@@ -37,3 +37,6 @@ agente-iac/bitacora/resumen.json
 
 # Bitácora del curso (material confidencial, solo local)
 docs/bitacora-curso.md
+
+agente-iac/bitacora/temas.local.json
+agente-iac/bitacora/pipeline-eventos.json

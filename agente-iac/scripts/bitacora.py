@@ -27,6 +27,7 @@ REPO = RAIZ.parent  # raíz del repo git: las rutas de evidencia son relativas a
 B = RAIZ / "bitacora"
 REALES = B / "sesiones.json"
 SIMULADAS = B / "simuladas.local.json"
+TEMAS_LOCAL = B / "temas.local.json"  # nombres de los temas del curso: material confidencial, solo local
 SALIDA_JSON = B / "bitacora.json"
 SALIDA_MD = B / "BITACORA.md"
 SALIDA_RESUMEN = B / "resumen.json"
@@ -102,6 +103,12 @@ def md_sesion(s):
     return "\n".join(L)
 
 
+def nombrar_temas(temas):
+    """El repo (público) guarda solo los ids de los temas; los nombres salen de un archivo local opcional."""
+    nombres = {t["id"]: t.get("nombre", "") for t in cargar(TEMAS_LOCAL, {"temas": []})["temas"]}
+    return [{"id": t["id"], "nombre": nombres.get(t["id"]) or t.get("nombre") or t["id"]} for t in temas]
+
+
 def resumen(union):
     """Agregados para Grafana. Solo las sesiones reales cuentan como 'aplicado'."""
     reales = [s for s in union["sesiones"] if not s["simulado"]]
@@ -151,6 +158,7 @@ def generar():
     SALIDA_MD.write_text("\n".join(filas) + "\n", encoding="utf-8", newline="\n")
     union = {k: v for k, v in reales.items() if k != "sesiones"}
     union["sesiones"] = reales["sesiones"] + sim["sesiones"]
+    union["temas_curso"] = nombrar_temas(reales.get("temas_curso", []))
     SALIDA_JSON.write_text(json.dumps(union, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     SALIDA_RESUMEN.write_text(json.dumps(resumen(union), ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     print(f"OK: {len(reales['sesiones'])} reales + {len(sim['sesiones'])} simuladas -> {SALIDA_JSON.name}, {SALIDA_MD.name}")

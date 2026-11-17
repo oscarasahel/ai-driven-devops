@@ -88,3 +88,22 @@ def test_md_sesion_incluye_evidencia(sha):
 def test_bitacora_real_del_repo_es_valida():
     _, _, errores = bitacora.validar()
     assert errores == []
+
+
+def test_nombrar_temas_sin_archivo_local_usa_el_id(monkeypatch, tmp_path):
+    monkeypatch.setattr(bitacora, "TEMAS_LOCAL", tmp_path / "no-existe.json")
+    assert bitacora.nombrar_temas([{"id": "S1"}]) == [{"id": "S1", "nombre": "S1"}]
+
+
+def test_nombrar_temas_con_archivo_local(monkeypatch, tmp_path):
+    f = tmp_path / "temas.json"
+    f.write_text('{"temas": [{"id": "S1", "nombre": "Tema uno"}]}', encoding="utf-8")
+    monkeypatch.setattr(bitacora, "TEMAS_LOCAL", f)
+    assert bitacora.nombrar_temas([{"id": "S1"}, {"id": "S2"}]) == [
+        {"id": "S1", "nombre": "Tema uno"}, {"id": "S2", "nombre": "S2"}]
+
+
+def test_sesiones_json_versionado_no_contiene_nombres_de_temas():
+    import json
+    datos = json.loads(bitacora.REALES.read_text(encoding="utf-8"))
+    assert all(set(t) == {"id"} for t in datos["temas_curso"])

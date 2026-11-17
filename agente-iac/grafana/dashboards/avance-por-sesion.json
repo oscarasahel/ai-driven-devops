@@ -654,6 +654,196 @@
       "options": {
         "showHeader": true
       }
+    },
+    {
+      "id": 8,
+      "title": "SLI del pipeline (builds buenos / builds totales)",
+      "type": "stat",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 8,
+        "h": 6
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/pipeline-eventos.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "sli",
+          "columns": [
+            {
+              "selector": "sli_pct",
+              "text": "SLI %",
+              "type": "number"
+            },
+            {
+              "selector": "slo_pct",
+              "text": "SLO %",
+              "type": "number"
+            },
+            {
+              "selector": "builds",
+              "text": "Builds",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Bueno = success o rechazo humano; malo = failure. SLO 90 %. Con pocos builds el valor es muy sensible. Fuente: scripts/eventos_pipeline.py.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 75
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^SLI %$/",
+          "values": false
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Eventos del pipeline (un evento por build, con trace_id)",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 30,
+        "w": 16,
+        "h": 6
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/pipeline-eventos.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "eventos",
+          "columns": [
+            {
+              "selector": "trace_id",
+              "text": "trace_id",
+              "type": "string"
+            },
+            {
+              "selector": "operation",
+              "text": "Operación",
+              "type": "string"
+            },
+            {
+              "selector": "outcome",
+              "text": "Resultado",
+              "type": "string"
+            },
+            {
+              "selector": "duration_ms",
+              "text": "Duración (ms)",
+              "type": "number"
+            },
+            {
+              "selector": "started_at",
+              "text": "Inicio (UTC)",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Resultado"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "success": {
+                        "color": "green",
+                        "text": "success"
+                      },
+                      "rejected": {
+                        "color": "blue",
+                        "text": "rejected"
+                      },
+                      "failure": {
+                        "color": "red",
+                        "text": "failure"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true
+      }
     }
   ]
 }

@@ -21,6 +21,7 @@ Etapas: Preparar -> Validate/lint/seguridad -> Plan -> Aprobación manual -> App
 | `rsync ... change_dir "/repo/agente-iac" failed` | Ruta equivocada: `/repo` ya es `agente-iac/` | `docker compose exec jenkins ls /repo` |
 | Etapa de seguridad FAIL | Hallazgo nuevo o excepción vencida | `reports/resumen.txt`; `python scripts/excepciones.py checkov` |
 | Errores TLS al llamar al emulador | Jenkins no comparte la red del emulador o el emulador se reinició (cambia el certificado) | `docker compose exec jenkins curl -s --cacert /emulator/9297/ca.pem https://127.0.0.1:9297/__admin/health` |
+| Jenkins "healthy" pero la UI/API no responde ("connection closed", curl código 000) | Jenkins comparte la red del contenedor del emulador (`network_mode`); si el emulador se **recreó**, Jenkins queda pegado a la red del contenedor anterior | `docker ps --format '{{.Names}} {{.Status}}'`: el emulador es más joven que Jenkins. Remedio: `docker compose up -d --force-recreate jenkins` (ocurrió el 2026-11-17 tras relanzar el emulador) |
 | El cliente da HTTP 400/404 | Cabecera crumb mal formada o id de aprobación no reconocido | `curl -u ... /crumbIssuer/api/json`; revisar `scripts/jenkins.sh` |
 | Espera aprobación para siempre | Nadie aprobó | `bash scripts/jenkins.sh estado <N>` |
 

@@ -45,5 +45,16 @@ dash={"uid":"avance-por-sesion","title":"Avance por sesión","tags":["agente-iac
    {"defaults":{"mappings":[{"type":"value","options":{"ok":{"color":"green","text":"OK"},"fallido":{"color":"red","text":"FALLIDO"},"no verificado":{"color":"orange","text":"NO VERIFICADO"}}}]},"overrides":[]},
    "Se actualiza en bitacora/sesiones.json (campo pipeline.estado)."),
  panel(7,"Bitácora (reales y simuladas)","table",8,25,16,5,q("resumen.json","bitacora",cols_b),{"showHeader":True},tipo_colores),
+ panel(8,"SLI del pipeline (builds buenos / builds totales)","stat",0,30,8,6,
+   q("pipeline-eventos.json","sli",[("sli_pct","SLI %","number"),("slo_pct","SLO %","number"),("builds","Builds","number")]),
+   {"textMode":"value_and_name","colorMode":"background","reduceOptions":{"calcs":["lastNotNull"],"fields":"/^SLI %$/","values":False}},
+   {"defaults":{"unit":"percent","thresholds":{"mode":"absolute","steps":[{"color":"red","value":None},{"color":"orange","value":75},{"color":"green","value":90}]}},"overrides":[]},
+   "Bueno = success o rechazo humano; malo = failure. SLO 90 %. Con pocos builds el valor es muy sensible. Fuente: scripts/eventos_pipeline.py."),
+ panel(9,"Eventos del pipeline (un evento por build, con trace_id)","table",8,30,16,6,
+   q("pipeline-eventos.json","eventos",[("trace_id","trace_id","string"),("operation","Operación","string"),("outcome","Resultado","string"),("duration_ms","Duración (ms)","number"),("started_at","Inicio (UTC)","string")]),
+   {"showHeader":True},
+   {"defaults":{},"overrides":[{"matcher":{"id":"byName","options":"Resultado"},"properties":[
+     {"id":"mappings","value":[{"type":"value","options":{"success":{"color":"green","text":"success"},"rejected":{"color":"blue","text":"rejected"},"failure":{"color":"red","text":"failure"}}}]},
+     {"id":"custom.cellOptions","value":{"type":"color-text"}}]}]}),
 ]}
 json.dump(dash,open("grafana/dashboards/avance-por-sesion.json","w",encoding="utf-8"),ensure_ascii=False,indent=2)

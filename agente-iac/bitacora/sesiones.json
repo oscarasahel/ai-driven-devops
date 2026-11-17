@@ -2,60 +2,46 @@
   "version": 1,
   "temas_curso": [
     {
-      "id": "S1",
-      "nombre": "Marco de ingeniería asistida/agéntica"
+      "id": "S1"
     },
     {
-      "id": "S2",
-      "nombre": "Anatomía de un modelo y harnesses"
+      "id": "S2"
     },
     {
-      "id": "S3",
-      "nombre": "GitHub Copilot y spec-driven"
+      "id": "S3"
     },
     {
-      "id": "S4",
-      "nombre": "Spec-driven con Kiro"
+      "id": "S4"
     },
     {
-      "id": "S5",
-      "nombre": "CI/CD Fundamentals"
+      "id": "S5"
     },
     {
-      "id": "S6",
-      "nombre": "AI-Powered Pipelines"
+      "id": "S6"
     },
     {
-      "id": "S7",
-      "nombre": "Arquitectura moderna para sistemas LLM"
+      "id": "S7"
     },
     {
-      "id": "S8",
-      "nombre": "AI en la nube"
+      "id": "S8"
     },
     {
-      "id": "S9",
-      "nombre": "Qué es un agente (ADK)"
+      "id": "S9"
     },
     {
-      "id": "S10",
-      "nombre": "Desarrollo de agentes"
+      "id": "S10"
     },
     {
-      "id": "S11",
-      "nombre": "Observabilidad"
+      "id": "S11"
     },
     {
-      "id": "S12",
-      "nombre": "AIOps"
+      "id": "S12"
     },
     {
-      "id": "S13",
-      "nombre": "Runbooks inteligentes"
+      "id": "S13"
     },
     {
-      "id": "S14",
-      "nombre": "ChatOps con IA"
+      "id": "S14"
     }
   ],
   "pipeline": {
