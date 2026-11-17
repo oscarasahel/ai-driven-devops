@@ -4,8 +4,8 @@
 Uso: python scripts/excepciones.py <checkov|trivy> [--hoy AAAA-MM-DD]
 - checkov: imprime los IDs separados por comas (para --skip-check).
 - trivy:   imprime líneas 'ID exp:FECHA' (formato de .trivyignore).
-Sale con 1 si una excepción no tiene los campos obligatorios, tiene justificación
-vacía o su fecha de revisión ya venció.
+Sale con 1 si una excepción (de cualquier herramienta) no tiene los campos obligatorios,
+tiene la justificación vacía o su fecha de revisión ya venció: el gate es todo o nada.
 """
 import datetime
 import json
@@ -16,16 +16,8 @@ CAMPOS = ("herramienta", "id", "recurso", "justificacion", "revision")
 RUTA = Path(__file__).resolve().parent.parent / "policies" / "excepciones.json"
 
 
-def main(argv):
-    if not argv or argv[0] not in ("checkov", "trivy"):
-        print(__doc__, file=sys.stderr)
-        return 2
-    herramienta = argv[0]
-    hoy = datetime.date.today()
-    if "--hoy" in argv:
-        hoy = datetime.date.fromisoformat(argv[argv.index("--hoy") + 1])
-
-    datos = json.loads(RUTA.read_text(encoding="utf-8"))
+def evaluar(datos, herramienta, hoy):
+    """Devuelve (ids, errores): ids=[(id, revision)] de la herramienta; errores=lista de textos."""
     ids, errores = [], []
     for e in datos.get("excepciones", []):
         faltan = [c for c in CAMPOS if not str(e.get(c, "")).strip()]
@@ -42,7 +34,20 @@ def main(argv):
             continue
         if e["herramienta"] == herramienta:
             ids.append((e["id"], e["revision"]))
+    return ids, errores
 
+
+def main(argv):
+    if not argv or argv[0] not in ("checkov", "trivy"):
+        print(__doc__, file=sys.stderr)
+        return 2
+    herramienta = argv[0]
+    hoy = datetime.date.today()
+    if "--hoy" in argv:
+        hoy = datetime.date.fromisoformat(argv[argv.index("--hoy") + 1])
+
+    datos = json.loads(RUTA.read_text(encoding="utf-8"))
+    ids, errores = evaluar(datos, herramienta, hoy)
     if errores:
         for m in errores:
             print(f"EXCEPCIÓN INVÁLIDA {m}", file=sys.stderr)

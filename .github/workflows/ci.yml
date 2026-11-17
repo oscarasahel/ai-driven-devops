@@ -1,0 +1,75 @@
+# CI de agente-iac. Las acciones están fijadas por SHA (cadena de suministro) y las herramientas por versión de imagen.
+# Los mismos comandos se pueden correr en local: ver agente-iac/README.md.
+name: ci
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: agente-iac
+
+jobs:
+  pruebas:
+    name: Pruebas unitarias (pytest)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0 # la validación de la bitácora comprueba que los commits citados existan
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - name: Validar la bitácora
+        run: python scripts/bitacora.py validar
+
+  secretos:
+    name: Escaneo de secretos (Gitleaks)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Gitleaks sobre todo el historial
+        working-directory: .
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 \
+            detect --source /repo --log-opts="--all" --redact --no-banner
+
+  seguridad:
+    name: Gate de seguridad IaC (fmt, validate, TFLint, Checkov, Trivy)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: bash scripts/seguridad.sh
+      - name: Subir informes (JUnit y SARIF)
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: informes-seguridad
+          path: agente-iac/reports/
+          if-no-files-found: ignore
+
+  evals:
+    name: Evals con resultado esperado (casos rápidos)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - run: bash evals/run_evals.sh rapido
