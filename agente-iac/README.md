@@ -54,7 +54,7 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 | `docker compose up` levanta emulador, Jenkins y Grafana sanos | **Verificado:** `down` + un solo `up -d --wait`: los cuatro contenedores `healthy` en 14 s y respondiendo |
 | Un requerimiento recorre el flujo completo y deja recursos en el emulador | **Verificado en Jenkins** (build #2: gate, plan, aprobación, apply de 15 recursos, pruebas de humo) |
 | Trazas OpenTelemetry del pipeline | **Exportación a archivo OTLP/JSON, sin colector**: no hay visor ni latencia por etapa (un span por build). Ver `docs/fase-17.md` |
-| SLI del pipeline | Bruto 75 %; **ajustado 93,8 %** (excluye pruebas negativas deliberadas, `policies/builds-prueba-negativa.json`) |
+| SLI del pipeline | Ventana de 20 builds: bruto 85 %; **ajustado 100 %** (con #1 y #5 aún dentro: 75 % / 93,8 %; excluye pruebas negativas deliberadas, `policies/builds-prueba-negativa.json`) |
 | Staging aislado y promoción controlada a `local` | **Verificado en Jenkins** (builds #12 a #18, 10 comprobaciones PASS): compuerta por huella de `infra/`, un cambio la invalida, destruir staging la revoca. Ver `docs/fase-16.md` y `specs/003-promocion-entornos/` |
 | El pipeline falla ante un recurso inseguro | **Verificado también dentro de Jenkins** (build #6: el gate rechazó un bucket público; Plan, aprobación y Apply omitidos; emulador sin buckets). Ver `docs/fase-15.md` |
 | No aplica sin aprobación manual | **Verificado:** con el build esperando, el emulador estaba vacío; un destroy rechazado (#3) terminó ABORTED sin cambios (`docs/fase-10.md`) |

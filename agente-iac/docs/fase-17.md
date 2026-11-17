@@ -30,7 +30,7 @@ Valida longitudes de `traceId`/`spanId` y que el fin no preceda al inicio antes 
 - Es la forma de los datos, no instrumentación real del pipeline: esa exigiría un plugin de OpenTelemetry en Jenkins y un colector.
 
 ## SLI ajustado
-`policies/builds-prueba-negativa.json` lista los builds de prueba negativa deliberada (#6, #12, #15, #17) con su motivo. `eventos_pipeline.py` los marca (`prueba_negativa`) y `sli_pct` los excluye; `sli_bruto_pct` y `excluidos` quedan como campos nuevos. Solo se excluye un build en `failure` que esté en la lista: los defectos reales (#1, #5) siguen contando. Resultado: **bruto 75 %, ajustado 93,8 %** (SLO 90 %). `tests/test_sli_pruebas_negativas.py` (6 pruebas, con mutación).
+`policies/builds-prueba-negativa.json` lista los builds de prueba negativa deliberada (#6, #12, #15, #17) con su motivo. `eventos_pipeline.py` los marca (`prueba_negativa`) y `sli_pct` los excluye; `sli_bruto_pct` y `excluidos` quedan como campos nuevos. Solo se excluye un build en `failure` que esté en la lista: los defectos reales (#1, #5) siguen contando. Resultado: con #1 y #5 en la ventana, **bruto 75 %, ajustado 93,8 %**; ya fuera de ella (Jenkins guarda 20 builds), **bruto 85 %, ajustado 100 %** (SLO 90 %). Los datos de Jenkins se pierden al rotar; la bitácora conserva la evidencia. `tests/test_sli_pruebas_negativas.py` (6 pruebas, con mutación).
 
 ## Arreglo de `jenkins.sh disparar`
 - **Causa:** el curl de Windows sale con código distinto de 0 aunque Jenkins responda 201 y encole el build; el script lo tomaba por fallo y lanzaba el respaldo `/build`, que da el 400 y a veces duplica el build (#8 a #10, #21).

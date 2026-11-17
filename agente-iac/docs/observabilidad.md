@@ -23,7 +23,7 @@ Generado por `scripts/eventos_pipeline.py` a partir de la API de Jenkins:
 - **Presupuesto de error:** con 10 builds, 1 `failure` agota el presupuesto.
 
 ## Estado real (2026-11-17)
-20 eventos cerrados: **SLI bruto 75 %**; **SLI ajustado 93,8 %**, que cumple el SLO de 90 %. El ajustado excluye los builds de prueba negativa deliberada (#6 recurso inseguro; #12, #15 y #17 promoción bloqueada), listados con su motivo en `policies/builds-prueba-negativa.json`: ahí el `failure` es el control funcionando. Solo se excluye un build que terminó en `failure` y está en esa lista; los defectos reales (#1 ruta en el Jenkinsfile, #5 CRLF) siguen contando. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión.
+Ventana de los últimos 20 builds que conserva Jenkins (`numToKeepStr: 20`; #1 y #5 ya salieron de ella): **SLI bruto 85 %**; **SLI ajustado 100 %**, que cumple el SLO de 90 %. Medido antes con 21 eventos (incluidos #1 y #5): bruto 75 %, ajustado 93,8 %. El ajustado excluye los builds de prueba negativa deliberada (#6 recurso inseguro; #12, #15 y #17 promoción bloqueada), listados con su motivo en `policies/builds-prueba-negativa.json`: ahí el `failure` es el control funcionando. Solo se excluye un build que terminó en `failure` y está en esa lista; los defectos reales (#1 ruta en el Jenkinsfile, #5 CRLF) siguen contando. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión.
 
 ## Dónde se ve
 Dashboard "Avance por sesión" en Grafana: paneles *SLI del pipeline* y *Eventos del pipeline*. Datos: `bitacora/pipeline-eventos.json` (local, ignorado por git). Para actualizarlos: `python scripts/eventos_pipeline.py`.
