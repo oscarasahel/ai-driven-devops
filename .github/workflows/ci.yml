@@ -1,0 +1,100 @@
+# CI de agente-iac. Las acciones están fijadas por SHA (cadena de suministro) y las herramientas por versión de imagen.
+# Los mismos comandos se pueden correr en local: ver agente-iac/README.md.
+name: ci
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: agente-iac
+
+jobs:
+  pruebas:
+    name: Pruebas unitarias (pytest)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0 # la validación de la bitácora comprueba que los commits citados existan
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - name: Validar la bitácora
+        run: python scripts/bitacora.py validar
+
+  secretos:
+    name: Escaneo de secretos (Gitleaks)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Gitleaks sobre todo el historial
+        working-directory: .
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 \
+            detect --source /repo --log-opts="--all" --redact --no-banner
+
+  seguridad:
+    name: Gate de seguridad IaC (fmt, validate, TFLint, Checkov, Trivy)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: bash scripts/seguridad.sh
+      - name: Subir informes (JUnit y SARIF)
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: informes-seguridad
+          path: agente-iac/reports/
+          if-no-files-found: ignore
+
+  evals:
+    name: Evals con resultado esperado (casos rápidos)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+      - run: bash evals/run_evals.sh rapido
+
+  sugerencias:
+    name: Sugerencias de corrección (si el gate falla)
+    needs: seguridad
+    if: ${{ always() && needs.seguridad.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write # solo se usa para comentar en PRs del propio repositorio
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: informes-seguridad
+          path: agente-iac/reports
+      - name: Generar sugerencias desde los informes
+        run: python3 scripts/sugerir_correccion.py --salida sugerencias.md
+      - name: Publicar en el resumen del job
+        run: cat sugerencias.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Comentar en el PR (solo PRs del mismo repositorio)
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR" --body-file sugerencias.md

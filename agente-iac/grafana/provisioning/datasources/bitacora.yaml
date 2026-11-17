@@ -1,0 +1,10 @@
+apiVersion: 1
+datasources:
+  - name: Bitacora
+    uid: bitacora
+    type: yesoreyeram-infinity-datasource
+    access: proxy
+    isDefault: true
+    jsonData:
+      allowedHosts:
+        - http://bitacora-web

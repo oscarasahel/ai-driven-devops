@@ -1,0 +1,12 @@
+# Gate local: se ejecuta al commitear cambios en Terraform o políticas.
+# Instalación: pip install pre-commit && pre-commit install   (desde la raíz del repo)
+# Requiere Docker; tarda ~1 min la primera vez (descarga de imágenes).
+repos:
+  - repo: local
+    hooks:
+      - id: gate-seguridad-iac
+        name: Gate de seguridad IaC (fmt, validate, tflint, checkov, trivy)
+        entry: bash agente-iac/scripts/seguridad.sh
+        language: system
+        files: ^agente-iac/(infra/.*\.tf|policies/.*|\.tflint\.hcl)$
+        pass_filenames: false

@@ -1,0 +1,54 @@
+{
+  "descripcion": "Excepciones al gate de seguridad. Cada una requiere justificación y fecha de revisión futura; una excepción vencida hace fallar el gate.",
+  "excepciones": [
+    {
+      "herramienta": "trivy",
+      "id": "AVD-AWS-0132",
+      "recurso": "module.secure-bucket",
+      "justificacion": "Spec 001 acepta cifrado AES256 (SSE-S3) y deja fuera de alcance las claves KMS gestionadas por el cliente. Se evalúa CMK para producción.",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "trivy",
+      "id": "AVD-AWS-0136",
+      "recurso": "module.order-events",
+      "justificacion": "El tema SNS ya se cifra con la clave administrada por AWS (alias/aws/sns); la spec 002 deja fuera de alcance las claves KMS gestionadas por el cliente.",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "checkov",
+      "id": "CKV_AWS_145",
+      "recurso": "module.secure-bucket",
+      "justificacion": "Mismo motivo que AVD-AWS-0132: la spec 001 acepta SSE-S3; KMS por defecto fuera de alcance.",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "checkov",
+      "id": "CKV_AWS_18",
+      "recurso": "module.secure-bucket",
+      "justificacion": "Registro de accesos S3 fuera de alcance de la spec 001; requeriría un segundo bucket de logs.",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "checkov",
+      "id": "CKV2_AWS_62",
+      "recurso": "module.secure-bucket",
+      "justificacion": "Notificaciones de eventos S3 fuera de alcance de la spec 001.",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "checkov",
+      "id": "CKV_AWS_144",
+      "recurso": "module.secure-bucket",
+      "justificacion": "Replicación entre regiones fuera de alcance de la spec 001 (PoC local, una sola región).",
+      "revision": "2027-02-16"
+    },
+    {
+      "herramienta": "checkov",
+      "id": "CKV_AWS_119",
+      "recurso": "module.order-state-table",
+      "justificacion": "Spec 002 deja fuera de alcance las claves KMS gestionadas por el cliente; la tabla usa cifrado con clave propiedad de AWS.",
+      "revision": "2027-02-16"
+    }
+  ]
+}

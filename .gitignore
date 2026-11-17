@@ -1,0 +1,43 @@
+# Secretos
+.env
+*.pem
+*.p12
+emulator_credentials
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Material confidencial del curso
+agente-iac/bitacora/bitacora.json
+bitacora.json
+*.pdf
+
+# Varios
+graphify-out/
+__pycache__/
+.DS_Store
+
+# Seguimiento personal (solo local)
+docs/seguimiento.md
+
+# Datos locales del emulador
+agente-iac/.data/
+
+# Informes del gate
+agente-iac/reports/
+
+# Bitácora: lo simulado y la unión para Grafana son locales
+agente-iac/bitacora/simuladas.local.json
+agente-iac/bitacora/resumen.json
+.evals-neg/
+
+# Bitácora del curso (material confidencial, solo local)
+docs/bitacora-curso.md
+
+agente-iac/bitacora/temas.local.json
+agente-iac/bitacora/pipeline-eventos.json
+agente-iac/bitacora/chatops-auditoria.jsonl

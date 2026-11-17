@@ -1,0 +1,134 @@
+name: agente-iac
+
+services:
+  aws-emulator:
+    build: ./emulator
+    image: agente-iac/aws-emulator:local
+    command: ["-p", "9297", "--telemetry", "off"]
+    ports:
+      - "127.0.0.1:9297:9297"
+      # Jenkins comparte la red de este servicio (el certificado del emulador solo vale para localhost/127.0.0.1)
+      - "127.0.0.1:8080:8080"
+    volumes:
+      # credenciales y ca.pem que genera el propio emulador (ignorado por git)
+      - ./.data/emulator:/home/emulator/.aws/emulator
+    mem_limit: 2g
+    memswap_limit: 2g
+    restart: unless-stopped
+    healthcheck:
+      # -k: el certificado es autofirmado y no incluye siempre el host del contenedor
+      test: ["CMD", "curl", "-sfk", "https://127.0.0.1:9297/__admin/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    networks: [iac]
+
+  jenkins:
+    build: ./jenkins
+    image: agente-iac/jenkins:local
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    environment:
+      JENKINS_ADMIN_USER: ${JENKINS_ADMIN_USER:?define JENKINS_ADMIN_USER en .env}
+      JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?define JENKINS_ADMIN_PASSWORD en .env}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./:/repo:ro
+      - ./.data/emulator:/emulator:ro
+    mem_limit: 2g
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8080/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # Sirve bitacora.json y resumen.json a Grafana (solo red interna)
+  bitacora-web:
+    image: nginx:1.27.3-alpine
+    volumes:
+      - ./bitacora:/usr/share/nginx/html:ro
+      - ./grafana/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    mem_limit: 64m
+    restart: unless-stopped
+    networks: [iac]
+
+  grafana:
+    image: grafana/grafana-oss:11.4.0
+    depends_on: [bitacora-web]
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?define GRAFANA_ADMIN_USER en .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?define GRAFANA_ADMIN_PASSWORD en .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_INSTALL_PLUGINS: "yesoreyeram-infinity-datasource 3.7.1"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    mem_limit: 512m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health | grep -q ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks: [iac]
+
+  # Herramienta bajo demanda: docker compose run --rm terraform <comando>
+  # Comparte la red del emulador, así que 127.0.0.1:9297 apunta al emulador.
+  terraform:
+    image: hashicorp/terraform:1.9.8
+    profiles: ["tools"]
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    working_dir: /infra/envs/local
+    volumes:
+      - ./infra:/infra
+      - ./.data/emulator:/emulator:ro
+    environment:
+      AWS_ENDPOINT_URL: https://127.0.0.1:9297
+      AWS_SHARED_CREDENTIALS_FILE: /emulator/9297/emulator_credentials
+      AWS_CONFIG_FILE: /emulator/9297/config
+      AWS_CA_BUNDLE: /emulator/9297/ca.pem
+      AWS_EC2_METADATA_DISABLED: "true"
+      AWS_DISABLE_HOST_PREFIX_INJECTION: "true"
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+      TF_IN_AUTOMATION: "1"
+
+  # Pruebas de humo: docker compose run --rm awscli s3 ls
+  awscli:
+    image: amazon/aws-cli:2.22.0
+    profiles: ["tools"]
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    volumes:
+      - ./.data/emulator:/emulator:ro
+    environment:
+      AWS_ENDPOINT_URL: https://127.0.0.1:9297
+      AWS_SHARED_CREDENTIALS_FILE: /emulator/9297/emulator_credentials
+      AWS_CONFIG_FILE: /emulator/9297/config
+      AWS_CA_BUNDLE: /emulator/9297/ca.pem
+      AWS_REGION: us-east-1
+
+volumes:
+  jenkins_home:
+  grafana_data:
+
+networks:
+  iac:
+    driver: bridge

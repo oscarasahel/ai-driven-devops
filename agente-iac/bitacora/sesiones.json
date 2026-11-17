@@ -1,0 +1,834 @@
+{
+  "version": 1,
+  "temas_curso": [
+    {
+      "id": "S1"
+    },
+    {
+      "id": "S2"
+    },
+    {
+      "id": "S3"
+    },
+    {
+      "id": "S4"
+    },
+    {
+      "id": "S5"
+    },
+    {
+      "id": "S6"
+    },
+    {
+      "id": "S7"
+    },
+    {
+      "id": "S8"
+    },
+    {
+      "id": "S9"
+    },
+    {
+      "id": "S10"
+    },
+    {
+      "id": "S11"
+    },
+    {
+      "id": "S12"
+    },
+    {
+      "id": "S13"
+    },
+    {
+      "id": "S14"
+    }
+  ],
+  "pipeline": {
+    "estado": "ok",
+    "detalle": "Jenkins: build #2 apply aprobado (15 recursos), #3 destroy rechazado (ABORTED, sin cambios), #4 destroy aprobado. Ver docs/fase-10.md"
+  },
+  "sesiones": [
+    {
+      "numero": 0,
+      "fecha": "2026-11-16",
+      "fase": "Fase 0",
+      "tema": "Fundación",
+      "slug": "fundacion",
+      "rama": "feature/fase-0-fundacion",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S3",
+        "S7"
+      ],
+      "objetivo": "Dejar la estructura, las reglas y la verificación del emulador antes de construir.",
+      "archivos": [
+        "agente-iac/CLAUDE.md",
+        "agente-iac/docs/constitution.md",
+        "agente-iac/docs/adr/001-fundacion.md",
+        "agente-iac/docs/emulador-tabla.md",
+        ".gitignore"
+      ],
+      "decisiones": [
+        {
+          "decision": "Docker Desktop en lugar de WSL2",
+          "porque": "es el entorno real del usuario"
+        },
+        {
+          "decision": "Una rama por fase",
+          "porque": "trazabilidad y revisión por PR"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "d8a5efa",
+          "detalle": "commit de la fase 0"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/emulador-tabla.md",
+          "detalle": "tabla de servicios y límites del emulador"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 0,
+        "archivos_nuevos": 19
+      },
+      "riesgos": [
+        "No se encontró tabla de fidelidad por servicio del emulador",
+        "El RPM del emulador no se puede fijar a versión"
+      ],
+      "siguiente": "Fase 1: compose y prueba de humo."
+    },
+    {
+      "numero": 1,
+      "fecha": "2026-11-16",
+      "fase": "Fase 1",
+      "tema": "Infra base",
+      "slug": "infra-base",
+      "rama": "feature/fase-1-infra-base",
+      "simulado": false,
+      "temas_curso": [
+        "S5",
+        "S6"
+      ],
+      "objetivo": "Levantar el emulador con Docker Compose y crear un bucket S3 con Terraform.",
+      "archivos": [
+        "agente-iac/docker-compose.yml",
+        "agente-iac/emulator/Dockerfile",
+        "agente-iac/infra/envs/local/main.tf",
+        "agente-iac/docs/fase-1.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Terraform y AWS CLI en la red del emulador",
+          "porque": "el certificado solo vale para localhost/127.0.0.1"
+        },
+        {
+          "decision": "apply sin confirmación solo en el emulador",
+          "porque": "autorización explícita del usuario para autonomía"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "e7941dc",
+          "detalle": "commit de la fase 1"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-1.md",
+          "detalle": "resultado real: apply, ls y plan sin cambios"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 1,
+        "emulador": "1.0.485",
+        "provider_aws": "5.100.0"
+      },
+      "riesgos": [
+        "La versión del emulador no es fijable"
+      ],
+      "siguiente": "Fase 2: skill analizar-requerimiento."
+    },
+    {
+      "numero": 2,
+      "fecha": "2026-11-16",
+      "fase": "Fase 2",
+      "tema": "Skill analizar-requerimiento",
+      "slug": "analizar-requerimiento",
+      "rama": "feature/fase-2-analizar-requerimiento",
+      "simulado": false,
+      "temas_curso": [
+        "S3",
+        "S4",
+        "S7"
+      ],
+      "objetivo": "Convertir requerimientos en specs verificables y validarlas en código.",
+      "archivos": [
+        "agente-iac/.claude/skills/analizar-requerimiento/SKILL.md",
+        "agente-iac/scripts/validar_spec.py",
+        "agente-iac/specs/001-bucket-artefactos/spec.md",
+        "agente-iac/specs/002-eventos-pedidos/spec.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Specs sin código, con Dado/Cuando/Entonces",
+          "porque": "criterios verificables"
+        },
+        {
+          "decision": "Sondeo previo en el emulador",
+          "porque": "no prometer lo que no funciona (SNS→SQS exige política de la cola)"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "7ee8a33",
+          "detalle": "commit de la fase 2"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-2.md",
+          "detalle": "validación y sondeo del emulador"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 0,
+        "criterios_aceptacion": 17
+      },
+      "riesgos": [
+        "El validador revisa estructura, no calidad semántica"
+      ],
+      "siguiente": "Fase 3: construir-iac."
+    },
+    {
+      "numero": 3,
+      "fecha": "2026-11-16",
+      "fase": "Fase 3",
+      "tema": "Skill construir-iac",
+      "slug": "construir-iac",
+      "rama": "feature/fase-3-construir-iac",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S9",
+        "S10"
+      ],
+      "objetivo": "Generar módulos Terraform desde las specs aprobadas y comprobar los criterios en el emulador.",
+      "archivos": [
+        "agente-iac/.claude/skills/construir-iac/SKILL.md",
+        "agente-iac/infra/modules/secure-bucket/main.tf",
+        "agente-iac/infra/modules/order-events/main.tf",
+        "agente-iac/scripts/verificar-criterios.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Specs aprobadas por delegación",
+          "porque": "el usuario pidió autonomía; queda anotado en cada spec"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "4a97c80",
+          "detalle": "commit de la fase 3"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-3.md",
+          "detalle": "15 recursos aplicados, verificación TODO OK, destroy"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "criterios_verificados": 29
+      },
+      "riesgos": [
+        "Redirección real a la DLQ sin probar (solo por atributos)"
+      ],
+      "siguiente": "Fase 4: gate de seguridad."
+    },
+    {
+      "numero": 4,
+      "fecha": "2026-11-16",
+      "fase": "Fase 4",
+      "tema": "Skill seguridad-iac",
+      "slug": "seguridad-iac",
+      "rama": "feature/fase-4-seguridad-iac",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "objetivo": "Imponer en código el gate de seguridad (TFLint, Checkov, Trivy) con excepciones documentadas.",
+      "archivos": [
+        "agente-iac/.claude/skills/seguridad-iac/SKILL.md",
+        "agente-iac/scripts/seguridad.sh",
+        "agente-iac/policies/excepciones.json",
+        ".pre-commit-config.yaml"
+      ],
+      "decisiones": [
+        {
+          "decision": "Excepciones con justificación y vencimiento",
+          "porque": "una excepción vencida rompe el gate"
+        },
+        {
+          "decision": "Corregir SNS sin cifrar; excepcionar CMK",
+          "porque": "las specs dejan KMS propio fuera de alcance"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "760d03a",
+          "detalle": "commit de la fase 4"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-4.md",
+          "detalle": "gate verde y dos pruebas negativas"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "hallazgos_antes": {
+          "alta": 1,
+          "sin_severidad": 10
+        },
+        "hallazgos_despues": {
+          "alta": 0,
+          "sin_severidad": 0
+        },
+        "excepciones_documentadas": 7
+      },
+      "riesgos": [
+        "Checkov no informa severidad sin API key"
+      ],
+      "siguiente": "Fase 5: Jenkins."
+    },
+    {
+      "numero": 5,
+      "fecha": "2026-11-16",
+      "fase": "Fase 5",
+      "tema": "Jenkins con aprobación manual",
+      "slug": "jenkins",
+      "rama": "feature/fase-5-jenkins",
+      "simulado": false,
+      "temas_curso": [
+        "S6",
+        "S14"
+      ],
+      "objetivo": "Orquestar el flujo en Jenkins con aprobación manual antes del apply.",
+      "archivos": [
+        "agente-iac/jenkins/Dockerfile",
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/jenkins/casc/jenkins.yaml",
+        "agente-iac/scripts/jenkins.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Jenkins en la red del emulador",
+          "porque": "mismo motivo del certificado"
+        },
+        {
+          "decision": "Binarios copiados de imágenes oficiales",
+          "porque": "las descargas de Trivy daban 404"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "0b69f84",
+          "detalle": "commit de la fase 5"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-5.md",
+          "detalle": "declara explícitamente que no se verificó E2E"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pipeline_verificado": false
+      },
+      "riesgos": [
+        "El pipeline completo NO se ejecutó: sin evidencia de la aprobación manual",
+        "scripts/jenkins.sh devolvió 404 sin diagnosticar"
+      ],
+      "siguiente": "Fase 6: bitácora."
+    },
+    {
+      "numero": 6,
+      "fecha": "2026-11-16",
+      "fase": "Fase 6",
+      "tema": "Skill bitacora",
+      "slug": "bitacora",
+      "rama": "feature/fase-6-bitacora",
+      "simulado": false,
+      "temas_curso": [
+        "S14",
+        "S11"
+      ],
+      "objetivo": "Registrar sesiones con evidencia verificable y separar lo simulado de lo real.",
+      "archivos": [
+        "agente-iac/.claude/skills/bitacora/SKILL.md",
+        "agente-iac/scripts/bitacora.py",
+        "agente-iac/bitacora/sesiones.json",
+        "agente-iac/bitacora/BITACORA.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Sesiones simuladas en archivo local ignorado por git",
+          "porque": "vienen de notas confidenciales y no deben presentarse como trabajo real"
+        },
+        {
+          "decision": "El validador exige commits existentes",
+          "porque": "la evidencia se impone en código, no en el prompt"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "716d1e0",
+          "detalle": "commit de la fase 6"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-6.md",
+          "detalle": "verificación y límites"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "sesiones_reales": 7,
+        "sesiones_simuladas": 14
+      },
+      "riesgos": [
+        "Fechas de S1-S4 aproximadas"
+      ],
+      "siguiente": "Fase 7: Grafana y dashboard."
+    },
+    {
+      "numero": 7,
+      "fecha": "2026-11-16",
+      "fase": "Fase 7",
+      "tema": "Grafana y dashboard por sesión",
+      "slug": "grafana",
+      "rama": "feature/fase-7-grafana",
+      "simulado": false,
+      "temas_curso": [
+        "S11",
+        "S7"
+      ],
+      "objetivo": "Visualizar el avance por sesión con un dashboard aprovisionado como código.",
+      "archivos": [
+        "agente-iac/grafana/dashboards/avance-por-sesion.json",
+        "agente-iac/grafana/provisioning/datasources/bitacora.yaml",
+        "agente-iac/docker-compose.yml",
+        "agente-iac/scripts/generar_dashboard.py"
+      ],
+      "decisiones": [
+        {
+          "decision": "Agregados calculados en bitacora.py (resumen.json)",
+          "porque": "Grafana solo muestra, la lógica queda en código testeable"
+        },
+        {
+          "decision": "Infinity 3.7.1 con Grafana 11.4.0",
+          "porque": "versiones fijadas y compatibles"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "56425d6",
+          "detalle": "commit de la fase 7"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-7.md",
+          "detalle": "consultas de los 7 paneles verificadas por API"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "paneles": 7,
+        "paneles_con_datos": 7
+      },
+      "riesgos": [
+        "Aspecto visual no revisado (sin navegador)",
+        "Estado del pipeline no conectado a métricas vivas"
+      ],
+      "siguiente": "Fase 8: evals, pruebas negativas y README."
+    },
+    {
+      "numero": 8,
+      "fecha": "2026-11-16",
+      "fase": "Fase 8",
+      "tema": "Endurecimiento y evals",
+      "slug": "endurecimiento",
+      "rama": "feature/fase-8-endurecimiento",
+      "simulado": false,
+      "temas_curso": [
+        "S7",
+        "S13"
+      ],
+      "objetivo": "Fijar con evals y pruebas negativas lo que el sistema impone en código, y documentar el estado real.",
+      "archivos": [
+        "agente-iac/evals/run_evals.sh",
+        "agente-iac/README.md",
+        "agente-iac/docs/fase-8.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Evals deterministas sin LLM",
+          "porque": "repetibles y sin costo; el comportamiento del modelo queda declarado como no cubierto"
+        },
+        {
+          "decision": "README con estado real por criterio",
+          "porque": "no presentar como hecho lo que no se ejecutó"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "4067d49",
+          "detalle": "commit de la fase 8"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-8.md",
+          "detalle": "16/16 casos con el resultado esperado"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "evals_total": 16,
+        "evals_ok": 16
+      },
+      "riesgos": [
+        "Pipeline de Jenkins sin verificar de extremo a extremo",
+        "Ambigüedad e inyección de prompt a nivel del modelo sin evals automáticos"
+      ],
+      "siguiente": "Revisar y fusionar las ramas; ejecutar el pipeline de Jenkins a mano."
+    },
+    {
+      "numero": 9,
+      "fecha": "2026-11-17",
+      "fase": "Fase 9",
+      "tema": "Pruebas unitarias y CI en GitHub Actions",
+      "slug": "ci-y-pruebas",
+      "rama": "feature/fase-9-ci-y-pruebas",
+      "simulado": false,
+      "temas_curso": [
+        "S4",
+        "S5",
+        "S15"
+      ],
+      "objetivo": "Cerrar las brechas de pruebas unitarias, CI con Gitleaks y GitHub Actions.",
+      "archivos": [
+        "agente-iac/tests/test_validar_spec.py",
+        "agente-iac/tests/test_excepciones.py",
+        "agente-iac/tests/test_bitacora.py",
+        "agente-iac/scripts/excepciones.py",
+        ".github/workflows/ci.yml"
+      ],
+      "decisiones": [
+        {
+          "decision": "Acciones de GitHub fijadas por SHA",
+          "porque": "cadena de suministro: un tag puede moverse, un SHA no"
+        },
+        {
+          "decision": "Gitleaks sobre todo el historial",
+          "porque": "el repo es público"
+        },
+        {
+          "decision": "Comprobar las pruebas con mutaciones manuales",
+          "porque": "una prueba que nunca falla no prueba nada"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "c93a23c",
+          "detalle": "pruebas y workflow de CI"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-9.md",
+          "detalle": "run de Actions 44031273761 con los 4 jobs en éxito"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 34,
+        "jobs_ci": 4,
+        "jobs_ci_ok": 4
+      },
+      "riesgos": [
+        "Sin protección de rama ni checks requeridos (paso manual en GitHub)",
+        "Los evals lentos no corren en CI"
+      ],
+      "siguiente": "Fase 10: pipeline de Jenkins verificado de extremo a extremo."
+    },
+    {
+      "numero": 10,
+      "fecha": "2026-11-17",
+      "fase": "Fase 10",
+      "tema": "Jenkins verificado de extremo a extremo",
+      "slug": "jenkins-verificado",
+      "rama": "feature/fase-10-jenkins-verificado",
+      "simulado": false,
+      "temas_curso": [
+        "S5",
+        "S6",
+        "S14"
+      ],
+      "objetivo": "Demostrar con ejecuciones reales que el pipeline no aplica sin aprobación manual y que un rechazo no cambia nada.",
+      "archivos": [
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/scripts/jenkins.sh",
+        "agente-iac/docs/fase-10.md",
+        "agente-iac/docs/evidencia/jenkins-build-2.log",
+        "agente-iac/docs/evidencia/jenkins-build-3.log",
+        "agente-iac/docs/evidencia/jenkins-build-4.log"
+      ],
+      "decisiones": [
+        {
+          "decision": "Probar el rechazo además de la aprobación",
+          "porque": "un control de aprobación solo es creíble si se demuestra que rechazar no cambia nada"
+        },
+        {
+          "decision": "Guardar los logs de los builds como evidencia, revisados con Gitleaks",
+          "porque": "la bitácora exige evidencia verificable y el repo es público"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "570716e",
+          "detalle": "correcciones y evidencia de Jenkins"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-2.log",
+          "detalle": "apply: gate, plan, aprobación de admin, 15 recursos, pruebas de humo OK"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-3.log",
+          "detalle": "destroy rechazado: ABORTED, sin cambios"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-4.log",
+          "detalle": "destroy aprobado"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "builds_ok": 2,
+        "builds_rechazados": 1,
+        "builds_con_defecto": 1,
+        "pipeline_verificado": true
+      },
+      "riesgos": [
+        "Un solo usuario (admin): no hay separación entre solicitante y aprobador",
+        "El build #1 falló por un defecto mío (ruta de rsync), corregido"
+      ],
+      "siguiente": "Fase 11: runbooks, diseño de ChatOps, AI-BOM y modelado de amenazas."
+    },
+    {
+      "numero": 11,
+      "fecha": "2026-11-17",
+      "fase": "Fase 11",
+      "tema": "Runbooks, ChatOps, AI-BOM y modelo de amenazas",
+      "slug": "runbooks-amenazas",
+      "rama": "feature/fase-11-runbooks-chatops-amenazas",
+      "simulado": false,
+      "temas_curso": [
+        "S13",
+        "S14",
+        "S15",
+        "S3"
+      ],
+      "objetivo": "Cerrar las brechas de documentación operativa y de seguridad frente a las sesiones de runbooks, ChatOps y DevSecOps.",
+      "archivos": [
+        "agente-iac/docs/runbooks/jenkins-falla-construccion-imagen.md",
+        "agente-iac/docs/runbooks/jenkins-pipeline-falla.md",
+        "agente-iac/docs/runbooks/revision-previa-al-apply.md",
+        "agente-iac/docs/chatops-diseno.md",
+        "agente-iac/docs/seguridad/ai-bom.md",
+        "agente-iac/docs/seguridad/modelo-de-amenazas.md",
+        "agente-iac/scripts/probar-dlq.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Runbooks a partir de incidentes reales",
+          "porque": "un runbook basado en fallos ocurridos se puede contrastar con la evidencia"
+        },
+        {
+          "decision": "plan.md y tasks.md marcados como reconstruidos a posteriori",
+          "porque": "no presentar como previo lo que se escribió después"
+        },
+        {
+          "decision": "Documentación con contenido propio y sin material del curso",
+          "porque": "el repositorio es público"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "af43bc9",
+          "detalle": "documentación y prueba de la DLQ"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-11.md",
+          "detalle": "qué se verificó y qué no"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "runbooks": 3,
+        "riesgos_owasp_revisados": 20,
+        "dlq_comportamiento_verificado": true
+      },
+      "riesgos": [
+        "ChatOps es solo diseño",
+        "Runbook de revisión previa no probado con un plan destructivo inesperado",
+        "Numeración OWASP a verificar contra la versión vigente"
+      ],
+      "siguiente": "Fase 12: higiene del repositorio público, telemetría del pipeline y actualización del dashboard."
+    },
+    {
+      "numero": 12,
+      "fecha": "2026-11-17",
+      "fase": "Fase 12",
+      "tema": "Higiene del repo público y telemetría del pipeline",
+      "slug": "higiene-y-telemetria",
+      "rama": "feature/fase-12-higiene-y-telemetria",
+      "simulado": false,
+      "temas_curso": [
+        "S11",
+        "S12",
+        "S15"
+      ],
+      "objetivo": "Mantener el material confidencial fuera del repo público y medir el pipeline con eventos estructurados y un SLI.",
+      "archivos": [
+        "agente-iac/scripts/eventos_pipeline.py",
+        "agente-iac/scripts/verificar_dashboard.py",
+        "agente-iac/docs/observabilidad.md",
+        "agente-iac/scripts/bitacora.py",
+        "agente-iac/grafana/dashboards/avance-por-sesion.json"
+      ],
+      "decisiones": [
+        {
+          "decision": "Guardar en el repo solo ids de temas; nombres en un archivo local",
+          "porque": "el repo es público y los nombres derivan de material confidencial"
+        },
+        {
+          "decision": "Un rechazo humano cuenta como build bueno en el SLI",
+          "porque": "es el control funcionando, no una falla"
+        },
+        {
+          "decision": "No reescribir el historial público sin autorización",
+          "porque": "force-push es destructivo; lo decide el dueño del repo"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "8ee5c56",
+          "detalle": "higiene, eventos y dashboard"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-12.md",
+          "detalle": "44 pruebas, 9 de 9 paneles, Gitleaks sin hallazgos"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 44,
+        "paneles": 9,
+        "paneles_con_datos": 9,
+        "sli_pipeline_pct": 75.0,
+        "slo_pipeline_pct": 90.0
+      },
+      "riesgos": [
+        "Los títulos de los temas siguen en el historial de ramas anteriores (público)",
+        "SLI muy sensible con 4 builds",
+        "Aspecto visual del dashboard sin revisar"
+      ],
+      "siguiente": "Revisión humana por la mañana y decisión sobre el historial y la fusión de ramas."
+    },
+    {
+      "numero": 13,
+      "fecha": "2026-11-17",
+      "fase": "Fase 13",
+      "tema": "ChatOps de solo lectura, sugerencias de corrección en CI y evals con modelo",
+      "slug": "chatops-sugerencias-evals-modelo",
+      "rama": "feature/fase-13-chatops-sugerencias-evals-modelo",
+      "simulado": false,
+      "temas_curso": [
+        "S6",
+        "S7",
+        "S14"
+      ],
+      "objetivo": "Cerrar brechas con el curso: implementar la capa de ChatOps de solo lectura, una revisión automática con sugerencias cuando falla el gate en CI, y evals que ejecuten el modelo.",
+      "archivos": [
+        "agente-iac/scripts/chatops.py",
+        "agente-iac/scripts/sugerir_correccion.py",
+        "agente-iac/scripts/evals_modelo.py",
+        "agente-iac/policies/remediaciones.json",
+        "agente-iac/evals/modelo/casos.json",
+        ".github/workflows/ci.yml"
+      ],
+      "decisiones": [
+        {
+          "decision": "Los comandos de ChatOps que cambian estado se rechazan siempre en código",
+          "porque": "la única vía para cambiar infraestructura es la aprobación manual de Jenkins"
+        },
+        {
+          "decision": "Las sugerencias de corrección salen de un catálogo fijo, no del texto del informe",
+          "porque": "el informe deriva de contenido del repo (dato no confiable)"
+        },
+        {
+          "decision": "Los evals con modelo son locales y no corren en CI",
+          "porque": "exigirían una credencial del modelo en el repositorio"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "ef8aa45",
+          "detalle": "ChatOps, job de sugerencias y evals con modelo"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-13.md",
+          "detalle": "90 pruebas, plan real explicado, job probado en GitHub"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/evals-modelo.md",
+          "detalle": "6 de 6 corridas con modelo pasan"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 90
+      },
+      "riesgos": [
+        "Los evals con modelo son pocos y no deterministas: detectan regresiones groseras, no demuestran robustez",
+        "ChatOps sin gateway ni identidad real; solicitante y aprobador siguen siendo el mismo usuario en Jenkins",
+        "El comentario en PR del job de sugerencias no se ejercitó (la prueba fue en una rama sin PR)"
+      ],
+      "siguiente": "Revisión humana y decisión sobre la fusión de ramas y el historial público."
+    }
+  ]
+}

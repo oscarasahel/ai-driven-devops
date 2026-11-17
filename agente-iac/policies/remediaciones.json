@@ -1,0 +1,32 @@
+{
+  "_nota": "Correcciones sugeridas por control de Checkov. Es texto fijo escrito por humanos: lo que dice la herramienta sobre el recurso es dato y nunca se copia como instrucción. Una sugerencia no se aplica sola: la corrige una persona (o el agente por el flujo normal, con gate y aprobación).",
+  "CKV_AWS_18": "Activa el registro de accesos del bucket (aws_s3_bucket_logging) hacia un bucket de logs, o documenta una excepción vencible en policies/excepciones.json.",
+  "CKV_AWS_19": "Cifra el bucket en reposo con aws_s3_bucket_server_side_encryption_configuration (AES256 o KMS).",
+  "CKV_AWS_20": "Quita la ACL pública (acl = \"public-read\"): usa aws_s3_bucket_public_access_block con los cuatro bloqueos en true y, si hace falta compartir, una política acotada.",
+  "CKV_AWS_21": "Activa el versionado con aws_s3_bucket_versioning { status = \"Enabled\" }.",
+  "CKV_AWS_26": "Cifra el topic SNS con kms_master_key_id (por ejemplo \"alias/aws/sns\").",
+  "CKV_AWS_27": "Cifra la cola SQS con sqs_managed_sse_enabled = true o kms_master_key_id.",
+  "CKV_AWS_28": "Activa point_in_time_recovery { enabled = true } en la tabla DynamoDB.",
+  "CKV_AWS_40": "Asigna permisos IAM a roles o grupos, no directamente a usuarios.",
+  "CKV_AWS_53": "Bloquea ACL públicas: aws_s3_bucket_public_access_block con block_public_acls = true.",
+  "CKV_AWS_54": "Bloquea políticas públicas: aws_s3_bucket_public_access_block con block_public_policy = true.",
+  "CKV_AWS_55": "Ignora ACL públicas: aws_s3_bucket_public_access_block con ignore_public_acls = true.",
+  "CKV_AWS_56": "Restringe buckets públicos: aws_s3_bucket_public_access_block con restrict_public_buckets = true.",
+  "CKV_AWS_119": "Cifra la tabla DynamoDB con server_side_encryption { enabled = true, kms_key_arn = ... }.",
+  "CKV_AWS_144": "Replicación entre regiones: evalúa si el dato lo exige; si no aplica en el emulador, documenta una excepción vencible.",
+  "CKV_AWS_145": "Cifra el bucket con KMS (sse_algorithm = \"aws:kms\") en lugar de solo AES256, o documenta la excepción.",
+  "CKV_AWS_355": "Evita \"*\" en Resource de una política IAM con Allow: limita al ARN concreto.",
+  "CKV_AWS_356": "Evita \"*\" en Resource de una política de recursos: limita al ARN concreto.",
+  "CKV2_AWS_6": "Añade aws_s3_bucket_public_access_block al bucket con los cuatro bloqueos en true.",
+  "CKV2_AWS_61": "Añade aws_s3_bucket_lifecycle_configuration (p. ej. expirar versiones antiguas y abortar cargas incompletas).",
+  "CKV2_AWS_62": "Configura notificaciones de eventos del bucket (aws_s3_bucket_notification) o documenta la excepción.",
+  "_etapas": {
+    "terraform fmt -check": "Ejecuta `terraform fmt -recursive infra/` y confirma el cambio de formato.",
+    "terraform validate": "Corrige el error de sintaxis o de referencia que indica `terraform validate` (revisa el log del job).",
+    "tflint": "Corrige el aviso de TFLint (versión de provider, variable sin usar, etc.); ver el log del job.",
+    "excepciones válidas y vigentes": "Una excepción de policies/excepciones.json venció o está mal formada: renueva con justificación o elimina la causa.",
+    "checkov (sin excepciones documentadas)": "Checkov encontró controles fallidos: la tabla de abajo propone la corrección de cada uno.",
+    "trivy HIGH/CRITICAL": "Trivy encontró un hallazgo HIGH/CRITICAL: revisa trivy.sarif y corrige el recurso (o documenta una excepción vencible)."
+  },
+  "_generico": "Sin sugerencia catalogada para este control: consulta la guía del control en el informe de Checkov y propón la corrección en la spec antes de tocar el Terraform."
+}
