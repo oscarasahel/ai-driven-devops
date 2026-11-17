@@ -374,6 +374,57 @@
         "scripts/jenkins.sh devolvió 404 sin diagnosticar"
       ],
       "siguiente": "Fase 6: bitácora."
+    },
+    {
+      "numero": 6,
+      "fecha": "2026-11-16",
+      "fase": "Fase 6",
+      "tema": "Skill bitacora",
+      "slug": "bitacora",
+      "rama": "feature/fase-6-bitacora",
+      "simulado": false,
+      "temas_curso": [
+        "S14",
+        "S11"
+      ],
+      "objetivo": "Registrar sesiones con evidencia verificable y separar lo simulado de lo real.",
+      "archivos": [
+        "agente-iac/.claude/skills/bitacora/SKILL.md",
+        "agente-iac/scripts/bitacora.py",
+        "agente-iac/bitacora/sesiones.json",
+        "agente-iac/bitacora/BITACORA.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Sesiones simuladas en archivo local ignorado por git",
+          "porque": "vienen de notas confidenciales y no deben presentarse como trabajo real"
+        },
+        {
+          "decision": "El validador exige commits existentes",
+          "porque": "la evidencia se impone en código, no en el prompt"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "716d1e0",
+          "detalle": "commit de la fase 6"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-6.md",
+          "detalle": "verificación y límites"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "sesiones_reales": 7,
+        "sesiones_simuladas": 14
+      },
+      "riesgos": [
+        "Fechas de S1-S4 aproximadas"
+      ],
+      "siguiente": "Fase 7: Grafana y dashboard."
     }
   ]
 }
