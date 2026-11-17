@@ -22,7 +22,7 @@ Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker 
 ## Comprobaciones
 | Qué | Comando |
 |---|---|
-| Pruebas unitarias (90) | `pip install -r requirements-dev.txt && python -m pytest -q` |
+| Pruebas unitarias (120) | `pip install -r requirements-dev.txt && python -m pytest -q` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) | `bash scripts/seguridad.sh` |
 | Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` |
 | Evals con resultado esperado (14 rápidos; 16 con el gate) | `bash evals/run_evals.sh [rapido]` |
