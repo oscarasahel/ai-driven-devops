@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 1.9.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -25,7 +27,8 @@ variable "dlq_retention_seconds" {
 }
 
 resource "aws_sns_topic" "orders" {
-  name = "${var.name_prefix}-order-events"
+  name              = "${var.name_prefix}-order-events"
+  kms_master_key_id = "alias/aws/sns"
 }
 
 resource "aws_sqs_queue" "dlq" {
