@@ -40,6 +40,9 @@ Hasta que `main` tenga el Jenkinsfile nuevo, se prueba recreando Jenkins con `RE
 ## Disparo automático (build #33)
 Un push a la rama (`e15a697`) creó el #33 sin intervención: "Started by an SCM change", `staging` + `apply` por defecto, gate OK y plan **"No changes. Your infrastructure matches the configuration."** (el estado de Terraform se conservó). Se detuvo en la aprobación manual.
 
+## Cambio de rama: el polling sigue la rama del último build (builds #34 a #36)
+Tras el merge del PR #8 se quitó `REPO_BRANCH` y se recreó Jenkins con la configuración `*/main`, pero el polling seguía diciendo "already built" sobre la rama de la fase: Jenkins consulta el origen **registrado en el último build**, no el de la configuración. Hizo falta un build desde `main` (el #35: clonó `d7f617b`, plan "No changes", SUCCESS y encoló el #36 de `local`) para que a partir de ahí siguiera `main`. Regla práctica: **al cambiar de rama o de repositorio, lanzar una vez un build manual desde el origen nuevo.**
+
 ## Límites
 - Polling, no webhook: hay hasta 5 minutos de retraso.
 - Cualquier commit en `main` (incluidos los de documentación) lanza un build; filtrar por rutas queda como mejora.
