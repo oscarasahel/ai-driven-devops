@@ -1,0 +1,199 @@
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T18:50:44.729Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T18:50:45.118Z] + mkdir -p agente-iac
+[2026-11-17T18:50:45.118Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T18:50:46.030Z] + + terraform version
+[2026-11-17T18:50:46.030Z] head -1
+[2026-11-17T18:50:46.030Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T18:50:46.128Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T18:50:46.425Z] + bash scripts/seguridad.sh
+[2026-11-17T18:50:46.425Z] 
+[2026-11-17T18:50:46.425Z] == Excepciones documentadas ==
+[2026-11-17T18:50:46.425Z] PASS  excepciones válidas y vigentes
+[2026-11-17T18:50:46.425Z] 
+[2026-11-17T18:50:46.425Z] == terraform fmt ==
+[2026-11-17T18:50:46.425Z] PASS  terraform fmt -check
+[2026-11-17T18:50:46.425Z] 
+[2026-11-17T18:50:46.425Z] == terraform validate ==
+[2026-11-17T18:50:49.657Z] Success! The configuration is valid.
+[2026-11-17T18:50:49.658Z] 
+[2026-11-17T18:50:49.909Z] PASS  terraform validate
+[2026-11-17T18:50:49.909Z] 
+[2026-11-17T18:50:49.909Z] == TFLint ==
+[2026-11-17T18:50:49.909Z] PASS  tflint
+[2026-11-17T18:50:49.909Z] 
+[2026-11-17T18:50:49.909Z] == Checkov ==
+[2026-11-17T18:50:55.108Z] Passed checks: 77, Failed checks: 4, Skipped checks: 0
+[2026-11-17T18:50:55.108Z] Check: CKV_AWS_20: "S3 Bucket has an ACL defined which allows public READ access."
+[2026-11-17T18:50:55.108Z] 	FAILED for resource: aws_s3_bucket.inseguro
+[2026-11-17T18:50:55.108Z] Check: CKV2_AWS_61: "Ensure that an S3 bucket has a lifecycle configuration"
+[2026-11-17T18:50:55.108Z] 	FAILED for resource: aws_s3_bucket.inseguro
+[2026-11-17T18:50:55.108Z] Check: CKV2_AWS_6: "Ensure that S3 bucket has a Public Access block"
+[2026-11-17T18:50:55.108Z] 	FAILED for resource: aws_s3_bucket.inseguro
+[2026-11-17T18:50:55.108Z] Check: CKV_AWS_21: "Ensure all data stored in the S3 bucket have versioning enabled"
+[2026-11-17T18:50:55.108Z] 	FAILED for resource: aws_s3_bucket.inseguro
+[2026-11-17T18:50:55.108Z] FAIL  checkov (sin excepciones documentadas)
+[2026-11-17T18:50:55.108Z] 
+[2026-11-17T18:50:55.108Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T18:50:57.593Z] 
+[2026-11-17T18:50:57.594Z] envs/local/main.tf (terraform)
+[2026-11-17T18:50:57.594Z] ==============================
+[2026-11-17T18:50:57.594Z] Tests: 6 (SUCCESSES: 0, FAILURES: 6)
+[2026-11-17T18:50:57.594Z] Failures: 6 (HIGH: 6, CRITICAL: 0)
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] AVD-AWS-0086 (HIGH): No public access block so not blocking public acls
+[2026-11-17T18:50:57.594Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.594Z] S3 buckets should block public ACLs on buckets and any objects they contain. By blocking, PUTs with fail if the object has any public ACL a.
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] See https://avd.aquasec.com/misconfig/avd-aws-0086
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  envs/local/main.tf:107
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  107 [ resource "aws_s3_bucket" "inseguro" { bucket = "bucket-inseguro" }
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] AVD-AWS-0087 (HIGH): No public access block so not blocking public policies
+[2026-11-17T18:50:57.594Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.594Z] S3 bucket policy should have block public policy to prevent users from putting a policy that enable public access.
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] See https://avd.aquasec.com/misconfig/avd-aws-0087
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  envs/local/main.tf:107
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  107 [ resource "aws_s3_bucket" "inseguro" { bucket = "bucket-inseguro" }
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] AVD-AWS-0088 (HIGH): Bucket does not have encryption enabled
+[2026-11-17T18:50:57.594Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.594Z] S3 Buckets should be encrypted to protect the data that is stored within them if access is compromised.
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] See https://avd.aquasec.com/misconfig/avd-aws-0088
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  envs/local/main.tf:107
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  107 [ resource "aws_s3_bucket" "inseguro" { bucket = "bucket-inseguro" }
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] AVD-AWS-0091 (HIGH): No public access block so not blocking public acls
+[2026-11-17T18:50:57.594Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.594Z] S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] See https://avd.aquasec.com/misconfig/avd-aws-0091
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  envs/local/main.tf:107
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z]  107 [ resource "aws_s3_bucket" "inseguro" { bucket = "bucket-inseguro" }
+[2026-11-17T18:50:57.594Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] 
+[2026-11-17T18:50:57.594Z] AVD-AWS-0092 (HIGH): Bucket has a public ACL: "public-read"
+[2026-11-17T18:50:57.594Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.595Z] Buckets should not have ACLs that allow public access
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] See https://avd.aquasec.com/misconfig/avd-aws-0092
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z]  envs/local/main.tf:110
+[2026-11-17T18:50:57.595Z]    via envs/local/main.tf:108-111 (aws_s3_bucket_acl.publico)
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z]  108   resource "aws_s3_bucket_acl" "publico" {
+[2026-11-17T18:50:57.595Z]  109     bucket = aws_s3_bucket.inseguro.id
+[2026-11-17T18:50:57.595Z]  110 [   acl    = "public-read"
+[2026-11-17T18:50:57.595Z]  111   }
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] AVD-AWS-0093 (HIGH): No public access block so not restricting public buckets
+[2026-11-17T18:50:57.595Z] ════════════════════════════════════════
+[2026-11-17T18:50:57.595Z] S3 buckets should restrict public policies for the bucket. By enabling, the restrict_public_buckets, only the bucket owner and AWS Services can access if it has a public policy.
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] See https://avd.aquasec.com/misconfig/avd-aws-0093
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z]  envs/local/main.tf:107
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z]  107 [ resource "aws_s3_bucket" "inseguro" { bucket = "bucket-inseguro" }
+[2026-11-17T18:50:57.595Z] ────────────────────────────────────────
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] 
+[2026-11-17T18:50:57.595Z] FAIL  trivy HIGH/CRITICAL
+[2026-11-17T18:50:59.458Z] 
+[2026-11-17T18:50:59.458Z] GATE DE SEGURIDAD: FALLÓ (2 etapa(s))
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T18:50:59.650Z] Recording test results
+[2026-11-17T18:50:59.777Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T18:50:59.812Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+Stage "Plan" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+Stage "Aprobación manual" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+Stage "Apply" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T18:51:00.370Z] Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE

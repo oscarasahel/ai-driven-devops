@@ -829,6 +829,70 @@
         "El comentario en PR del job de sugerencias no se ejercitó (la prueba fue en una rama sin PR)"
       ],
       "siguiente": "Revisión humana y decisión sobre la fusión de ramas y el historial público."
+    },
+    {
+      "numero": 14,
+      "fecha": "2026-11-17",
+      "fase": "Fase 15",
+      "tema": "El gate rechaza un recurso inseguro dentro de Jenkins",
+      "slug": "jenkins-rechaza-inseguro",
+      "rama": "feature/fase-15-jenkins-rechaza-inseguro",
+      "simulado": false,
+      "temas_curso": [
+        "S13",
+        "S15"
+      ],
+      "objetivo": "Demostrar que el pipeline de Jenkins rechaza un recurso inseguro antes de planificar o pedir aprobación, y corregir lo que la prueba destapara.",
+      "archivos": [
+        "agente-iac/scripts/probar-gate-jenkins.sh",
+        ".gitattributes",
+        "agente-iac/tests/test_higiene.py",
+        "agente-iac/docs/runbooks/jenkins-pipeline-falla.md",
+        "agente-iac/docs/fase-15.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Comprobar el contenido del log y no solo que el build falle",
+          "porque": "el build #5 falló por scripts con CRLF y no por el gate; un criterio ingenuo lo habría dado por bueno"
+        },
+        {
+          "decision": "Forzar LF con .gitattributes",
+          "porque": "Jenkins monta el árbol de trabajo de Windows y los scripts con CRLF no se ejecutan en Linux"
+        },
+        {
+          "decision": "No excluir el build de la prueba negativa del SLI",
+          "porque": "el SLI no distingue la etapa del fallo; se documenta en observabilidad"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "a4eb82f",
+          "detalle": "prueba negativa en Jenkins y finales de línea LF"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-gate-inseguro.log",
+          "detalle": "log del build #6 rechazado por el gate"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-15.md",
+          "detalle": "6 comprobaciones PASS y hallazgo del build #5"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 93,
+        "sli_pipeline_pct": 50.0,
+        "slo_pipeline_pct": 90.0
+      },
+      "riesgos": [
+        "La prueba usa el árbol de trabajo local, no el código de un PR",
+        "El SLI baja a 50 % por tres builds malos (dos defectos corregidos y una prueba negativa deliberada)",
+        "Un solo recurso inseguro probado, no cada control por separado"
+      ],
+      "siguiente": "Separar solicitante y aprobador en Jenkins y planificar el staging (S5)."
     }
   ]
 }

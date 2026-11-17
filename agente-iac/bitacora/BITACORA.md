@@ -18,3 +18,4 @@ Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesi
 | 11 | 2026-11-17 | Fase 11 | [Runbooks, ChatOps, AI-BOM y modelo de amenazas](sesiones/sesion-11-runbooks-amenazas.md) | feature/fase-11-runbooks-chatops-amenazas | af43bc9 |
 | 12 | 2026-11-17 | Fase 12 | [Higiene del repo público y telemetría del pipeline](sesiones/sesion-12-higiene-y-telemetria.md) | feature/fase-12-higiene-y-telemetria | 8ee5c56 |
 | 13 | 2026-11-17 | Fase 13 | [ChatOps de solo lectura, sugerencias de corrección en CI y evals con modelo](sesiones/sesion-13-chatops-sugerencias-evals-modelo.md) | feature/fase-13-chatops-sugerencias-evals-modelo | ef8aa45 |
+| 14 | 2026-11-17 | Fase 15 | [El gate rechaza un recurso inseguro dentro de Jenkins](sesiones/sesion-14-jenkins-rechaza-inseguro.md) | feature/fase-15-jenkins-rechaza-inseguro | a4eb82f |
