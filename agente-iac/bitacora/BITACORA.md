@@ -22,3 +22,4 @@ Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesi
 | 15 | 2026-11-17 | Fase 16 | [Staging con workspaces y promoción controlada](sesiones/sesion-15-staging-promocion.md) | feature/fase-16-staging-promocion | c2d9ad6 |
 | 16 | 2026-11-17 | Fase 17 | [SLI sin pruebas negativas, trazas OpenTelemetry y cliente de Jenkins](sesiones/sesion-16-sli-otel-cliente-jenkins.md) | feature/fase-17-sli-otel-cliente-jenkins | e21726f, a0c7e01, 2e79b16 |
 | 17 | 2026-11-17 | Fase 19 | [Spec 004: bucket de secretos reutilizando secure-bucket](sesiones/sesion-17-bucket-secretos.md) | feature/spec-004-bucket-secretos | 2a3e317, 968a620, 0dba369 |
+| 18 | 2026-11-17 | Fase 20 | [Jenkins desde Git y lanzamientos automáticos tras el merge](sesiones/sesion-18-jenkins-desde-git.md) | feature/fase-20-jenkins-desde-git | 03cdcca, 3d3663f, 8b1eabe, e15a697 |

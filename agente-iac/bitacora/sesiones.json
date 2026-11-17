@@ -1095,6 +1095,81 @@
         "Tras seguridad.sh hay que repetir terraform init"
       ],
       "siguiente": "Ejecutar la spec 004 en Jenkins con aprobación manual; spec del rol IAM cuando exista el principal."
+    },
+    {
+      "numero": 18,
+      "fecha": "2026-11-17",
+      "fase": "Fase 20",
+      "tema": "Jenkins desde Git y lanzamientos automáticos tras el merge",
+      "slug": "jenkins-desde-git",
+      "rama": "feature/fase-20-jenkins-desde-git",
+      "simulado": false,
+      "temas_curso": [],
+      "objetivo": "Que Jenkins clone el repositorio de GitHub y lance el pipeline solo tras un merge, deteniéndose en la aprobación manual, y que un staging verificado encole local.",
+      "archivos": [
+        "agente-iac/specs/005-jenkins-desde-git/spec.md",
+        "agente-iac/specs/005-jenkins-desde-git/plan.md",
+        "agente-iac/specs/005-jenkins-desde-git/tasks.md",
+        "agente-iac/jenkins/casc/jobs.groovy",
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/jenkins/Dockerfile",
+        "agente-iac/jenkins/plugins.txt",
+        "agente-iac/docker-compose.yml",
+        "agente-iac/tests/test_jenkins_desde_git.py",
+        "agente-iac/docs/fase-20.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Polling de Git cada 5 minutos en lugar de webhook",
+          "porque": "Jenkins corre en 127.0.0.1 y GitHub no puede alcanzarlo; solo sale a GitHub por HTTPS"
+        },
+        {
+          "decision": "Encadenar local solo encolándolo, con la compuerta de promoción y la aprobación manual intactas",
+          "porque": "la regla 4 exige aprobación humana para cualquier apply"
+        },
+        {
+          "decision": "Origen del código por REPO_URL y REPO_BRANCH con valores por defecto",
+          "porque": "permite probar una rama antes del merge sin tocar el código"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "03cdcca",
+          "detalle": "spec 005 con plan y tareas"
+        },
+        {
+          "tipo": "commit",
+          "ref": "3d3663f",
+          "detalle": "job desde Git, polling y encadenado"
+        },
+        {
+          "tipo": "commit",
+          "ref": "8b1eabe",
+          "detalle": "hallazgos del primer build desde Git"
+        },
+        {
+          "tipo": "commit",
+          "ref": "e15a697",
+          "detalle": "push que disparó el build #33 por polling"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-20.md",
+          "detalle": "builds #30 a #33: línea base, estado perdido, encadenado a local y disparo automático"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 21,
+        "pruebas_unitarias": 128
+      },
+      "riesgos": [
+        "El estado de Terraform sigue dentro del workspace de Jenkins: el primer clon lo vació y vaciarlo otra vez lo perdería",
+        "El polling necesita un build exitoso desde Git como referencia; antes dijo No changes",
+        "Cualquier commit en la rama lanza un build, incluidos los de documentación",
+        "Un build esperando aprobación bloquea a los siguientes y caduca a los 30 minutos"
+      ],
+      "siguiente": "Comprobar CA-7 (sin commits nuevos no hay builds), fusionar el PR, quitar REPO_BRANCH del .env y mover el estado de Terraform fuera del workspace."
     }
   ]
 }
