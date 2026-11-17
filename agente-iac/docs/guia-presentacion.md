@@ -6,7 +6,7 @@ Mapa del proyecto y guion de demo (unos 10 minutos). Todo se ejecuta desde `agen
 | Pieza | Dónde |
 |---|---|
 | **Agentes (skills)**: analizar requerimiento, construir IaC, seguridad, bitácora | `.claude/skills/` |
-| Requerimiento → spec (criterios Dado/Cuando/Entonces) | `specs/001`, `002`, `003` y `scripts/validar_spec.py` |
+| Requerimiento → spec (criterios Dado/Cuando/Entonces) | `specs/001`, `002`, `003`, `004` y `scripts/validar_spec.py` |
 | Terraform generado (módulos y entorno) | `infra/modules/`, `infra/envs/local/` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) y excepciones | `scripts/seguridad.sh`, `policies/` |
 | **Jenkins**: pipeline con aprobación manual | `jenkins/Jenkinsfile`, `jenkins/casc/`, `scripts/jenkins.sh` |

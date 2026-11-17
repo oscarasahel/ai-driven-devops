@@ -13,6 +13,7 @@ Al recibir un requerimiento nuevo (archivo `requerimiento.md` o texto en el chat
 - `docs/emulador-tabla.md` (servicios y límites del emulador).
 
 ## Pasos
+0. **Rama:** antes de crear o modificar cualquier archivo, comprueba la rama (`git branch --show-current`). Si estás en `main` o en otra rama base, crea una rama `feature/<cambio>` (p. ej. `feature/spec-004-bucket-secretos`) y trabaja ahí. Nunca escribas la spec en una rama base. No hagas commit ni push salvo petición explícita.
 1. **Extraer:** recursos, región, redes, datos, seguridad/compliance, costo y supuestos.
 2. **Ambigüedades:** lista las dudas priorizadas (máx. 5). Si bloquean, pregunta al usuario antes de seguir. Si no bloquean, decide con la opción **más segura**, escríbela en *Supuestos* y dilo.
 3. **Compatibilidad con el emulador:** para cada servicio u operación, contrasta con `docs/emulador-tabla.md` y los issues del emulador. Marca lo no soportado y propón alternativa.
@@ -32,3 +33,4 @@ Al recibir un requerimiento nuevo (archivo `requerimiento.md` o texto en el chat
 - Pedir más de 5 preguntas o preguntar lo que se puede decidir de forma segura.
 - Prometer en la spec algo que el emulador no soporta (p. ej. invocar Lambda, EC2/VPC).
 - Colar nombres de recursos Terraform o bloques de código en la spec.
+- Escribir la spec estando en `main` (o en otra rama base) en lugar de en una rama `feature/<cambio>`.
