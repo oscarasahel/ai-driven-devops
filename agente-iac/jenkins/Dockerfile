@@ -6,7 +6,7 @@ ARG CHECKOV_VERSION=3.2.255
 ARG AWSCLI_VERSION=2.22.0
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends unzip curl ca-certificates python3 python3-venv rsync jq \
+ && apt-get install -y --no-install-recommends unzip curl ca-certificates python3 python3-venv git jq \
  && rm -rf /var/lib/apt/lists/*
 
 # Terraform, TFLint y Trivy se copian de las imágenes oficiales con versión fijada (binarios estáticos).
@@ -27,4 +27,3 @@ RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
     CASC_JENKINS_CONFIG=/usr/share/jenkins/casc
 COPY casc/ /usr/share/jenkins/casc/
-COPY Jenkinsfile /usr/share/jenkins/Jenkinsfile

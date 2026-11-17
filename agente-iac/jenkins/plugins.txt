@@ -18,6 +18,9 @@ display-url-api:2.217.va_6b_de84cc74b_
 durable-task:686.v80ff80875b_82
 echarts-api:6.1.0-1321.v86c4c5114494
 font-awesome-api:7.3.1-1013.v0835a_879ec6d
+git:5.11.0
+git-client:6.7.1
+gson-api:2.15.0-212.v085f60a_8093b_
 instance-identity:203.v15e81a_1b_7a_38
 ionicons-api:94.vcc3065403257
 jackson-annotations2-api:2.23-28.v3db_d0f5f2387
@@ -34,6 +37,8 @@ jquery3-api:3.7.1-687.v68d468e40b_30
 json-api:20260814-226.v20f9685d642c
 junit:1458.1460.vd53b_087eeb_2c
 mailer:534.v1b_36f5864073
+mina-sshd-api-common:2.20.1-199.v8ce76b_c93542
+mina-sshd-api-core:2.20.1-199.v8ce76b_c93542
 pipeline-build-step:605.v00486e8f4b_3e
 pipeline-groovy-lib:822.vc95f70dea_db_7
 pipeline-input-step:568.v0c9db_2652741

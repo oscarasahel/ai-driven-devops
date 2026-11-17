@@ -34,9 +34,11 @@ services:
     environment:
       JENKINS_ADMIN_USER: ${JENKINS_ADMIN_USER:?define JENKINS_ADMIN_USER en .env}
       JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?define JENKINS_ADMIN_PASSWORD en .env}
+      # Spec 005: origen del código (lectura anónima por HTTPS). Para probar una rama antes del merge: REPO_BRANCH=feature/... en .env.
+      REPO_URL: ${REPO_URL:-https://github.com/oscarasahel/ai-driven-devops.git}
+      REPO_BRANCH: ${REPO_BRANCH:-main}
     volumes:
       - jenkins_home:/var/jenkins_home
-      - ./:/repo:ro
       - ./.data/emulator:/emulator:ro
     mem_limit: 2g
     restart: unless-stopped
