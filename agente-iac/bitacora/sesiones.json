@@ -528,6 +528,65 @@
         "Ambigüedad e inyección de prompt a nivel del modelo sin evals automáticos"
       ],
       "siguiente": "Revisar y fusionar las ramas; ejecutar el pipeline de Jenkins a mano."
+    },
+    {
+      "numero": 9,
+      "fecha": "2026-11-17",
+      "fase": "Fase 9",
+      "tema": "Pruebas unitarias y CI en GitHub Actions",
+      "slug": "ci-y-pruebas",
+      "rama": "feature/fase-9-ci-y-pruebas",
+      "simulado": false,
+      "temas_curso": [
+        "S4",
+        "S5",
+        "S15"
+      ],
+      "objetivo": "Cerrar las brechas de pruebas unitarias, CI con Gitleaks y GitHub Actions.",
+      "archivos": [
+        "agente-iac/tests/test_validar_spec.py",
+        "agente-iac/tests/test_excepciones.py",
+        "agente-iac/tests/test_bitacora.py",
+        "agente-iac/scripts/excepciones.py",
+        ".github/workflows/ci.yml"
+      ],
+      "decisiones": [
+        {
+          "decision": "Acciones de GitHub fijadas por SHA",
+          "porque": "cadena de suministro: un tag puede moverse, un SHA no"
+        },
+        {
+          "decision": "Gitleaks sobre todo el historial",
+          "porque": "el repo es público"
+        },
+        {
+          "decision": "Comprobar las pruebas con mutaciones manuales",
+          "porque": "una prueba que nunca falla no prueba nada"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "c93a23c",
+          "detalle": "pruebas y workflow de CI"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-9.md",
+          "detalle": "run de Actions 44031273761 con los 4 jobs en éxito"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 34,
+        "jobs_ci": 4,
+        "jobs_ci_ok": 4
+      },
+      "riesgos": [
+        "Sin protección de rama ni checks requeridos (paso manual en GitHub)",
+        "Los evals lentos no corren en CI"
+      ],
+      "siguiente": "Fase 10: pipeline de Jenkins verificado de extremo a extremo."
     }
   ]
 }
