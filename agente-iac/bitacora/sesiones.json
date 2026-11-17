@@ -654,6 +654,69 @@
         "El build #1 falló por un defecto mío (ruta de rsync), corregido"
       ],
       "siguiente": "Fase 11: runbooks, diseño de ChatOps, AI-BOM y modelado de amenazas."
+    },
+    {
+      "numero": 11,
+      "fecha": "2026-11-17",
+      "fase": "Fase 11",
+      "tema": "Runbooks, ChatOps, AI-BOM y modelo de amenazas",
+      "slug": "runbooks-amenazas",
+      "rama": "feature/fase-11-runbooks-chatops-amenazas",
+      "simulado": false,
+      "temas_curso": [
+        "S13",
+        "S14",
+        "S15",
+        "S3"
+      ],
+      "objetivo": "Cerrar las brechas de documentación operativa y de seguridad frente a las sesiones de runbooks, ChatOps y DevSecOps.",
+      "archivos": [
+        "agente-iac/docs/runbooks/jenkins-falla-construccion-imagen.md",
+        "agente-iac/docs/runbooks/jenkins-pipeline-falla.md",
+        "agente-iac/docs/runbooks/revision-previa-al-apply.md",
+        "agente-iac/docs/chatops-diseno.md",
+        "agente-iac/docs/seguridad/ai-bom.md",
+        "agente-iac/docs/seguridad/modelo-de-amenazas.md",
+        "agente-iac/scripts/probar-dlq.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Runbooks a partir de incidentes reales",
+          "porque": "un runbook basado en fallos ocurridos se puede contrastar con la evidencia"
+        },
+        {
+          "decision": "plan.md y tasks.md marcados como reconstruidos a posteriori",
+          "porque": "no presentar como previo lo que se escribió después"
+        },
+        {
+          "decision": "Documentación con contenido propio y sin material del curso",
+          "porque": "el repositorio es público"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "af43bc9",
+          "detalle": "documentación y prueba de la DLQ"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-11.md",
+          "detalle": "qué se verificó y qué no"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "runbooks": 3,
+        "riesgos_owasp_revisados": 20,
+        "dlq_comportamiento_verificado": true
+      },
+      "riesgos": [
+        "ChatOps es solo diseño",
+        "Runbook de revisión previa no probado con un plan destructivo inesperado",
+        "Numeración OWASP a verificar contra la versión vigente"
+      ],
+      "siguiente": "Fase 12: higiene del repositorio público, telemetría del pipeline y actualización del dashboard."
     }
   ]
 }

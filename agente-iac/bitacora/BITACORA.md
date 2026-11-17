@@ -15,3 +15,4 @@ Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesi
 | 8 | 2026-11-16 | Fase 8 | [Endurecimiento y evals](sesiones/sesion-08-endurecimiento.md) | feature/fase-8-endurecimiento | 4067d49 |
 | 9 | 2026-11-17 | Fase 9 | [Pruebas unitarias y CI en GitHub Actions](sesiones/sesion-09-ci-y-pruebas.md) | feature/fase-9-ci-y-pruebas | c93a23c |
 | 10 | 2026-11-17 | Fase 10 | [Jenkins verificado de extremo a extremo](sesiones/sesion-10-jenkins-verificado.md) | feature/fase-10-jenkins-verificado | 570716e |
+| 11 | 2026-11-17 | Fase 11 | [Runbooks, ChatOps, AI-BOM y modelo de amenazas](sesiones/sesion-11-runbooks-amenazas.md) | feature/fase-11-runbooks-chatops-amenazas | af43bc9 |
