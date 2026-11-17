@@ -59,8 +59,8 @@
     }
   ],
   "pipeline": {
-    "estado": "no verificado",
-    "detalle": "Jenkins construido; el pipeline completo no se ejecutó (ver docs/fase-5.md)"
+    "estado": "ok",
+    "detalle": "Jenkins: build #2 apply aprobado (15 recursos), #3 destroy rechazado (ABORTED, sin cambios), #4 destroy aprobado. Ver docs/fase-10.md"
   },
   "sesiones": [
     {

@@ -34,7 +34,9 @@ pipeline {
         // Copia el código conservando el estado de Terraform de ejecuciones anteriores.
         sh '''
           mkdir -p agente-iac
-          rsync -a --delete --exclude 'terraform.tfstate*' --exclude '.terraform' --exclude 'reports' --exclude 'tfplan' --exclude 'plan.txt' /repo/agente-iac/ agente-iac/
+          # /repo es la carpeta agente-iac montada en solo lectura. No se copian secretos (.env) ni datos del emulador (.data).
+          rsync -a --delete --exclude 'terraform.tfstate*' --exclude '.terraform' --exclude 'reports' --exclude 'tfplan' --exclude 'plan.txt' \
+            --exclude '.env' --exclude '.data' --exclude '.git' /repo/ agente-iac/
           terraform version | head -1
         '''
       }
