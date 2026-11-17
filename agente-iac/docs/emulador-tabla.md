@@ -38,4 +38,4 @@ Fecha: 2026-11-16. Fuente: https://github.com/aws/aws-emulator y guías en docs.
 Funcionaron sin error: S3 (crear, versionado, cifrado, bloqueo público, ciclo de vida, etiquetas, política), IAM (rol, política, adjuntar), DynamoDB (crear tabla PAY_PER_REQUEST, TTL, recuperación a un punto en el tiempo), SQS (cola con atributos, cifrado SSE-SQS, redirección con `maxReceiveCount`), SNS (tema, suscripción SQS, publicar) y KMS (crear clave).
 - SNS a SQS: la entrega solo ocurre con política de cola que permita `sns.amazonaws.com` (se probó sin y con política).
 - Lectura de vuelta desde Terraform (provider 5.x): pendiente de comprobar en fase 3.
-- Redirección real a DLQ tras fallos y ejecución de Lambda: no probadas / no soportadas.
+- Redirección real a DLQ tras superar `maxReceiveCount`: **probada y funciona** (2026-11-17, `scripts/probar-dlq.sh`). Ejecución de Lambda: no soportada.

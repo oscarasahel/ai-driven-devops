@@ -86,7 +86,7 @@ Recibir eventos de pedidos en un tema SNS, encolarlos en SQS con una cola de men
 | DynamoDB crear tabla, TTL, recuperación a un punto en el tiempo | Sí (AWS CLI, 2026-11-16) | Fixes recientes en Query/Scan, no se usan aquí |
 | SQS crear cola con retención, cifrado SSE-SQS y política de redirección (`maxReceiveCount` 3) | Sí (AWS CLI, 2026-11-16) | Los atributos se leen de vuelta correctamente |
 | SNS crear tema, suscribir cola y publicar | Sí (AWS CLI, 2026-11-16) | La entrega **solo ocurre con la política de la cola que permita al tema**; sin ella el mensaje no llega (igual que en AWS) |
-| Redirección real a la DLQ tras 3 fallos | No | Solo se verifica por atributos (CA-2) |
+| Redirección real a la DLQ tras superar `maxReceiveCount` | Sí (2026-11-17, `scripts/probar-dlq.sh`) | El mensaje no borrado termina en la DLQ; CA-2 también se comprueba por atributos |
 
 ## Supuestos
 - Cifrado SSE-SQS (administrado) en las colas, por ser la opción más segura sin claves a gestionar.
