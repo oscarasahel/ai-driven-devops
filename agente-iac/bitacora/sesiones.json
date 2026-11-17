@@ -587,6 +587,73 @@
         "Los evals lentos no corren en CI"
       ],
       "siguiente": "Fase 10: pipeline de Jenkins verificado de extremo a extremo."
+    },
+    {
+      "numero": 10,
+      "fecha": "2026-11-17",
+      "fase": "Fase 10",
+      "tema": "Jenkins verificado de extremo a extremo",
+      "slug": "jenkins-verificado",
+      "rama": "feature/fase-10-jenkins-verificado",
+      "simulado": false,
+      "temas_curso": [
+        "S5",
+        "S6",
+        "S14"
+      ],
+      "objetivo": "Demostrar con ejecuciones reales que el pipeline no aplica sin aprobación manual y que un rechazo no cambia nada.",
+      "archivos": [
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/scripts/jenkins.sh",
+        "agente-iac/docs/fase-10.md",
+        "agente-iac/docs/evidencia/jenkins-build-2.log",
+        "agente-iac/docs/evidencia/jenkins-build-3.log",
+        "agente-iac/docs/evidencia/jenkins-build-4.log"
+      ],
+      "decisiones": [
+        {
+          "decision": "Probar el rechazo además de la aprobación",
+          "porque": "un control de aprobación solo es creíble si se demuestra que rechazar no cambia nada"
+        },
+        {
+          "decision": "Guardar los logs de los builds como evidencia, revisados con Gitleaks",
+          "porque": "la bitácora exige evidencia verificable y el repo es público"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "570716e",
+          "detalle": "correcciones y evidencia de Jenkins"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-2.log",
+          "detalle": "apply: gate, plan, aprobación de admin, 15 recursos, pruebas de humo OK"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-3.log",
+          "detalle": "destroy rechazado: ABORTED, sin cambios"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-build-4.log",
+          "detalle": "destroy aprobado"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "builds_ok": 2,
+        "builds_rechazados": 1,
+        "builds_con_defecto": 1,
+        "pipeline_verificado": true
+      },
+      "riesgos": [
+        "Un solo usuario (admin): no hay separación entre solicitante y aprobador",
+        "El build #1 falló por un defecto mío (ruta de rsync), corregido"
+      ],
+      "siguiente": "Fase 11: runbooks, diseño de ChatOps, AI-BOM y modelado de amenazas."
     }
   ]
 }
