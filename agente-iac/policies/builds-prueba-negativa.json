@@ -1,0 +1,9 @@
+{
+  "_descripcion": "Builds de Jenkins que fallaron a propósito para probar un control (el control funcionó). Se excluyen del SLI ajustado; el SLI bruto los sigue contando. Añadir aquí un build solo si la prueba negativa es deliberada y está documentada.",
+  "builds": {
+    "6": "Fase 15: el gate rechazó un bucket público (docs/evidencia/jenkins-gate-inseguro.log)",
+    "12": "Fase 16: promoción a local bloqueada sin staging verificado (CA-2)",
+    "15": "Fase 16: un cambio en infra/ invalidó la promoción (CA-4)",
+    "17": "Fase 16: destruir staging revocó la promoción (CA-5)"
+  }
+}
