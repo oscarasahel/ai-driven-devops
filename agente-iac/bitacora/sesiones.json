@@ -703,6 +703,68 @@
         "Numeración OWASP a verificar contra la versión vigente"
       ],
       "siguiente": "Fase 12: higiene del repositorio público, telemetría del pipeline y actualización del dashboard."
+    },
+    {
+      "numero": 12,
+      "fecha": "2026-11-17",
+      "fase": "Fase 12",
+      "tema": "Higiene del repo público y telemetría del pipeline",
+      "slug": "higiene-y-telemetria",
+      "rama": "feature/fase-12-higiene-y-telemetria",
+      "simulado": false,
+      "temas_curso": [
+        "S11",
+        "S12",
+        "S15"
+      ],
+      "objetivo": "Mantener el material confidencial fuera del repo público y medir el pipeline con eventos estructurados y un SLI.",
+      "archivos": [
+        "agente-iac/scripts/eventos_pipeline.py",
+        "agente-iac/scripts/verificar_dashboard.py",
+        "agente-iac/docs/observabilidad.md",
+        "agente-iac/scripts/bitacora.py",
+        "agente-iac/grafana/dashboards/avance-por-sesion.json"
+      ],
+      "decisiones": [
+        {
+          "decision": "Guardar en el repo solo ids de temas; nombres en un archivo local",
+          "porque": "el repo es público y los nombres derivan de material confidencial"
+        },
+        {
+          "decision": "Un rechazo humano cuenta como build bueno en el SLI",
+          "porque": "es el control funcionando, no una falla"
+        },
+        {
+          "decision": "No reescribir el historial público sin autorización",
+          "porque": "force-push es destructivo; lo decide el dueño del repo"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "8ee5c56",
+          "detalle": "higiene, eventos y dashboard"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-12.md",
+          "detalle": "44 pruebas, 9 de 9 paneles, Gitleaks sin hallazgos"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 44,
+        "paneles": 9,
+        "paneles_con_datos": 9,
+        "sli_pipeline_pct": 75.0,
+        "slo_pipeline_pct": 90.0
+      },
+      "riesgos": [
+        "Los títulos de los temas siguen en el historial de ramas anteriores (público)",
+        "SLI muy sensible con 4 builds",
+        "Aspecto visual del dashboard sin revisar"
+      ],
+      "siguiente": "Revisión humana por la mañana y decisión sobre el historial y la fusión de ramas."
     }
   ]
 }
