@@ -60,11 +60,11 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 - Los evals deterministas no ejecutan el LLM. Los `evals_modelo.py` sí (ambigüedad, inyección de prompt, requerimiento inviable), pero son locales, no deterministas y de pocos casos: detectan regresiones groseras, no demuestran robustez.
 - ChatOps: solo la capa de comandos de solo lectura; sin conexión con un canal de chat (ver [diseño](docs/chatops-diseno.md)).
 - Un solo usuario en Jenkins: no hay separación entre quien solicita y quien aprueba.
-- Sin protección de rama ni checks requeridos en GitHub (paso manual del dueño del repo).
+- `main` está protegida con un ruleset (verificado en la API de GitHub): pull request obligatorio con solo método *merge*, los 4 checks del CI requeridos, sin borrado ni force push. Con 0 aprobaciones requeridas, porque hay un único colaborador.
 - SLI del pipeline 75 % con 4 builds (1 fallo por un defecto ya corregido): ver [observabilidad](docs/observabilidad.md).
 
 ## Archivos locales (no versionados)
 `docs/seguimiento.md` (en la raíz del repo), `bitacora/bitacora.json`, `bitacora/resumen.json`, `bitacora/simuladas.local.json`, `bitacora/temas.local.json`, `bitacora/pipeline-eventos.json`, `bitacora/chatops-auditoria.jsonl` y `.env`. Los cuatro primeros son material confidencial del curso o derivados de él. En un clon nuevo, `python scripts/bitacora.py generar` produce lo que falte.
 
 ## Ramas
-Una rama por fase (`feature/fase-0-fundacion` ... `feature/fase-13-chatops-sugerencias-evals-modelo`), **apiladas**: cada una parte de la anterior. Para integrar: revisar en orden y fusionar solo la última (contiene todo) o fusionar una a una cambiando la base de cada PR. Nada se fusionó a `main`.
+Las fases 0 a 13 se integraron en `main` con el PR #1 (merge commit `d679087`). Las 14 ramas `feature/fase-N-*` **se conservan a propósito**: la bitácora cita commits por SHA y el CI comprueba que existan, así que no se borran ni se hace squash. El trabajo nuevo va en una rama `feature/*` desde `main`, con PR y los 4 checks en verde.
