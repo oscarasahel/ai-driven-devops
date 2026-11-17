@@ -12,7 +12,7 @@ Ver `plan.md`. Estado a 2026-11-17.
 | T6 | Gate de seguridad y Gitleaks | CA-9, CA-10 | Hecha | `seguridad.sh`: 6 PASS; Gitleaks: 44 commits sin hallazgos |
 | T7 | Jenkins alcanza GitHub desde el contenedor | Supuesto | Hecha | `git ls-remote` anónimo desde el contenedor devolvió el commit de `main` |
 | T8a | Build real desde Git hasta la aprobación | CA-2, CA-5 | Hecha | Build #30: clonó `d7df1c5`, gate OK, plan y espera de aprobación. Lanzado a mano (línea base del polling) |
-| T8b | Build lanzado por el polling, sin disparo manual | CA-3 | Pendiente | Se espera con el push de esta documentación |
+| T8b | Build lanzado por el polling, sin disparo manual | CA-3, CA-4 | Hecha | Build #33: "Started by an SCM change" tras el push de `e15a697`; `staging` + `apply` por defecto |
 | T9 | Encadenado staging -> local | CA-6 | Hecha | Build #31 (staging) encoló el #32 (local); compuerta OK; ambos SUCCESS con aprobación manual |
-| T9b | Estado de Terraform conservado entre builds | CA-8 | Pendiente | El primer clon lo vació (#30); falta un build posterior con el repo ya clonado que dé plan sin cambios |
+| T9b | Estado de Terraform conservado entre builds | CA-8 | Hecha | Build #33: "No changes. Your infrastructure matches the configuration." (el primer clon lo había vaciado en el #30) |
 | T10 | Sin builds nuevos con `main` quieto | CA-7 | Pendiente | Observación de varios intervalos |
