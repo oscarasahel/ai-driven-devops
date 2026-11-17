@@ -1,0 +1,68 @@
+name: agente-iac
+
+services:
+  aws-emulator:
+    build: ./emulator
+    image: agente-iac/aws-emulator:local
+    command: ["-p", "9297", "--telemetry", "off"]
+    ports:
+      - "127.0.0.1:9297:9297"
+    volumes:
+      # credenciales y ca.pem que genera el propio emulador (ignorado por git)
+      - ./.data/emulator:/home/emulator/.aws/emulator
+    mem_limit: 2g
+    memswap_limit: 2g
+    restart: unless-stopped
+    healthcheck:
+      # -k: el certificado es autofirmado y no incluye siempre el host del contenedor
+      test: ["CMD", "curl", "-sfk", "https://127.0.0.1:9297/__admin/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    networks: [iac]
+
+  # Herramienta bajo demanda: docker compose run --rm terraform <comando>
+  # Comparte la red del emulador, así que 127.0.0.1:9297 apunta al emulador.
+  terraform:
+    image: hashicorp/terraform:1.9.8
+    profiles: ["tools"]
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    working_dir: /workspace
+    volumes:
+      - ./infra/envs/local:/workspace
+      - ./.data/emulator:/emulator:ro
+    environment:
+      AWS_ENDPOINT_URL: https://127.0.0.1:9297
+      AWS_SHARED_CREDENTIALS_FILE: /emulator/9297/emulator_credentials
+      AWS_CONFIG_FILE: /emulator/9297/config
+      AWS_CA_BUNDLE: /emulator/9297/ca.pem
+      AWS_EC2_METADATA_DISABLED: "true"
+      AWS_DISABLE_HOST_PREFIX_INJECTION: "true"
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+      TF_IN_AUTOMATION: "1"
+
+  # Pruebas de humo: docker compose run --rm awscli s3 ls
+  awscli:
+    image: amazon/aws-cli:2.22.0
+    profiles: ["tools"]
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    volumes:
+      - ./.data/emulator:/emulator:ro
+    environment:
+      AWS_ENDPOINT_URL: https://127.0.0.1:9297
+      AWS_SHARED_CREDENTIALS_FILE: /emulator/9297/emulator_credentials
+      AWS_CONFIG_FILE: /emulator/9297/config
+      AWS_CA_BUNDLE: /emulator/9297/ca.pem
+      AWS_REGION: us-east-1
+
+networks:
+  iac:
+    driver: bridge
