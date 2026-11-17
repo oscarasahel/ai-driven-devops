@@ -73,3 +73,28 @@ jobs:
         with:
           python-version: "3.12"
       - run: bash evals/run_evals.sh rapido
+
+  sugerencias:
+    name: Sugerencias de corrección (si el gate falla)
+    needs: seguridad
+    if: ${{ always() && needs.seguridad.result == 'failure' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write # solo se usa para comentar en PRs del propio repositorio
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: informes-seguridad
+          path: agente-iac/reports
+      - name: Generar sugerencias desde los informes
+        run: python3 scripts/sugerir_correccion.py --salida sugerencias.md
+      - name: Publicar en el resumen del job
+        run: cat sugerencias.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Comentar en el PR (solo PRs del mismo repositorio)
+        if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR" --body-file sugerencias.md

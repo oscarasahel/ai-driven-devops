@@ -1,6 +1,6 @@
 # Diseño de ChatOps para agente-iac
 
-- **Estado:** **solo diseño, no implementado.** Cubre la tarea de diseñar un comando de ChatOps. Reutiliza piezas que ya existen y están verificadas (skills, gate, Jenkins con aprobación, bitácora).
+- **Estado:** diseño completo; **implementada la capa de comandos de solo lectura** (`scripts/chatops.py`: `/iac-status` y `/iac-explain`, fase 13). **No hay conexión con Slack/Teams/Discord** ni gateway con identidad real, y los comandos L3 (`/iac-spec`, `/iac-propose`, `/iac-approve`, `/iac-destroy`) se **rechazan siempre** en código: la única vía para cambiar infraestructura sigue siendo la aprobación manual en Jenkins. Reutiliza piezas ya verificadas (gate, Jenkins con aprobación, bitácora).
 
 ## Idea
 Un canal de chat (Slack, Teams o Discord) como interfaz del flujo: pedir una infraestructura, ver el plan y aprobarlo, sin dar al canal acceso directo a nada que cambie estado.
@@ -42,5 +42,12 @@ El único camino que cambia infraestructura es el job de Jenkins, y exige aproba
 4. Credenciales de vida corta y alcance mínimo por componente; el bot no guarda credenciales de AWS.
 5. Kill switch: revocar el token del bot y deshabilitar el job de Jenkins.
 
-## Qué falta para implementarlo
-Un gateway (p. ej. un servicio pequeño con la API de Jenkins y un app token del canal), separación de usuarios en Jenkins (hoy solo `admin`), y la herramienta que lea artefactos de builds.
+## Qué está implementado y qué falta
+**Implementado y verificado** (`python scripts/chatops.py "/iac-explain 3"`; en Git Bash anteponer `MSYS_NO_PATHCONV=1`):
+- Allowlist de comandos y validación de parámetros (`^[0-9]{1,6}$`); los comandos que cambian estado se rechazan.
+- `/iac-explain` lee `plan.txt` del build en Jenkins y aplica el runbook de revisión previa: totales, destroys, replaces, recursos con datos y comodines IAM en sentencias `Allow` (un `Deny` con comodín, como el de "solo TLS", no cuenta). Probado con los planes reales de los builds #2 (crear, sin hallazgos) y #3 (destroy: REVISAR).
+- El contenido del plan es dato: solo se cuenta con expresiones regulares.
+- Redacción de credenciales, tope de respuesta, límite de 10 comandos por minuto por usuario y registro de auditoría local (`bitacora/chatops-auditoria.jsonl`, ignorado por git).
+- 30 pruebas unitarias (`tests/test_chatops.py`).
+
+**Falta:** un gateway de chat (app token, verificación de firma de las peticiones, identidad real del solicitante), separar solicitante y aprobador en Jenkins (hoy solo `admin`) y `/iac-spec`, `/iac-propose`, `/iac-approve` y `/iac-destroy`.

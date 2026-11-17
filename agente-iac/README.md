@@ -22,18 +22,21 @@ Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker 
 ## Comprobaciones
 | Qué | Comando |
 |---|---|
-| Pruebas unitarias (44) | `pip install -r requirements-dev.txt && python -m pytest -q` |
+| Pruebas unitarias (90) | `pip install -r requirements-dev.txt && python -m pytest -q` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) | `bash scripts/seguridad.sh` |
 | Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` |
 | Evals con resultado esperado (14 rápidos; 16 con el gate) | `bash evals/run_evals.sh [rapido]` |
 | Validar la bitácora | `python scripts/bitacora.py validar` |
 | Redirección real a la DLQ en el emulador | `bash scripts/probar-dlq.sh` |
+| Evals que ejecutan el modelo (local, usa la CLI `claude`; no corre en CI) | `python scripts/evals_modelo.py [--caso inyeccion --repeticiones 3]` |
+| ChatOps de solo lectura (en Git Bash: `MSYS_NO_PATHCONV=1`) | `python scripts/chatops.py "/iac-explain 3"` · `"/iac-status"` |
+| Sugerencias de corrección desde los informes del gate | `python scripts/sugerir_correccion.py` |
 | Pipeline de Jenkins (disparar, aprobar, rechazar) | `bash scripts/jenkins.sh disparar apply` ... ver el script |
 | Eventos y SLI del pipeline | `python scripts/eventos_pipeline.py` |
 | Paneles de Grafana con datos | `python scripts/verificar_dashboard.py` |
 | Secretos en el historial | `docker run --rm -v "$PWD/..:/repo" zricethezav/gitleaks:v8.21.2 detect --source /repo --log-opts="--all" --redact` |
 
-CI en GitHub Actions (`.github/workflows/ci.yml`, acciones fijadas por SHA): pytest, Gitleaks sobre todo el historial, gate de seguridad y evals rápidos.
+CI en GitHub Actions (`.github/workflows/ci.yml`, acciones fijadas por SHA): pytest, Gitleaks sobre todo el historial, gate de seguridad y evals rápidos; si el gate falla, un job adicional publica sugerencias de corrección en el resumen (y en el PR).
 
 ## Flujo y skills (`.claude/skills/`)
 1. `analizar-requerimiento` -> `specs/NNN-*/spec.md` (Dado/Cuando/Entonces, validada por `validar_spec.py`), con `plan.md` y `tasks.md`.
@@ -45,7 +48,7 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 ## Estado real frente a los criterios de aceptación globales
 | Criterio | Estado |
 |---|---|
-| `docker compose up` levanta emulador, Jenkins y Grafana sanos | Verificado por separado; los tres a la vez en una sola corrida: **no** |
+| `docker compose up` levanta emulador, Jenkins y Grafana sanos | **Verificado:** `down` + un solo `up -d --wait`: los cuatro contenedores `healthy` en 14 s y respondiendo |
 | Un requerimiento recorre el flujo completo y deja recursos en el emulador | **Verificado en Jenkins** (build #2: gate, plan, aprobación, apply de 15 recursos, pruebas de humo) |
 | El pipeline falla ante un recurso inseguro | Verificado en el gate (script, pre-commit y CI). No se probó un recurso inseguro **dentro** de Jenkins |
 | No aplica sin aprobación manual | **Verificado:** con el build esperando, el emulador estaba vacío; un destroy rechazado (#3) terminó ABORTED sin cambios (`docs/fase-10.md`) |
@@ -54,13 +57,14 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 
 ## Límites conocidos
 - Emulador: sin tabla de fidelidad publicada; Lambda `Invoke` y partes de EC2/VPC no funcionan.
-- Los evals no ejecutan el LLM: el comportamiento del modelo ante requerimientos ambiguos o con inyección de prompt **no se prueba automáticamente**.
+- Los evals deterministas no ejecutan el LLM. Los `evals_modelo.py` sí (ambigüedad, inyección de prompt, requerimiento inviable), pero son locales, no deterministas y de pocos casos: detectan regresiones groseras, no demuestran robustez.
+- ChatOps: solo la capa de comandos de solo lectura; sin conexión con un canal de chat (ver [diseño](docs/chatops-diseno.md)).
 - Un solo usuario en Jenkins: no hay separación entre quien solicita y quien aprueba.
 - Sin protección de rama ni checks requeridos en GitHub (paso manual del dueño del repo).
 - SLI del pipeline 75 % con 4 builds (1 fallo por un defecto ya corregido): ver [observabilidad](docs/observabilidad.md).
 
 ## Archivos locales (no versionados)
-`docs/seguimiento.md` (en la raíz del repo), `bitacora/bitacora.json`, `bitacora/resumen.json`, `bitacora/simuladas.local.json`, `bitacora/temas.local.json`, `bitacora/pipeline-eventos.json` y `.env`. Los cuatro primeros son material confidencial del curso o derivados de él. En un clon nuevo, `python scripts/bitacora.py generar` produce lo que falte.
+`docs/seguimiento.md` (en la raíz del repo), `bitacora/bitacora.json`, `bitacora/resumen.json`, `bitacora/simuladas.local.json`, `bitacora/temas.local.json`, `bitacora/pipeline-eventos.json`, `bitacora/chatops-auditoria.jsonl` y `.env`. Los cuatro primeros son material confidencial del curso o derivados de él. En un clon nuevo, `python scripts/bitacora.py generar` produce lo que falte.
 
 ## Ramas
-Una rama por fase (`feature/fase-0-fundacion` ... `feature/fase-12-higiene-y-telemetria`), **apiladas**: cada una parte de la anterior. Para integrar: revisar en orden y fusionar solo la última (contiene todo) o fusionar una a una cambiando la base de cada PR. Nada se fusionó a `main`.
+Una rama por fase (`feature/fase-0-fundacion` ... `feature/fase-13-chatops-sugerencias-evals-modelo`), **apiladas**: cada una parte de la anterior. Para integrar: revisar en orden y fusionar solo la última (contiene todo) o fusionar una a una cambiando la base de cada PR. Nada se fusionó a `main`.
