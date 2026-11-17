@@ -34,7 +34,11 @@ Hasta que `main` tenga el Jenkinsfile nuevo, se prueba recreando Jenkins con `RE
 ## Ejecución exitosa desde Git (builds #31 y #32)
 - **#31 (staging, `apply`):** clonó `8b1eabe` desde GitHub, gate OK, aprobación manual, apply de 21 recursos, pruebas de humo "TODO OK" (incluida la sección de la spec 004) y promoción habilitada.
 - **#32 (local, `apply`):** lo encoló solo el #31 ("Started by upstream project agente-iac build number 31"), pasó la compuerta de promoción ("verificado en staging"), esperó la aprobación manual y terminó en SUCCESS con 21 recursos y "TODO OK".
-- Los dos lanzamientos previos al #31 que se aprobaron a mano fueron el #30 (línea base, falló por el estado perdido) y el propio #31 (lanzado a mano); la prueba del disparo por polling se registra en `tasks.md` cuando ocurra.
+- Los lanzamientos manuales fueron el #30 (línea base, falló por el estado perdido) y el #31.
+- **El polling necesita un build exitoso desde Git como referencia**, no solo uno que haya clonado: tras el #30 (fallido) seguía diciendo "No changes" en 0 ms; tras el #31 (SUCCESS) detectó el push siguiente.
+
+## Disparo automático (build #33)
+Un push a la rama (`e15a697`) creó el #33 sin intervención: "Started by an SCM change", `staging` + `apply` por defecto, gate OK y plan **"No changes. Your infrastructure matches the configuration."** (el estado de Terraform se conservó). Se detuvo en la aprobación manual.
 
 ## Límites
 - Polling, no webhook: hay hasta 5 minutos de retraso.
