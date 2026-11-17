@@ -29,3 +29,6 @@ agente-iac/.data/
 
 # Informes del gate
 agente-iac/reports/
+
+# Bitácora: lo simulado y la unión para Grafana son locales
+agente-iac/bitacora/simuladas.local.json

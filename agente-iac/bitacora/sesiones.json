@@ -1,0 +1,379 @@
+{
+  "version": 1,
+  "temas_curso": [
+    {
+      "id": "S1",
+      "nombre": "Marco de ingeniería asistida/agéntica"
+    },
+    {
+      "id": "S2",
+      "nombre": "Anatomía de un modelo y harnesses"
+    },
+    {
+      "id": "S3",
+      "nombre": "GitHub Copilot y spec-driven"
+    },
+    {
+      "id": "S4",
+      "nombre": "Spec-driven con Kiro"
+    },
+    {
+      "id": "S5",
+      "nombre": "CI/CD Fundamentals"
+    },
+    {
+      "id": "S6",
+      "nombre": "AI-Powered Pipelines"
+    },
+    {
+      "id": "S7",
+      "nombre": "Arquitectura moderna para sistemas LLM"
+    },
+    {
+      "id": "S8",
+      "nombre": "AI en la nube"
+    },
+    {
+      "id": "S9",
+      "nombre": "Qué es un agente (ADK)"
+    },
+    {
+      "id": "S10",
+      "nombre": "Desarrollo de agentes"
+    },
+    {
+      "id": "S11",
+      "nombre": "Observabilidad"
+    },
+    {
+      "id": "S12",
+      "nombre": "AIOps"
+    },
+    {
+      "id": "S13",
+      "nombre": "Runbooks inteligentes"
+    },
+    {
+      "id": "S14",
+      "nombre": "ChatOps con IA"
+    }
+  ],
+  "pipeline": {
+    "estado": "no verificado",
+    "detalle": "Jenkins construido; el pipeline completo no se ejecutó (ver docs/fase-5.md)"
+  },
+  "sesiones": [
+    {
+      "numero": 0,
+      "fecha": "2026-11-16",
+      "fase": "Fase 0",
+      "tema": "Fundación",
+      "slug": "fundacion",
+      "rama": "feature/fase-0-fundacion",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S3",
+        "S7"
+      ],
+      "objetivo": "Dejar la estructura, las reglas y la verificación del emulador antes de construir.",
+      "archivos": [
+        "agente-iac/CLAUDE.md",
+        "agente-iac/docs/constitution.md",
+        "agente-iac/docs/adr/001-fundacion.md",
+        "agente-iac/docs/emulador-tabla.md",
+        ".gitignore"
+      ],
+      "decisiones": [
+        {
+          "decision": "Docker Desktop en lugar de WSL2",
+          "porque": "es el entorno real del usuario"
+        },
+        {
+          "decision": "Una rama por fase",
+          "porque": "trazabilidad y revisión por PR"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "d8a5efa",
+          "detalle": "commit de la fase 0"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/emulador-tabla.md",
+          "detalle": "tabla de servicios y límites del emulador"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 0,
+        "archivos_nuevos": 19
+      },
+      "riesgos": [
+        "No se encontró tabla de fidelidad por servicio del emulador",
+        "El RPM del emulador no se puede fijar a versión"
+      ],
+      "siguiente": "Fase 1: compose y prueba de humo."
+    },
+    {
+      "numero": 1,
+      "fecha": "2026-11-16",
+      "fase": "Fase 1",
+      "tema": "Infra base",
+      "slug": "infra-base",
+      "rama": "feature/fase-1-infra-base",
+      "simulado": false,
+      "temas_curso": [
+        "S5",
+        "S6"
+      ],
+      "objetivo": "Levantar el emulador con Docker Compose y crear un bucket S3 con Terraform.",
+      "archivos": [
+        "agente-iac/docker-compose.yml",
+        "agente-iac/emulator/Dockerfile",
+        "agente-iac/infra/envs/local/main.tf",
+        "agente-iac/docs/fase-1.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Terraform y AWS CLI en la red del emulador",
+          "porque": "el certificado solo vale para localhost/127.0.0.1"
+        },
+        {
+          "decision": "apply sin confirmación solo en el emulador",
+          "porque": "autorización explícita del usuario para autonomía"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "e7941dc",
+          "detalle": "commit de la fase 1"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-1.md",
+          "detalle": "resultado real: apply, ls y plan sin cambios"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 1,
+        "emulador": "1.0.485",
+        "provider_aws": "5.100.0"
+      },
+      "riesgos": [
+        "La versión del emulador no es fijable"
+      ],
+      "siguiente": "Fase 2: skill analizar-requerimiento."
+    },
+    {
+      "numero": 2,
+      "fecha": "2026-11-16",
+      "fase": "Fase 2",
+      "tema": "Skill analizar-requerimiento",
+      "slug": "analizar-requerimiento",
+      "rama": "feature/fase-2-analizar-requerimiento",
+      "simulado": false,
+      "temas_curso": [
+        "S3",
+        "S4",
+        "S7"
+      ],
+      "objetivo": "Convertir requerimientos en specs verificables y validarlas en código.",
+      "archivos": [
+        "agente-iac/.claude/skills/analizar-requerimiento/SKILL.md",
+        "agente-iac/scripts/validar_spec.py",
+        "agente-iac/specs/001-bucket-artefactos/spec.md",
+        "agente-iac/specs/002-eventos-pedidos/spec.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Specs sin código, con Dado/Cuando/Entonces",
+          "porque": "criterios verificables"
+        },
+        {
+          "decision": "Sondeo previo en el emulador",
+          "porque": "no prometer lo que no funciona (SNS→SQS exige política de la cola)"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "7ee8a33",
+          "detalle": "commit de la fase 2"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-2.md",
+          "detalle": "validación y sondeo del emulador"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 0,
+        "criterios_aceptacion": 17
+      },
+      "riesgos": [
+        "El validador revisa estructura, no calidad semántica"
+      ],
+      "siguiente": "Fase 3: construir-iac."
+    },
+    {
+      "numero": 3,
+      "fecha": "2026-11-16",
+      "fase": "Fase 3",
+      "tema": "Skill construir-iac",
+      "slug": "construir-iac",
+      "rama": "feature/fase-3-construir-iac",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S9",
+        "S10"
+      ],
+      "objetivo": "Generar módulos Terraform desde las specs aprobadas y comprobar los criterios en el emulador.",
+      "archivos": [
+        "agente-iac/.claude/skills/construir-iac/SKILL.md",
+        "agente-iac/infra/modules/secure-bucket/main.tf",
+        "agente-iac/infra/modules/order-events/main.tf",
+        "agente-iac/scripts/verificar-criterios.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Specs aprobadas por delegación",
+          "porque": "el usuario pidió autonomía; queda anotado en cada spec"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "4a97c80",
+          "detalle": "commit de la fase 3"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-3.md",
+          "detalle": "15 recursos aplicados, verificación TODO OK, destroy"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "criterios_verificados": 29
+      },
+      "riesgos": [
+        "Redirección real a la DLQ sin probar (solo por atributos)"
+      ],
+      "siguiente": "Fase 4: gate de seguridad."
+    },
+    {
+      "numero": 4,
+      "fecha": "2026-11-16",
+      "fase": "Fase 4",
+      "tema": "Skill seguridad-iac",
+      "slug": "seguridad-iac",
+      "rama": "feature/fase-4-seguridad-iac",
+      "simulado": false,
+      "temas_curso": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "objetivo": "Imponer en código el gate de seguridad (TFLint, Checkov, Trivy) con excepciones documentadas.",
+      "archivos": [
+        "agente-iac/.claude/skills/seguridad-iac/SKILL.md",
+        "agente-iac/scripts/seguridad.sh",
+        "agente-iac/policies/excepciones.json",
+        ".pre-commit-config.yaml"
+      ],
+      "decisiones": [
+        {
+          "decision": "Excepciones con justificación y vencimiento",
+          "porque": "una excepción vencida rompe el gate"
+        },
+        {
+          "decision": "Corregir SNS sin cifrar; excepcionar CMK",
+          "porque": "las specs dejan KMS propio fuera de alcance"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "760d03a",
+          "detalle": "commit de la fase 4"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-4.md",
+          "detalle": "gate verde y dos pruebas negativas"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "hallazgos_antes": {
+          "alta": 1,
+          "sin_severidad": 10
+        },
+        "hallazgos_despues": {
+          "alta": 0,
+          "sin_severidad": 0
+        },
+        "excepciones_documentadas": 7
+      },
+      "riesgos": [
+        "Checkov no informa severidad sin API key"
+      ],
+      "siguiente": "Fase 5: Jenkins."
+    },
+    {
+      "numero": 5,
+      "fecha": "2026-11-16",
+      "fase": "Fase 5",
+      "tema": "Jenkins con aprobación manual",
+      "slug": "jenkins",
+      "rama": "feature/fase-5-jenkins",
+      "simulado": false,
+      "temas_curso": [
+        "S6",
+        "S14"
+      ],
+      "objetivo": "Orquestar el flujo en Jenkins con aprobación manual antes del apply.",
+      "archivos": [
+        "agente-iac/jenkins/Dockerfile",
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/jenkins/casc/jenkins.yaml",
+        "agente-iac/scripts/jenkins.sh"
+      ],
+      "decisiones": [
+        {
+          "decision": "Jenkins en la red del emulador",
+          "porque": "mismo motivo del certificado"
+        },
+        {
+          "decision": "Binarios copiados de imágenes oficiales",
+          "porque": "las descargas de Trivy daban 404"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "0b69f84",
+          "detalle": "commit de la fase 5"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-5.md",
+          "detalle": "declara explícitamente que no se verificó E2E"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pipeline_verificado": false
+      },
+      "riesgos": [
+        "El pipeline completo NO se ejecutó: sin evidencia de la aprobación manual",
+        "scripts/jenkins.sh devolvió 404 sin diagnosticar"
+      ],
+      "siguiente": "Fase 6: bitácora."
+    }
+  ]
+}
