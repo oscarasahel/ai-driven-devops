@@ -1030,6 +1030,71 @@
         "El SLI de 100 % es de una ventana de 20 builds; Jenkins rota los anteriores"
       ],
       "siguiente": "Colector OTLP real y latencia por etapa; ChatOps con canal real; evals del modelo en CI."
+    },
+    {
+      "numero": 17,
+      "fecha": "2026-11-17",
+      "fase": "Fase 19",
+      "tema": "Spec 004: bucket de secretos reutilizando secure-bucket",
+      "slug": "bucket-secretos",
+      "rama": "feature/spec-004-bucket-secretos",
+      "simulado": false,
+      "temas_curso": [],
+      "objetivo": "Recorrer el flujo con un requerimiento nuevo (bucket S3 para secretos) reutilizando el módulo secure-bucket, y hacer que analizar-requerimiento cree siempre una rama feature.",
+      "archivos": [
+        "agente-iac/specs/004-bucket-secretos/spec.md",
+        "agente-iac/specs/004-bucket-secretos/plan.md",
+        "agente-iac/specs/004-bucket-secretos/tasks.md",
+        "agente-iac/infra/envs/local/main.tf",
+        "agente-iac/scripts/verificar-criterios.sh",
+        "agente-iac/.claude/skills/analizar-requerimiento/SKILL.md",
+        "agente-iac/docs/fase-19.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Reutilizar secure-bucket sin modificarlo",
+          "porque": "ya aporta cifrado, versionado, bloqueo público, ciclo de vida y HTTPS verificados"
+        },
+        {
+          "decision": "Sin rol IAM en esta spec",
+          "porque": "todavía no existe el principal que lo asuma; se hará en una spec posterior"
+        },
+        {
+          "decision": "Aprobación de la spec delegada por el usuario al agente",
+          "porque": "queda registrada en la spec; no la revisó un humano línea a línea"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "2a3e317",
+          "detalle": "regla de rama en analizar-requerimiento"
+        },
+        {
+          "tipo": "commit",
+          "ref": "968a620",
+          "detalle": "spec 004 con plan y tareas"
+        },
+        {
+          "tipo": "commit",
+          "ref": "0dba369",
+          "detalle": "instancia secrets_bucket y criterios de verificación"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-19.md",
+          "detalle": "apply de 21 recursos, TODO OK, plan sin cambios y destroy en el emulador"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 21
+      },
+      "riesgos": [
+        "S3 es un almacén débil para secretos frente a Secrets Manager o SSM; el bucket se despliega vacío",
+        "No se ejecutó en Jenkins: aprobación manual y pruebas de humo pendientes (T8)",
+        "Tras seguridad.sh hay que repetir terraform init"
+      ],
+      "siguiente": "Ejecutar la spec 004 en Jenkins con aprobación manual; spec del rol IAM cuando exista el principal."
     }
   ]
 }
