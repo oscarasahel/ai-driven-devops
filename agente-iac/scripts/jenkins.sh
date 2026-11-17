@@ -30,14 +30,25 @@ case "$cmd" in
     accion="${2:-apply}"; entorno="${3:-staging}"
     antes="$(ultimo)"; antes="${antes:-0}"
     C="$(crumb)"
-    # Con el job recién creado aún no hay parámetros definidos: se cae a /build (ACCION=apply, ENTORNO=staging).
-    if ! api -H "$C" -X POST "$URL/job/$JOB/buildWithParameters?ACCION=$accion&ENTORNO=$entorno" -o /dev/null 2>/dev/null; then
-      api -H "$C" -X POST "$URL/job/$JOB/build" -o /dev/null
-    fi
-    for _ in $(seq 1 20); do
+    # Una sola petición. Solo si Jenkins responde que el job aún no tiene parámetros (400/404, primer build tras
+    # crear el job) se cae a /build; si la petición fue aceptada (2xx/3xx) NUNCA se lanza otra: duplicaba builds.
+    # Causa del defecto original: curl (Windows) puede salir con código distinto de 0 aunque Jenkins respondió 201; el
+    # script lo tomaba por fallo y lanzaba /build (400 o build duplicado). Se decide por el código HTTP, no por el de curl.
+    post() { curl -sS -o /dev/null -w '%{http_code}' -u "$AUTH" -b "$JAR" -c "$JAR" -H "$C" -X POST "$1" || true; }
+    codigo="$(post "$URL/job/$JOB/buildWithParameters?ACCION=$accion&ENTORNO=$entorno")"
+    case "$codigo" in
+      2??|3??) ;;
+      400|404)
+        echo "buildWithParameters respondió $codigo; reintento con /build (valores por defecto)" >&2
+        codigo="$(post "$URL/job/$JOB/build")"
+        case "$codigo" in 2??|3??) ;; *) echo "Jenkins rechazó el lanzamiento (HTTP $codigo)"; exit 1;; esac;;
+      *) echo "Jenkins rechazó el lanzamiento (HTTP $codigo)"; exit 1;;
+    esac
+    # El build puede tardar en salir de la cola (p. ej. hay otro en curso): se espera hasta 90 s.
+    for _ in $(seq 1 90); do
       n="$(ultimo)"; [ "${n:-0}" -gt "$antes" ] && { echo "disparado build #$n (ACCION=$accion, ENTORNO=$entorno)"; exit 0; }; sleep 1
     done
-    echo "no apareció un build nuevo"; exit 1;;
+    echo "la petición fue aceptada (HTTP $codigo) pero no apareció un build nuevo (¿sigue en cola?)"; exit 1;;
   estado)
     N="${N:-$(ultimo)}"; resultado "$N"; echo
     [ -n "$(pendiente "$N")" ] && echo "esperando aprobación";;

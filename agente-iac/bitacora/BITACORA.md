@@ -20,3 +20,4 @@ Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesi
 | 13 | 2026-11-17 | Fase 13 | [ChatOps de solo lectura, sugerencias de corrección en CI y evals con modelo](sesiones/sesion-13-chatops-sugerencias-evals-modelo.md) | feature/fase-13-chatops-sugerencias-evals-modelo | ef8aa45 |
 | 14 | 2026-11-17 | Fase 15 | [El gate rechaza un recurso inseguro dentro de Jenkins](sesiones/sesion-14-jenkins-rechaza-inseguro.md) | feature/fase-15-jenkins-rechaza-inseguro | a4eb82f |
 | 15 | 2026-11-17 | Fase 16 | [Staging con workspaces y promoción controlada](sesiones/sesion-15-staging-promocion.md) | feature/fase-16-staging-promocion | c2d9ad6 |
+| 16 | 2026-11-17 | Fase 17 | [SLI sin pruebas negativas, trazas OpenTelemetry y cliente de Jenkins](sesiones/sesion-16-sli-otel-cliente-jenkins.md) | feature/fase-17-sli-otel-cliente-jenkins | e21726f, a0c7e01, 2e79b16 |

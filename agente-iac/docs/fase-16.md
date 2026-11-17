@@ -51,5 +51,5 @@ Tras reconstruir Jenkins con los plugins y digests fijados, el build #19 (apply 
 - `tests/test_higiene.py` falla si reaparece una imagen sin digest o un plugin sin versión.
 - Verificado: la imagen se reconstruyó con los plugins fijados y el pipeline funcionó (build #19, SUCCESS).
 - Límite: la imagen del emulador sigue descargando el último RPM publicado (`.../LTS/latest/...`); no se puede fijar sin un RPM versionado. Las imágenes de `tflint` y similares usadas desde `seguridad.sh` están fijadas por tag, no por digest.
-- `jenkins.sh disparar` muestra a veces `curl: (22) ... 400` y «no apareció un build nuevo» aunque el build sí se crea (visto en #20 y en los lanzamientos de la prueba); no afectó a los resultados, pero queda como defecto menor del cliente.
+- `jenkins.sh disparar` mostraba a veces `curl: (22) ... 400` y duplicaba builds (#8 a #10 y #21). Causa y arreglo en `docs/fase-17.md`.
 - Un solo lanzamiento a la vez: una ejecución anterior que detuve a medias dejó builds entrelazados (#8 a #10) y hubo que abortarlos y limpiar a mano antes de repetir.

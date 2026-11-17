@@ -48,3 +48,10 @@ def test_plugins_txt_solo_nombres_y_versiones():
     for l in (RAIZ / "jenkins" / "plugins.txt").read_text(encoding="utf-8").splitlines():
         if l.strip() and not l.startswith("#"):
             assert re.fullmatch(r"[a-z0-9][a-z0-9-]*:[A-Za-z0-9._-]+", l.strip()), l
+
+
+def test_jenkins_disparar_decide_por_codigo_http_sin_fallback_ciego():
+    """curl puede salir != 0 aunque Jenkins aceptó el build (201): decidir por el código HTTP evita lanzar /build y duplicar builds."""
+    t = (RAIZ / "scripts" / "jenkins.sh").read_text(encoding="utf-8")
+    assert "%{http_code}" in t
+    assert "if ! api -H" not in t

@@ -962,6 +962,74 @@
         "jenkins.sh disparar muestra a veces un 400 inocuo y puede lanzar builds duplicados"
       ],
       "siguiente": "Marcar los builds de prueba negativa para excluirlos del SLI; S11 (OpenTelemetry)."
+    },
+    {
+      "numero": 16,
+      "fecha": "2026-11-17",
+      "fase": "Fase 17",
+      "tema": "SLI sin pruebas negativas, trazas OpenTelemetry y cliente de Jenkins",
+      "slug": "sli-otel-cliente-jenkins",
+      "rama": "feature/fase-17-sli-otel-cliente-jenkins",
+      "simulado": false,
+      "temas_curso": [
+        "S11"
+      ],
+      "objetivo": "Cerrar la primera versión: SLI que no penaliza las pruebas negativas, exportación de trazas en formato OpenTelemetry y cliente de Jenkins sin builds duplicados.",
+      "archivos": [
+        "agente-iac/policies/builds-prueba-negativa.json",
+        "agente-iac/scripts/eventos_pipeline.py",
+        "agente-iac/scripts/otel_exportar.py",
+        "agente-iac/scripts/jenkins.sh",
+        "agente-iac/docs/fase-17.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Excluir del SLI solo los builds en failure listados como prueba negativa",
+          "porque": "el control funcionando no es un defecto, pero los defectos reales deben seguir contando"
+        },
+        {
+          "decision": "Exportar trazas a archivo OTLP/JSON sin colector",
+          "porque": "no añadir servicios al Compose a última hora; --enviar queda opcional y sin probar"
+        },
+        {
+          "decision": "jenkins.sh decide por código HTTP",
+          "porque": "el curl de Windows devolvía distinto de 0 con 201 y el respaldo /build duplicaba builds"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "e21726f",
+          "detalle": "SLI sin pruebas negativas"
+        },
+        {
+          "tipo": "commit",
+          "ref": "a0c7e01",
+          "detalle": "trazas OTLP/JSON"
+        },
+        {
+          "tipo": "commit",
+          "ref": "2e79b16",
+          "detalle": "arreglo de jenkins.sh disparar"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-17.md",
+          "detalle": "causa del 400 y cifras del SLI"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 120,
+        "sli_pipeline_pct": 100.0,
+        "slo_pipeline_pct": 90.0
+      },
+      "riesgos": [
+        "Las trazas son un archivo: no hay colector ni visor ni latencia por etapa",
+        "--enviar no está probado contra un colector real",
+        "El SLI de 100 % es de una ventana de 20 builds; Jenkins rota los anteriores"
+      ],
+      "siguiente": "Colector OTLP real y latencia por etapa; ChatOps con canal real; evals del modelo en CI."
     }
   ]
 }

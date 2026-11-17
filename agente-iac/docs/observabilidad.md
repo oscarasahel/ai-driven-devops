@@ -18,11 +18,12 @@ Generado por `scripts/eventos_pipeline.py` a partir de la API de Jenkins:
 
 ## SLI y SLO
 - **SLI:** `(success + rejected) / (success + rejected + failure)`. Un rechazo humano cuenta como bueno porque es el control funcionando; solo `failure` es malo. Los builds en curso no cuentan.
+- **Exclusión:** las pruebas negativas deliberadas no cuentan (se informa también el SLI bruto).
 - **SLO:** 90 % de builds buenos. (Objetivo interno de la PoC, no un compromiso.)
 - **Presupuesto de error:** con 10 builds, 1 `failure` agota el presupuesto.
 
 ## Estado real (2026-11-17)
-20 eventos cerrados -> **SLI 75 %, por debajo del SLO de 90 %**. Los `failure` son: #1 (defecto de ruta en el Jenkinsfile, corregido), #5 (scripts con CRLF, corregido con `.gitattributes`) y, desde la fase 15 y 16, **pruebas negativas deliberadas** (#6 recurso inseguro; #12, #15 y #17 promoción bloqueada por la compuerta). Estas últimas son el control funcionando, pero el SLI las cuenta como fallo porque no distingue la etapa en que falló; los `ABORTED` por rechazo o limpieza cuentan como buenos. Sin los fallos deliberados, los únicos defectos reales fueron #1 y #5. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión. Mejora pendiente: marcar los builds de prueba negativa para excluirlos del SLI.
+Ventana de los últimos 20 builds que conserva Jenkins (`numToKeepStr: 20`; #1 y #5 ya salieron de ella): **SLI bruto 85 %**; **SLI ajustado 100 %**, que cumple el SLO de 90 %. Medido antes con 21 eventos (incluidos #1 y #5): bruto 75 %, ajustado 93,8 %. El ajustado excluye los builds de prueba negativa deliberada (#6 recurso inseguro; #12, #15 y #17 promoción bloqueada), listados con su motivo en `policies/builds-prueba-negativa.json`: ahí el `failure` es el control funcionando. Solo se excluye un build que terminó en `failure` y está en esa lista; los defectos reales (#1 ruta en el Jenkinsfile, #5 CRLF) siguen contando. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión.
 
 ## Dónde se ve
 Dashboard "Avance por sesión" en Grafana: paneles *SLI del pipeline* y *Eventos del pipeline*. Datos: `bitacora/pipeline-eventos.json` (local, ignorado por git). Para actualizarlos: `python scripts/eventos_pipeline.py`.
