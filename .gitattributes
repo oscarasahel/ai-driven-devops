@@ -1,0 +1,3 @@
+# Finales de línea LF en todo: Jenkins y Docker (Linux) leen el árbol de trabajo de Windows.
+* text=auto eol=lf
+*.png binary
