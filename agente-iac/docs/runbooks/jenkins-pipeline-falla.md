@@ -19,6 +19,7 @@ Etapas: Preparar -> Validate/lint/seguridad -> Plan -> Aprobación manual -> App
 | Síntoma | Causa conocida | Confirmación |
 |---|---|---|
 | `rsync ... change_dir "/repo/agente-iac" failed` | Ruta equivocada: `/repo` ya es `agente-iac/` | `docker compose exec jenkins ls /repo` |
+| Etapa de seguridad falla al instante con `$'': command not found` o `set: -: invalid option` | Los scripts llegaron a Jenkins con finales de línea de Windows (CRLF): Jenkins lee el árbol de trabajo del anfitrión y Git los reconvirtió al cambiar de rama (build #5, 2026-11-17) | `git ls-files --eol` (busca `w/crlf`). Remedio: `.gitattributes` con `* text=auto eol=lf` y `git rm --cached -r . && git reset --hard`; el test `tests/test_higiene.py` lo vigila |
 | Etapa de seguridad FAIL | Hallazgo nuevo o excepción vencida | `reports/resumen.txt`; `python scripts/excepciones.py checkov` |
 | Errores TLS al llamar al emulador | Jenkins no comparte la red del emulador o el emulador se reinició (cambia el certificado) | `docker compose exec jenkins curl -s --cacert /emulator/9297/ca.pem https://127.0.0.1:9297/__admin/health` |
 | Jenkins "healthy" pero la UI/API no responde ("connection closed", curl código 000) | Jenkins comparte la red del contenedor del emulador (`network_mode`); si el emulador se **recreó**, Jenkins queda pegado a la red del contenedor anterior | `docker ps --format '{{.Names}} {{.Status}}'`: el emulador es más joven que Jenkins. Remedio: `docker compose up -d --force-recreate jenkins` (ocurrió el 2026-11-17 tras relanzar el emulador) |

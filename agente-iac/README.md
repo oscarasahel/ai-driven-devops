@@ -31,6 +31,7 @@ Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker 
 | Evals que ejecutan el modelo (local, usa la CLI `claude`; no corre en CI) | `python scripts/evals_modelo.py [--caso inyeccion --repeticiones 3]` |
 | ChatOps de solo lectura (en Git Bash: `MSYS_NO_PATHCONV=1`) | `python scripts/chatops.py "/iac-explain 3"` · `"/iac-status"` |
 | Sugerencias de corrección desde los informes del gate | `python scripts/sugerir_correccion.py` |
+| Prueba negativa del gate dentro de Jenkins (inserta un recurso inseguro, lanza el pipeline, restaura) | `bash scripts/probar-gate-jenkins.sh` |
 | Pipeline de Jenkins (disparar, aprobar, rechazar) | `bash scripts/jenkins.sh disparar apply` ... ver el script |
 | Eventos y SLI del pipeline | `python scripts/eventos_pipeline.py` |
 | Paneles de Grafana con datos | `python scripts/verificar_dashboard.py` |
@@ -50,7 +51,7 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 |---|---|
 | `docker compose up` levanta emulador, Jenkins y Grafana sanos | **Verificado:** `down` + un solo `up -d --wait`: los cuatro contenedores `healthy` en 14 s y respondiendo |
 | Un requerimiento recorre el flujo completo y deja recursos en el emulador | **Verificado en Jenkins** (build #2: gate, plan, aprobación, apply de 15 recursos, pruebas de humo) |
-| El pipeline falla ante un recurso inseguro | Verificado en el gate (script, pre-commit y CI). No se probó un recurso inseguro **dentro** de Jenkins |
+| El pipeline falla ante un recurso inseguro | **Verificado también dentro de Jenkins** (build #6: el gate rechazó un bucket público; Plan, aprobación y Apply omitidos; emulador sin buckets). Ver `docs/fase-15.md` |
 | No aplica sin aprobación manual | **Verificado:** con el build esperando, el emulador estaba vacío; un destroy rechazado (#3) terminó ABORTED sin cambios (`docs/fase-10.md`) |
 | Bitácora y dashboard reflejan cada sesión con evidencia | Verificado: 9 paneles devuelven datos; aspecto visual no revisado |
 | Sin secretos; versiones fijadas | Gitleaks sin hallazgos en todo el historial. Excepciones: RPM del emulador `LTS/latest` y plugins de Jenkins sin fijar |

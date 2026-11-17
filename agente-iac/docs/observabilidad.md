@@ -22,7 +22,7 @@ Generado por `scripts/eventos_pipeline.py` a partir de la API de Jenkins:
 - **Presupuesto de error:** con 10 builds, 1 `failure` agota el presupuesto.
 
 ## Estado real (2026-11-17)
-4 builds: 3 buenos, 1 malo (#1, defecto de ruta en el Jenkinsfile, ya corregido) -> **SLI 75 %, por debajo del SLO**. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión.
+6 builds: 3 buenos y 3 malos -> **SLI 50 %, por debajo del SLO**. Los malos: #1 (defecto de ruta en el Jenkinsfile, corregido), #5 (scripts con CRLF por la conversión de Git en Windows, corregido con `.gitattributes`) y #6 (**prueba negativa deliberada**: el gate rechazó un recurso inseguro, es decir, el control funcionó; el SLI lo cuenta como fallo porque no distingue la etapa en que falló). Sin esos tres, el pipeline estable en uso normal fue 3 de 3. Con tan pocos builds el valor es muy sensible: es un instrumento, no una conclusión.
 
 ## Dónde se ve
 Dashboard "Avance por sesión" en Grafana: paneles *SLI del pipeline* y *Eventos del pipeline*. Datos: `bitacora/pipeline-eventos.json` (local, ignorado por git). Para actualizarlos: `python scripts/eventos_pipeline.py`.
