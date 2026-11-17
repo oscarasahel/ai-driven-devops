@@ -1,0 +1,22 @@
+# Secretos
+.env
+*.pem
+*.p12
+emulator_credentials
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Material confidencial del curso
+agente-iac/bitacora/bitacora.json
+bitacora.json
+*.pdf
+
+# Varios
+graphify-out/
+__pycache__/
+.DS_Store
