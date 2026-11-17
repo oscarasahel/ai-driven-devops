@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifica los criterios de aceptación de las specs 001 y 002 contra el emulador.
+# Verifica los criterios de aceptación de las specs 001, 002 y 004 contra el emulador.
 # Uso (desde agente-iac/, con el emulador y los recursos desplegados): [NAME_PREFIX=agente-iac-stg] bash scripts/verificar-criterios.sh
 # Sale con 0 si todo pasa, 1 si algún criterio falla.
 set -u
@@ -7,6 +7,7 @@ export MSYS_NO_PATHCONV=1
 
 P="${NAME_PREFIX:-agente-iac}"   # staging usa agente-iac-stg (NAME_PREFIX)
 B="$P-artifacts"
+S="$P-secrets"
 ROLE="$P-pipeline"
 TOPIC="arn:aws:sns:us-east-1:000000000000:$P-order-events"
 QURL="https://sqs.us-east-1.amazonaws.com/000000000000/$P-order-events"
@@ -81,6 +82,20 @@ for k in project env owner; do
   chk "002 CA-8 etiqueta $k en cola" "$k" "$(aws sqs list-queue-tags --queue-url $QURL --query "keys(Tags)" --output text)"
   chk "002 CA-8 etiqueta $k en DLQ" "$k" "$(aws sqs list-queue-tags --queue-url $DURL --query "keys(Tags)" --output text)"
   chk "002 CA-8 etiqueta $k en tabla" "$k" "$(aws dynamodb list-tags-of-resource --resource-arn arn:aws:dynamodb:us-east-1:000000000000:table/$TABLE --output text)"
+done
+
+echo "== Spec 004 =="
+chk "004 CA-1 bloqueo público" '^True\s+True\s+True\s+True$' "$(aws s3api get-public-access-block --bucket $S --query 'PublicAccessBlockConfiguration.[BlockPublicAcls,IgnorePublicAcls,BlockPublicPolicy,RestrictPublicBuckets]' --output text)"
+chk "004 CA-2 cifrado" '^(AES256|aws:kms)$' "$(aws s3api get-bucket-encryption --bucket $S --query 'ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm' --output text)"
+chk "004 CA-3 versionado" '^Enabled$' "$(aws s3api get-bucket-versioning --bucket $S --query Status --output text)"
+chk "004 CA-4 regla habilitada" '^Enabled$' "$(aws s3api get-bucket-lifecycle-configuration --bucket $S --query 'Rules[0].Status' --output text)"
+chk "004 CA-4 retención 30/7" '^30\s+7$' "$(aws s3api get-bucket-lifecycle-configuration --bucket $S --query 'Rules[0].[Expiration.Days,NoncurrentVersionExpiration.NoncurrentDays]' --output text)"
+spol="$(aws s3api get-bucket-policy --bucket $S --query Policy --output text)"
+chk "004 CA-5 solo HTTPS" 'Deny' "$spol"
+chk "004 CA-5 condición SecureTransport" 'aws:SecureTransport' "$spol"
+stags="$(aws s3api get-bucket-tagging --bucket $S --output text)"
+for k in project env owner; do
+  chk "004 CA-7 etiqueta $k en bucket" "$k" "$stags"
 done
 
 echo

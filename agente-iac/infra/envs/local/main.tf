@@ -74,6 +74,12 @@ module "order_state" {
   table_name = "${var.name_prefix}-order-state"
 }
 
+# --- Spec 004: bucket de secretos de aplicación ---
+module "secrets_bucket" {
+  source      = "../../modules/secure-bucket"
+  bucket_name = "${var.name_prefix}-secrets"
+}
+
 output "artifact_bucket_arn" {
   description = "ARN del bucket de artefactos."
   value       = module.artifact_bucket.bucket_arn
@@ -102,4 +108,9 @@ output "order_dlq_arn" {
 output "order_state_table" {
   description = "Nombre de la tabla de estado."
   value       = module.order_state.table_name
+}
+
+output "secrets_bucket_arn" {
+  description = "ARN del bucket de secretos de la aplicación."
+  value       = module.secrets_bucket.bucket_arn
 }
