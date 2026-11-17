@@ -40,3 +40,11 @@ def test_plugins_de_jenkins_con_version_fija():
     lineas = [l.strip() for l in (RAIZ / "jenkins" / "plugins.txt").read_text(encoding="utf-8").splitlines()
               if l.strip() and not l.startswith("#")]
     assert lineas and all(":" in l for l in lineas), [l for l in lineas if ":" not in l]
+
+
+def test_plugins_txt_solo_nombres_y_versiones():
+    """plugins.txt está exento en Gitleaks (falsos positivos con las versiones): que solo pueda contener nombre:versión."""
+    import re
+    for l in (RAIZ / "jenkins" / "plugins.txt").read_text(encoding="utf-8").splitlines():
+        if l.strip() and not l.startswith("#"):
+            assert re.fullmatch(r"[a-z0-9][a-z0-9-]*:[A-Za-z0-9._-]+", l.strip()), l
