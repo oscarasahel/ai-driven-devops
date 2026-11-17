@@ -1,6 +1,7 @@
 # Spec 001 – Bucket de artefactos de build
 
-- **Estado:** borrador
+- **Estado:** aprobada
+- **Aprobación:** delegada por el usuario al agente (autonomía), 2026-11-16; no revisada línea a línea por un humano
 - **Fecha:** 2026-11-16
 - **Requerimiento origen:** requerimiento.md
 

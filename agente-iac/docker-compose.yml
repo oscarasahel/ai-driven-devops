@@ -31,9 +31,9 @@ services:
     depends_on:
       aws-emulator:
         condition: service_healthy
-    working_dir: /workspace
+    working_dir: /infra/envs/local
     volumes:
-      - ./infra/envs/local:/workspace
+      - ./infra:/infra
       - ./.data/emulator:/emulator:ro
     environment:
       AWS_ENDPOINT_URL: https://127.0.0.1:9297

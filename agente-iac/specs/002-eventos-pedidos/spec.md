@@ -1,6 +1,7 @@
 # Spec 002 – Procesamiento asíncrono de eventos de pedidos
 
-- **Estado:** borrador
+- **Estado:** aprobada
+- **Aprobación:** delegada por el usuario al agente (autonomía), 2026-11-16; no revisada línea a línea por un humano
 - **Fecha:** 2026-11-16
 - **Requerimiento origen:** requerimiento.md
 
