@@ -22,3 +22,21 @@ def test_los_archivos_versionados_se_normalizan_a_lf():
     if r.returncode != 0:
         return  # sin git disponible: no se puede comprobar
     assert [l for l in r.stdout.splitlines() if l.startswith("i/crlf")] == []
+
+
+def test_imagenes_de_terceros_fijadas_por_digest():
+    sin_fijar = []
+    for linea in (RAIZ / "docker-compose.yml").read_text(encoding="utf-8").splitlines():
+        s = linea.strip()
+        if s.startswith("image:") and ":local" not in s and "@sha256:" not in s:
+            sin_fijar.append(s)
+    for linea in (RAIZ / "jenkins" / "Dockerfile").read_text(encoding="utf-8").splitlines():
+        if linea.startswith("FROM ") and "@sha256:" not in linea:
+            sin_fijar.append(linea)
+    assert not sin_fijar, f"imágenes sin digest: {sin_fijar}"
+
+
+def test_plugins_de_jenkins_con_version_fija():
+    lineas = [l.strip() for l in (RAIZ / "jenkins" / "plugins.txt").read_text(encoding="utf-8").splitlines()
+              if l.strip() and not l.startswith("#")]
+    assert lineas and all(":" in l for l in lineas), [l for l in lineas if ":" not in l]

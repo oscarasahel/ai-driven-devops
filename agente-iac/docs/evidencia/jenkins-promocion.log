@@ -1,0 +1,3256 @@
+################ build #12 (apply en local) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:12:50.966Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:12:51.277Z] + mkdir -p agente-iac
+[2026-11-17T20:12:51.277Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:12:51.828Z] + terraform version
+[2026-11-17T20:12:51.828Z] + head -1
+[2026-11-17T20:12:51.828Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:12:51.984Z] Entorno=local acción=apply workspace=default prefijo=agente-iac
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:12:52.075Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:12:52.353Z] + bash scripts/seguridad.sh
+[2026-11-17T20:12:52.353Z] 
+[2026-11-17T20:12:52.353Z] == Excepciones documentadas ==
+[2026-11-17T20:12:52.353Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:12:52.353Z] 
+[2026-11-17T20:12:52.353Z] == terraform fmt ==
+[2026-11-17T20:12:52.353Z] PASS  terraform fmt -check
+[2026-11-17T20:12:52.353Z] 
+[2026-11-17T20:12:52.353Z] == terraform validate ==
+[2026-11-17T20:12:54.837Z] Success! The configuration is valid.
+[2026-11-17T20:12:54.837Z] 
+[2026-11-17T20:12:54.837Z] PASS  terraform validate
+[2026-11-17T20:12:54.837Z] 
+[2026-11-17T20:12:54.837Z] == TFLint ==
+[2026-11-17T20:12:54.837Z] PASS  tflint
+[2026-11-17T20:12:54.837Z] 
+[2026-11-17T20:12:54.837Z] == Checkov ==
+[2026-11-17T20:12:58.071Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:12:58.071Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:12:58.071Z] 
+[2026-11-17T20:12:58.071Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:12:59.414Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:13:01.276Z] 
+[2026-11-17T20:13:01.276Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:13:01.322Z] Recording test results
+[2026-11-17T20:13:01.336Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:13:01.348Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+[Pipeline] dir
+[2026-11-17T20:13:01.440Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:13:01.718Z] + python3 scripts/promocion.py exigir --infra infra
+[2026-11-17T20:13:01.718Z] PROMOCIÓN BLOQUEADA: la huella 3aea1862bf2e no tiene un apply verificado en staging
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+Stage "Plan" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+Stage "Aprobación manual" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+Stage "Apply" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+Stage "Registrar promoción" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:13:02.245Z] Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
+################ build #13 (apply en staging) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:13:30.958Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:13:31.296Z] + mkdir -p agente-iac
+[2026-11-17T20:13:31.296Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:13:31.847Z] + terraform version
+[2026-11-17T20:13:31.847Z] + head -1
+[2026-11-17T20:13:31.847Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:13:31.999Z] Entorno=staging acción=apply workspace=staging prefijo=agente-iac-stg
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:13:32.097Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:13:32.387Z] + bash scripts/seguridad.sh
+[2026-11-17T20:13:32.387Z] 
+[2026-11-17T20:13:32.387Z] == Excepciones documentadas ==
+[2026-11-17T20:13:32.387Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:13:32.387Z] 
+[2026-11-17T20:13:32.387Z] == terraform fmt ==
+[2026-11-17T20:13:32.387Z] PASS  terraform fmt -check
+[2026-11-17T20:13:32.387Z] 
+[2026-11-17T20:13:32.387Z] == terraform validate ==
+[2026-11-17T20:13:50.350Z] Success! The configuration is valid.
+[2026-11-17T20:13:50.350Z] 
+[2026-11-17T20:13:50.350Z] PASS  terraform validate
+[2026-11-17T20:13:50.350Z] 
+[2026-11-17T20:13:50.350Z] == TFLint ==
+[2026-11-17T20:13:50.350Z] PASS  tflint
+[2026-11-17T20:13:50.350Z] 
+[2026-11-17T20:13:50.350Z] == Checkov ==
+[2026-11-17T20:13:50.600Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:13:50.600Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:13:50.600Z] 
+[2026-11-17T20:13:50.600Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:13:53.084Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:13:54.946Z] 
+[2026-11-17T20:13:54.946Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:13:54.996Z] Recording test results
+[2026-11-17T20:13:55.006Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:13:55.028Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+Stage "Compuerta de promoción" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+[Pipeline] dir
+[2026-11-17T20:13:55.204Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:13:55.486Z] + terraform init -input=false -no-color
+[2026-11-17T20:13:55.486Z] Initializing the backend...
+[2026-11-17T20:13:55.486Z] Initializing modules...
+[2026-11-17T20:13:55.486Z] - artifact_bucket in ../../modules/secure-bucket
+[2026-11-17T20:13:55.486Z] - order_events in ../../modules/order-events
+[2026-11-17T20:13:55.486Z] - order_state in ../../modules/order-state-table
+[2026-11-17T20:13:55.486Z] - pipeline_role in ../../modules/pipeline-role
+[2026-11-17T20:13:55.486Z] Initializing provider plugins...
+[2026-11-17T20:13:55.486Z] - Reusing previous version of hashicorp/aws from the dependency lock file
+[2026-11-17T20:13:57.348Z] - Installing hashicorp/aws v5.100.0...
+[2026-11-17T20:14:12.113Z] - Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z] Terraform has been successfully initialized!
+[2026-11-17T20:14:12.113Z] + terraform workspace select -or-create staging
+[2026-11-17T20:14:12.113Z] [0m[32mSwitched to workspace "staging".[0m
+[2026-11-17T20:14:12.113Z] + [ apply = destroy ]
+[2026-11-17T20:14:12.113Z] + terraform plan -input=false -no-color -var-file=staging.tfvars -out=tfplan
+[2026-11-17T20:14:12.113Z] module.pipeline_role.data.aws_iam_policy_document.assume: Reading...
+[2026-11-17T20:14:12.113Z] module.pipeline_role.data.aws_iam_policy_document.assume: Read complete after 0s [id=2851119427]
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z] Terraform used the selected providers to generate the following execution
+[2026-11-17T20:14:12.113Z] plan. Resource actions are indicated with the following symbols:
+[2026-11-17T20:14:12.113Z]   + create
+[2026-11-17T20:14:12.113Z]  <= read (data resources)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z] Terraform will perform the following actions:
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.data.aws_iam_policy_document.tls_only will be read during apply
+[2026-11-17T20:14:12.113Z]   # (config refers to values not yet known)
+[2026-11-17T20:14:12.113Z]  <= data "aws_iam_policy_document" "tls_only" {
+[2026-11-17T20:14:12.113Z]       + id            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + json          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + minified_json = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + statement {
+[2026-11-17T20:14:12.113Z]           + actions   = [
+[2026-11-17T20:14:12.113Z]               + "s3:*",
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + effect    = "Deny"
+[2026-11-17T20:14:12.113Z]           + resources = [
+[2026-11-17T20:14:12.113Z]               + (known after apply),
+[2026-11-17T20:14:12.113Z]               + (known after apply),
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + sid       = "DenyInsecureTransport"
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + condition {
+[2026-11-17T20:14:12.113Z]               + test     = "Bool"
+[2026-11-17T20:14:12.113Z]               + values   = [
+[2026-11-17T20:14:12.113Z]                   + "false",
+[2026-11-17T20:14:12.113Z]                 ]
+[2026-11-17T20:14:12.113Z]               + variable = "aws:SecureTransport"
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + principals {
+[2026-11-17T20:14:12.113Z]               + identifiers = [
+[2026-11-17T20:14:12.113Z]                   + "*",
+[2026-11-17T20:14:12.113Z]                 ]
+[2026-11-17T20:14:12.113Z]               + type        = "*"
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket" "this" {
+[2026-11-17T20:14:12.113Z]       + acceleration_status         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + acl                         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + arn                         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + bucket                      = "agente-iac-stg-artifacts"
+[2026-11-17T20:14:12.113Z]       + bucket_domain_name          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + bucket_prefix               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + bucket_regional_domain_name = (known after apply)
+[2026-11-17T20:14:12.113Z]       + force_destroy               = false
+[2026-11-17T20:14:12.113Z]       + hosted_zone_id              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + object_lock_enabled         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy                      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + region                      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + request_payer               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + tags_all                    = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + website_domain              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + website_endpoint            = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + cors_rule (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + grant (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + lifecycle_rule (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + logging (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + object_lock_configuration (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + replication_configuration (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + server_side_encryption_configuration (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + versioning (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + website (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+[2026-11-17T20:14:12.113Z]       + bucket                                 = (known after apply)
+[2026-11-17T20:14:12.113Z]       + expected_bucket_owner                  = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                                     = (known after apply)
+[2026-11-17T20:14:12.113Z]       + transition_default_minimum_object_size = "all_storage_classes_128K"
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + rule {
+[2026-11-17T20:14:12.113Z]           + id     = "expire-artifacts"
+[2026-11-17T20:14:12.113Z]           + status = "Enabled"
+[2026-11-17T20:14:12.113Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + abort_incomplete_multipart_upload {
+[2026-11-17T20:14:12.113Z]               + days_after_initiation = 7
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + expiration {
+[2026-11-17T20:14:12.113Z]               + days                         = 30
+[2026-11-17T20:14:12.113Z]               + expired_object_delete_marker = false
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + filter {
+[2026-11-17T20:14:12.113Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + noncurrent_version_expiration {
+[2026-11-17T20:14:12.113Z]               + noncurrent_days = 7
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket_policy.tls_only will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket_policy" "tls_only" {
+[2026-11-17T20:14:12.113Z]       + bucket = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id     = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy = (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket_public_access_block.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket_public_access_block" "this" {
+[2026-11-17T20:14:12.113Z]       + block_public_acls       = true
+[2026-11-17T20:14:12.113Z]       + block_public_policy     = true
+[2026-11-17T20:14:12.113Z]       + bucket                  = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + ignore_public_acls      = true
+[2026-11-17T20:14:12.113Z]       + restrict_public_buckets = true
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+[2026-11-17T20:14:12.113Z]       + bucket = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id     = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + rule {
+[2026-11-17T20:14:12.113Z]           + apply_server_side_encryption_by_default {
+[2026-11-17T20:14:12.113Z]               + sse_algorithm     = "AES256"
+[2026-11-17T20:14:12.113Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.artifact_bucket.aws_s3_bucket_versioning.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_s3_bucket_versioning" "this" {
+[2026-11-17T20:14:12.113Z]       + bucket = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id     = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + versioning_configuration {
+[2026-11-17T20:14:12.113Z]           + mfa_delete = (known after apply)
+[2026-11-17T20:14:12.113Z]           + status     = "Enabled"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.data.aws_iam_policy_document.sns_to_queue will be read during apply
+[2026-11-17T20:14:12.113Z]   # (config refers to values not yet known)
+[2026-11-17T20:14:12.113Z]  <= data "aws_iam_policy_document" "sns_to_queue" {
+[2026-11-17T20:14:12.113Z]       + id            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + json          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + minified_json = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + statement {
+[2026-11-17T20:14:12.113Z]           + actions   = [
+[2026-11-17T20:14:12.113Z]               + "sqs:SendMessage",
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + effect    = "Allow"
+[2026-11-17T20:14:12.113Z]           + resources = [
+[2026-11-17T20:14:12.113Z]               + (known after apply),
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + sid       = "AllowTopicToSend"
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + condition {
+[2026-11-17T20:14:12.113Z]               + test     = "ArnEquals"
+[2026-11-17T20:14:12.113Z]               + values   = [
+[2026-11-17T20:14:12.113Z]                   + (known after apply),
+[2026-11-17T20:14:12.113Z]                 ]
+[2026-11-17T20:14:12.113Z]               + variable = "aws:SourceArn"
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]           + principals {
+[2026-11-17T20:14:12.113Z]               + identifiers = [
+[2026-11-17T20:14:12.113Z]                   + "sns.amazonaws.com",
+[2026-11-17T20:14:12.113Z]                 ]
+[2026-11-17T20:14:12.113Z]               + type        = "Service"
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.aws_sns_topic.orders will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_sns_topic" "orders" {
+[2026-11-17T20:14:12.113Z]       + arn                         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + beginning_archive_time      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + content_based_deduplication = false
+[2026-11-17T20:14:12.113Z]       + fifo_throughput_scope       = (known after apply)
+[2026-11-17T20:14:12.113Z]       + fifo_topic                  = false
+[2026-11-17T20:14:12.113Z]       + id                          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + kms_master_key_id           = "alias/aws/sns"
+[2026-11-17T20:14:12.113Z]       + name                        = "agente-iac-stg-order-events"
+[2026-11-17T20:14:12.113Z]       + name_prefix                 = (known after apply)
+[2026-11-17T20:14:12.113Z]       + owner                       = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy                      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + signature_version           = (known after apply)
+[2026-11-17T20:14:12.113Z]       + tags_all                    = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + tracing_config              = (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.aws_sns_topic_subscription.main will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_sns_topic_subscription" "main" {
+[2026-11-17T20:14:12.113Z]       + arn                             = (known after apply)
+[2026-11-17T20:14:12.113Z]       + confirmation_timeout_in_minutes = 1
+[2026-11-17T20:14:12.113Z]       + confirmation_was_authenticated  = (known after apply)
+[2026-11-17T20:14:12.113Z]       + endpoint                        = (known after apply)
+[2026-11-17T20:14:12.113Z]       + endpoint_auto_confirms          = false
+[2026-11-17T20:14:12.113Z]       + filter_policy_scope             = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + owner_id                        = (known after apply)
+[2026-11-17T20:14:12.113Z]       + pending_confirmation            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + protocol                        = "sqs"
+[2026-11-17T20:14:12.113Z]       + raw_message_delivery            = false
+[2026-11-17T20:14:12.113Z]       + topic_arn                       = (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.aws_sqs_queue.dlq will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_sqs_queue" "dlq" {
+[2026-11-17T20:14:12.113Z]       + arn                               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + content_based_deduplication       = false
+[2026-11-17T20:14:12.113Z]       + deduplication_scope               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + delay_seconds                     = 0
+[2026-11-17T20:14:12.113Z]       + fifo_queue                        = false
+[2026-11-17T20:14:12.113Z]       + fifo_throughput_limit             = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                                = (known after apply)
+[2026-11-17T20:14:12.113Z]       + kms_data_key_reuse_period_seconds = 0
+[2026-11-17T20:14:12.113Z]       + max_message_size                  = 262144
+[2026-11-17T20:14:12.113Z]       + message_retention_seconds         = 1209600
+[2026-11-17T20:14:12.113Z]       + name                              = "agente-iac-stg-order-events-dlq"
+[2026-11-17T20:14:12.113Z]       + name_prefix                       = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy                            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + receive_wait_time_seconds         = 0
+[2026-11-17T20:14:12.113Z]       + redrive_allow_policy              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + redrive_policy                    = (known after apply)
+[2026-11-17T20:14:12.113Z]       + sqs_managed_sse_enabled           = true
+[2026-11-17T20:14:12.113Z]       + tags_all                          = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + url                               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + visibility_timeout_seconds        = 30
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.aws_sqs_queue.main will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_sqs_queue" "main" {
+[2026-11-17T20:14:12.113Z]       + arn                               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + content_based_deduplication       = false
+[2026-11-17T20:14:12.113Z]       + deduplication_scope               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + delay_seconds                     = 0
+[2026-11-17T20:14:12.113Z]       + fifo_queue                        = false
+[2026-11-17T20:14:12.113Z]       + fifo_throughput_limit             = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id                                = (known after apply)
+[2026-11-17T20:14:12.113Z]       + kms_data_key_reuse_period_seconds = 0
+[2026-11-17T20:14:12.113Z]       + max_message_size                  = 262144
+[2026-11-17T20:14:12.113Z]       + message_retention_seconds         = 345600
+[2026-11-17T20:14:12.113Z]       + name                              = "agente-iac-stg-order-events"
+[2026-11-17T20:14:12.113Z]       + name_prefix                       = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy                            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + receive_wait_time_seconds         = 0
+[2026-11-17T20:14:12.113Z]       + redrive_allow_policy              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + redrive_policy                    = (known after apply)
+[2026-11-17T20:14:12.113Z]       + sqs_managed_sse_enabled           = true
+[2026-11-17T20:14:12.113Z]       + tags_all                          = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + url                               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + visibility_timeout_seconds        = 30
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_events.aws_sqs_queue_policy.main will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_sqs_queue_policy" "main" {
+[2026-11-17T20:14:12.113Z]       + id        = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy    = (known after apply)
+[2026-11-17T20:14:12.113Z]       + queue_url = (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.order_state.aws_dynamodb_table.orders will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_dynamodb_table" "orders" {
+[2026-11-17T20:14:12.113Z]       + arn              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + billing_mode     = "PAY_PER_REQUEST"
+[2026-11-17T20:14:12.113Z]       + hash_key         = "order_id"
+[2026-11-17T20:14:12.113Z]       + id               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + name             = "agente-iac-stg-order-state"
+[2026-11-17T20:14:12.113Z]       + read_capacity    = (known after apply)
+[2026-11-17T20:14:12.113Z]       + stream_arn       = (known after apply)
+[2026-11-17T20:14:12.113Z]       + stream_label     = (known after apply)
+[2026-11-17T20:14:12.113Z]       + stream_view_type = (known after apply)
+[2026-11-17T20:14:12.113Z]       + tags_all         = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + write_capacity   = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + attribute {
+[2026-11-17T20:14:12.113Z]           + name = "order_id"
+[2026-11-17T20:14:12.113Z]           + type = "S"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + point_in_time_recovery {
+[2026-11-17T20:14:12.113Z]           + enabled                 = true
+[2026-11-17T20:14:12.113Z]           + recovery_period_in_days = (known after apply)
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + server_side_encryption (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + ttl {
+[2026-11-17T20:14:12.113Z]           + attribute_name = "expires_at"
+[2026-11-17T20:14:12.113Z]           + enabled        = true
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.pipeline_role.data.aws_iam_policy_document.bucket_rw will be read during apply
+[2026-11-17T20:14:12.113Z]   # (config refers to values not yet known)
+[2026-11-17T20:14:12.113Z]  <= data "aws_iam_policy_document" "bucket_rw" {
+[2026-11-17T20:14:12.113Z]       + id            = (known after apply)
+[2026-11-17T20:14:12.113Z]       + json          = (known after apply)
+[2026-11-17T20:14:12.113Z]       + minified_json = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + statement {
+[2026-11-17T20:14:12.113Z]           + actions   = [
+[2026-11-17T20:14:12.113Z]               + "s3:ListBucket",
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + effect    = "Allow"
+[2026-11-17T20:14:12.113Z]           + resources = [
+[2026-11-17T20:14:12.113Z]               + (known after apply),
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + sid       = "ListBucket"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + statement {
+[2026-11-17T20:14:12.113Z]           + actions   = [
+[2026-11-17T20:14:12.113Z]               + "s3:GetObject",
+[2026-11-17T20:14:12.113Z]               + "s3:PutObject",
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + effect    = "Allow"
+[2026-11-17T20:14:12.113Z]           + resources = [
+[2026-11-17T20:14:12.113Z]               + (known after apply),
+[2026-11-17T20:14:12.113Z]             ]
+[2026-11-17T20:14:12.113Z]           + sid       = "ReadWriteObjects"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.pipeline_role.aws_iam_policy.bucket_rw will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_iam_policy" "bucket_rw" {
+[2026-11-17T20:14:12.113Z]       + arn              = (known after apply)
+[2026-11-17T20:14:12.113Z]       + attachment_count = (known after apply)
+[2026-11-17T20:14:12.113Z]       + id               = (known after apply)
+[2026-11-17T20:14:12.113Z]       + name             = "agente-iac-stg-pipeline-bucket-rw"
+[2026-11-17T20:14:12.113Z]       + name_prefix      = (known after apply)
+[2026-11-17T20:14:12.113Z]       + path             = "/"
+[2026-11-17T20:14:12.113Z]       + policy           = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy_id        = (known after apply)
+[2026-11-17T20:14:12.113Z]       + tags_all         = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.pipeline_role.aws_iam_role.this will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_iam_role" "this" {
+[2026-11-17T20:14:12.113Z]       + arn                   = (known after apply)
+[2026-11-17T20:14:12.113Z]       + assume_role_policy    = jsonencode(
+[2026-11-17T20:14:12.113Z]             {
+[2026-11-17T20:14:12.113Z]               + Statement = [
+[2026-11-17T20:14:12.113Z]                   + {
+[2026-11-17T20:14:12.113Z]                       + Action    = "sts:AssumeRole"
+[2026-11-17T20:14:12.113Z]                       + Effect    = "Allow"
+[2026-11-17T20:14:12.113Z]                       + Principal = {
+[2026-11-17T20:14:12.113Z]                           + Service = "ec2.amazonaws.com"
+[2026-11-17T20:14:12.113Z]                         }
+[2026-11-17T20:14:12.113Z]                     },
+[2026-11-17T20:14:12.113Z]                 ]
+[2026-11-17T20:14:12.113Z]               + Version   = "2012-10-17"
+[2026-11-17T20:14:12.113Z]             }
+[2026-11-17T20:14:12.113Z]         )
+[2026-11-17T20:14:12.113Z]       + create_date           = (known after apply)
+[2026-11-17T20:14:12.113Z]       + force_detach_policies = false
+[2026-11-17T20:14:12.113Z]       + id                    = (known after apply)
+[2026-11-17T20:14:12.113Z]       + managed_policy_arns   = (known after apply)
+[2026-11-17T20:14:12.113Z]       + max_session_duration  = 3600
+[2026-11-17T20:14:12.113Z]       + name                  = "agente-iac-stg-pipeline"
+[2026-11-17T20:14:12.113Z]       + name_prefix           = (known after apply)
+[2026-11-17T20:14:12.113Z]       + path                  = "/"
+[2026-11-17T20:14:12.113Z]       + tags_all              = {
+[2026-11-17T20:14:12.113Z]           + "env"        = "staging"
+[2026-11-17T20:14:12.113Z]           + "managed_by" = "terraform"
+[2026-11-17T20:14:12.113Z]           + "owner"      = "platform-team"
+[2026-11-17T20:14:12.113Z]           + "project"    = "agente-iac"
+[2026-11-17T20:14:12.113Z]         }
+[2026-11-17T20:14:12.113Z]       + unique_id             = (known after apply)
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]       + inline_policy (known after apply)
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z]   # module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw will be created
+[2026-11-17T20:14:12.113Z]   + resource "aws_iam_role_policy_attachment" "bucket_rw" {
+[2026-11-17T20:14:12.113Z]       + id         = (known after apply)
+[2026-11-17T20:14:12.113Z]       + policy_arn = (known after apply)
+[2026-11-17T20:14:12.113Z]       + role       = "agente-iac-stg-pipeline"
+[2026-11-17T20:14:12.113Z]     }
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z] Plan: 15 to add, 0 to change, 0 to destroy.
+[2026-11-17T20:14:12.113Z] 
+[2026-11-17T20:14:12.113Z] Changes to Outputs:
+[2026-11-17T20:14:12.113Z]   + artifact_bucket_arn = (known after apply)
+[2026-11-17T20:14:12.113Z]   + order_dlq_arn       = (known after apply)
+[2026-11-17T20:14:12.113Z]   + order_queue_url     = (known after apply)
+[2026-11-17T20:14:12.113Z]   + order_state_table   = "agente-iac-stg-order-state"
+[2026-11-17T20:14:12.113Z]   + order_topic_arn     = (known after apply)
+[2026-11-17T20:14:12.113Z]   + pipeline_role_arn   = (known after apply)
+[2026-11-17T20:14:12.113Z] + terraform show -no-color tfplan
+[Pipeline] archiveArtifacts
+[2026-11-17T20:14:13.476Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+[Pipeline] timeout
+[2026-11-17T20:14:13.588Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] input
+[2026-11-17T20:14:13.632Z] ¿Ejecutar 'apply' en el entorno 'staging' del emulador? Revisa plan.txt en los artefactos.
+[2026-11-17T20:14:13.633Z] Aprobar or Abort
+[2026-11-17T20:14:25.651Z] Approved by admin
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+[Pipeline] dir
+[2026-11-17T20:14:25.762Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:14:26.043Z] + terraform workspace select staging
+[2026-11-17T20:14:26.293Z] + terraform apply -input=false -no-color tfplan
+[2026-11-17T20:14:28.155Z] module.order_events.aws_sqs_queue.dlq: Creating...
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_role.this: Creating...
+[2026-11-17T20:14:28.155Z] module.order_events.aws_sns_topic.orders: Creating...
+[2026-11-17T20:14:28.155Z] module.order_state.aws_dynamodb_table.orders: Creating...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket.this: Creating...
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_role.this: Creation complete after 0s [id=agente-iac-stg-pipeline]
+[2026-11-17T20:14:28.155Z] module.order_events.aws_sns_topic.orders: Creation complete after 0s [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events]
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket.this: Creation complete after 0s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Reading...
+[2026-11-17T20:14:28.155Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Reading...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Creating...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Creating...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Read complete after 0s [id=4025011458]
+[2026-11-17T20:14:28.155Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Read complete after 0s [id=2898127244]
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Creation complete after 0s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 0s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_policy.bucket_rw: Creating...
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Creating...
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_policy.bucket_rw: Creation complete after 0s [id=arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw]
+[2026-11-17T20:14:28.155Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Creation complete after 0s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Creating...
+[2026-11-17T20:14:28.155Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Creation complete after 0s [id=agente-iac-stg-pipeline-20261117201427769200000001]
+[2026-11-17T20:14:29.066Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Creation complete after 1s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:14:29.066Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Creating...
+[2026-11-17T20:14:34.262Z] module.order_state.aws_dynamodb_table.orders: Creation complete after 6s [id=agente-iac-stg-order-state]
+[2026-11-17T20:14:38.385Z] module.order_events.aws_sqs_queue.dlq: Still creating... [10s elapsed]
+[2026-11-17T20:14:39.296Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [10s elapsed]
+[2026-11-17T20:14:49.173Z] module.order_events.aws_sqs_queue.dlq: Still creating... [20s elapsed]
+[2026-11-17T20:14:49.173Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [20s elapsed]
+[2026-11-17T20:14:53.296Z] module.order_events.aws_sqs_queue.dlq: Creation complete after 25s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events-dlq]
+[2026-11-17T20:14:53.296Z] module.order_events.aws_sqs_queue.main: Creating...
+[2026-11-17T20:14:59.778Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [30s elapsed]
+[2026-11-17T20:15:03.007Z] module.order_events.aws_sqs_queue.main: Still creating... [10s elapsed]
+[2026-11-17T20:15:09.489Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [40s elapsed]
+[2026-11-17T20:15:13.612Z] module.order_events.aws_sqs_queue.main: Still creating... [20s elapsed]
+[2026-11-17T20:15:18.808Z] module.order_events.aws_sqs_queue.main: Creation complete after 25s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:15:18.808Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Reading...
+[2026-11-17T20:15:18.808Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Read complete after 0s [id=748139016]
+[2026-11-17T20:15:18.808Z] module.order_events.aws_sqs_queue_policy.main: Creating...
+[2026-11-17T20:15:19.059Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [50s elapsed]
+[2026-11-17T20:15:24.254Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Creation complete after 55s [id=agente-iac-stg-artifacts]
+[2026-11-17T20:15:28.378Z] module.order_events.aws_sqs_queue_policy.main: Still creating... [10s elapsed]
+[2026-11-17T20:15:38.254Z] module.order_events.aws_sqs_queue_policy.main: Still creating... [20s elapsed]
+[2026-11-17T20:15:43.450Z] module.order_events.aws_sqs_queue_policy.main: Creation complete after 25s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:15:43.450Z] module.order_events.aws_sns_topic_subscription.main: Creating...
+[2026-11-17T20:15:43.450Z] module.order_events.aws_sns_topic_subscription.main: Creation complete after 0s [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events:fe7757bc-6b7e-474b-8587-dad99bc98acb]
+[2026-11-17T20:15:43.450Z] 
+[2026-11-17T20:15:43.450Z] Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
+[2026-11-17T20:15:43.450Z] 
+[2026-11-17T20:15:43.450Z] Outputs:
+[2026-11-17T20:15:43.450Z] 
+[2026-11-17T20:15:43.450Z] artifact_bucket_arn = "arn:aws:s3:::agente-iac-stg-artifacts"
+[2026-11-17T20:15:43.450Z] order_dlq_arn = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events-dlq"
+[2026-11-17T20:15:43.450Z] order_queue_url = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events"
+[2026-11-17T20:15:43.450Z] order_state_table = "agente-iac-stg-order-state"
+[2026-11-17T20:15:43.450Z] order_topic_arn = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:15:43.450Z] pipeline_role_arn = "arn:aws:iam::000000000000:role/agente-iac-stg-pipeline"
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+[Pipeline] dir
+[2026-11-17T20:15:43.561Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:15:43.842Z] + bash scripts/verificar-criterios.sh
+[2026-11-17T20:15:43.842Z] == Spec 001 ==
+[2026-11-17T20:15:44.393Z] OK    001 CA-1 bloqueo público
+[2026-11-17T20:15:44.944Z] OK    001 CA-2 cifrado
+[2026-11-17T20:15:45.495Z] OK    001 CA-3 versionado
+[2026-11-17T20:15:46.046Z] OK    001 CA-4 solo HTTPS
+[2026-11-17T20:15:46.046Z] OK    001 CA-4 condición SecureTransport
+[2026-11-17T20:15:46.957Z] OK    001 CA-5 retención 30/7
+[2026-11-17T20:15:47.508Z] OK    001 CA-6 acciones permitidas
+[2026-11-17T20:15:47.508Z] OK    001 CA-6 sin comodín s3:*
+[2026-11-17T20:15:47.508Z] OK    001 CA-6 sin Resource *
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta project en bucket
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta project en rol
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta env en bucket
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta env en rol
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta owner en bucket
+[2026-11-17T20:15:48.419Z] OK    001 CA-7 etiqueta owner en rol
+[2026-11-17T20:15:48.419Z] == Spec 002 ==
+[2026-11-17T20:15:49.763Z] OK    002 CA-1 entrega tema->cola
+[2026-11-17T20:15:50.314Z] OK    002 CA-2 maxReceiveCount 3
+[2026-11-17T20:15:50.865Z] OK    002 CA-2 apunta a la DLQ
+[2026-11-17T20:15:51.416Z] OK    002 CA-3 retención DLQ 14d
+[2026-11-17T20:15:51.666Z] OK    002 CA-4 cifrado cola
+[2026-11-17T20:15:52.217Z] OK    002 CA-4 cifrado DLQ
+[2026-11-17T20:15:52.768Z] OK    002 CA-5 clave order_id (S)
+[2026-11-17T20:15:53.319Z] OK    002 CA-5 PAY_PER_REQUEST
+[2026-11-17T20:15:53.869Z] OK    002 CA-6 TTL habilitado
+[2026-11-17T20:15:54.420Z] OK    002 CA-6 PITR habilitado
+[2026-11-17T20:15:54.971Z] OK    002 CA-7 solo SendMessage
+[2026-11-17T20:15:54.971Z] OK    002 CA-7 principal SNS
+[2026-11-17T20:15:54.971Z] OK    002 CA-7 SourceArn del tema
+[2026-11-17T20:15:55.522Z] OK    002 CA-8 etiqueta project en tema
+[2026-11-17T20:15:56.072Z] OK    002 CA-8 etiqueta project en cola
+[2026-11-17T20:15:56.623Z] OK    002 CA-8 etiqueta project en DLQ
+[2026-11-17T20:15:56.874Z] OK    002 CA-8 etiqueta project en tabla
+[2026-11-17T20:15:57.424Z] OK    002 CA-8 etiqueta env en tema
+[2026-11-17T20:15:57.975Z] OK    002 CA-8 etiqueta env en cola
+[2026-11-17T20:15:58.526Z] OK    002 CA-8 etiqueta env en DLQ
+[2026-11-17T20:15:59.077Z] OK    002 CA-8 etiqueta env en tabla
+[2026-11-17T20:15:59.628Z] OK    002 CA-8 etiqueta owner en tema
+[2026-11-17T20:16:00.179Z] OK    002 CA-8 etiqueta owner en cola
+[2026-11-17T20:16:00.729Z] OK    002 CA-8 etiqueta owner en DLQ
+[2026-11-17T20:16:00.980Z] OK    002 CA-8 etiqueta owner en tabla
+[2026-11-17T20:16:00.980Z] 
+[2026-11-17T20:16:00.980Z] TODO OK
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+[Pipeline] dir
+[2026-11-17T20:16:01.088Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:16:01.369Z] + [ apply = apply ]
+[2026-11-17T20:16:01.369Z] + python3 scripts/promocion.py marcar --infra infra
+[2026-11-17T20:16:01.369Z] promoción habilitada para 3aea1862bf2e784bf901dcfd485c7d6782f6dd6baa81ff578396c143025f98d8
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:16:01.492Z] Pipeline OK (apply en staging).
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+################ build #14 (apply en local) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:16:31.009Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:16:31.335Z] + mkdir -p agente-iac
+[2026-11-17T20:16:31.335Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:16:31.886Z] + terraform version
+[2026-11-17T20:16:31.886Z] + head -1
+[2026-11-17T20:16:31.886Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:16:32.034Z] Entorno=local acción=apply workspace=default prefijo=agente-iac
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:16:32.132Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:16:32.412Z] + bash scripts/seguridad.sh
+[2026-11-17T20:16:32.412Z] 
+[2026-11-17T20:16:32.412Z] == Excepciones documentadas ==
+[2026-11-17T20:16:32.412Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:16:32.412Z] 
+[2026-11-17T20:16:32.412Z] == terraform fmt ==
+[2026-11-17T20:16:32.412Z] PASS  terraform fmt -check
+[2026-11-17T20:16:32.412Z] 
+[2026-11-17T20:16:32.412Z] == terraform validate ==
+[2026-11-17T20:16:35.641Z] Success! The configuration is valid.
+[2026-11-17T20:16:35.641Z] 
+[2026-11-17T20:16:35.641Z] PASS  terraform validate
+[2026-11-17T20:16:35.641Z] 
+[2026-11-17T20:16:35.641Z] == TFLint ==
+[2026-11-17T20:16:35.641Z] PASS  tflint
+[2026-11-17T20:16:35.641Z] 
+[2026-11-17T20:16:35.641Z] == Checkov ==
+[2026-11-17T20:16:38.124Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:16:38.124Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:16:38.124Z] 
+[2026-11-17T20:16:38.124Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:16:40.608Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:16:42.470Z] 
+[2026-11-17T20:16:42.470Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:16:42.518Z] Recording test results
+[2026-11-17T20:16:42.532Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:16:42.546Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+[Pipeline] dir
+[2026-11-17T20:16:42.643Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:16:42.923Z] + python3 scripts/promocion.py exigir --infra infra
+[2026-11-17T20:16:42.923Z] promoción permitida: 3aea1862bf2e verificado en staging
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+[Pipeline] dir
+[2026-11-17T20:16:43.027Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:16:43.306Z] + terraform init -input=false -no-color
+[2026-11-17T20:16:43.306Z] Initializing the backend...
+[2026-11-17T20:16:43.306Z] Initializing modules...
+[2026-11-17T20:16:43.306Z] - artifact_bucket in ../../modules/secure-bucket
+[2026-11-17T20:16:43.306Z] - order_events in ../../modules/order-events
+[2026-11-17T20:16:43.306Z] - order_state in ../../modules/order-state-table
+[2026-11-17T20:16:43.306Z] - pipeline_role in ../../modules/pipeline-role
+[2026-11-17T20:16:43.306Z] Initializing provider plugins...
+[2026-11-17T20:16:43.306Z] - Reusing previous version of hashicorp/aws from the dependency lock file
+[2026-11-17T20:16:44.218Z] - Installing hashicorp/aws v5.100.0...
+[2026-11-17T20:16:58.982Z] - Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+[2026-11-17T20:16:58.982Z] 
+[2026-11-17T20:16:58.982Z] Terraform has been successfully initialized!
+[2026-11-17T20:16:58.982Z] + terraform workspace select -or-create default
+[2026-11-17T20:16:58.982Z] + [ apply = destroy ]
+[2026-11-17T20:16:58.982Z] + terraform plan -input=false -no-color -out=tfplan
+[2026-11-17T20:16:59.533Z] module.pipeline_role.data.aws_iam_policy_document.assume: Reading...
+[2026-11-17T20:16:59.533Z] module.pipeline_role.data.aws_iam_policy_document.assume: Read complete after 0s [id=2851119427]
+[2026-11-17T20:16:59.533Z] 
+[2026-11-17T20:16:59.533Z] Terraform used the selected providers to generate the following execution
+[2026-11-17T20:16:59.533Z] plan. Resource actions are indicated with the following symbols:
+[2026-11-17T20:16:59.533Z]   + create
+[2026-11-17T20:16:59.533Z]  <= read (data resources)
+[2026-11-17T20:16:59.533Z] 
+[2026-11-17T20:16:59.533Z] Terraform will perform the following actions:
+[2026-11-17T20:16:59.533Z] 
+[2026-11-17T20:16:59.533Z]   # module.artifact_bucket.data.aws_iam_policy_document.tls_only will be read during apply
+[2026-11-17T20:16:59.534Z]   # (config refers to values not yet known)
+[2026-11-17T20:16:59.534Z]  <= data "aws_iam_policy_document" "tls_only" {
+[2026-11-17T20:16:59.534Z]       + id            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + json          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + minified_json = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + statement {
+[2026-11-17T20:16:59.534Z]           + actions   = [
+[2026-11-17T20:16:59.534Z]               + "s3:*",
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + effect    = "Deny"
+[2026-11-17T20:16:59.534Z]           + resources = [
+[2026-11-17T20:16:59.534Z]               + (known after apply),
+[2026-11-17T20:16:59.534Z]               + (known after apply),
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + sid       = "DenyInsecureTransport"
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + condition {
+[2026-11-17T20:16:59.534Z]               + test     = "Bool"
+[2026-11-17T20:16:59.534Z]               + values   = [
+[2026-11-17T20:16:59.534Z]                   + "false",
+[2026-11-17T20:16:59.534Z]                 ]
+[2026-11-17T20:16:59.534Z]               + variable = "aws:SecureTransport"
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + principals {
+[2026-11-17T20:16:59.534Z]               + identifiers = [
+[2026-11-17T20:16:59.534Z]                   + "*",
+[2026-11-17T20:16:59.534Z]                 ]
+[2026-11-17T20:16:59.534Z]               + type        = "*"
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket" "this" {
+[2026-11-17T20:16:59.534Z]       + acceleration_status         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + acl                         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + arn                         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + bucket                      = "agente-iac-artifacts"
+[2026-11-17T20:16:59.534Z]       + bucket_domain_name          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + bucket_prefix               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + bucket_regional_domain_name = (known after apply)
+[2026-11-17T20:16:59.534Z]       + force_destroy               = false
+[2026-11-17T20:16:59.534Z]       + hosted_zone_id              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + object_lock_enabled         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy                      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + region                      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + request_payer               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + tags_all                    = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + website_domain              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + website_endpoint            = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + cors_rule (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + grant (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + lifecycle_rule (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + logging (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + object_lock_configuration (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + replication_configuration (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + server_side_encryption_configuration (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + versioning (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + website (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+[2026-11-17T20:16:59.534Z]       + bucket                                 = (known after apply)
+[2026-11-17T20:16:59.534Z]       + expected_bucket_owner                  = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                                     = (known after apply)
+[2026-11-17T20:16:59.534Z]       + transition_default_minimum_object_size = "all_storage_classes_128K"
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + rule {
+[2026-11-17T20:16:59.534Z]           + id     = "expire-artifacts"
+[2026-11-17T20:16:59.534Z]           + status = "Enabled"
+[2026-11-17T20:16:59.534Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + abort_incomplete_multipart_upload {
+[2026-11-17T20:16:59.534Z]               + days_after_initiation = 7
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + expiration {
+[2026-11-17T20:16:59.534Z]               + days                         = 30
+[2026-11-17T20:16:59.534Z]               + expired_object_delete_marker = false
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + filter {
+[2026-11-17T20:16:59.534Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + noncurrent_version_expiration {
+[2026-11-17T20:16:59.534Z]               + noncurrent_days = 7
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket_policy.tls_only will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket_policy" "tls_only" {
+[2026-11-17T20:16:59.534Z]       + bucket = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id     = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy = (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket_public_access_block.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket_public_access_block" "this" {
+[2026-11-17T20:16:59.534Z]       + block_public_acls       = true
+[2026-11-17T20:16:59.534Z]       + block_public_policy     = true
+[2026-11-17T20:16:59.534Z]       + bucket                  = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + ignore_public_acls      = true
+[2026-11-17T20:16:59.534Z]       + restrict_public_buckets = true
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+[2026-11-17T20:16:59.534Z]       + bucket = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id     = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + rule {
+[2026-11-17T20:16:59.534Z]           + apply_server_side_encryption_by_default {
+[2026-11-17T20:16:59.534Z]               + sse_algorithm     = "AES256"
+[2026-11-17T20:16:59.534Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.artifact_bucket.aws_s3_bucket_versioning.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_s3_bucket_versioning" "this" {
+[2026-11-17T20:16:59.534Z]       + bucket = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id     = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + versioning_configuration {
+[2026-11-17T20:16:59.534Z]           + mfa_delete = (known after apply)
+[2026-11-17T20:16:59.534Z]           + status     = "Enabled"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.data.aws_iam_policy_document.sns_to_queue will be read during apply
+[2026-11-17T20:16:59.534Z]   # (config refers to values not yet known)
+[2026-11-17T20:16:59.534Z]  <= data "aws_iam_policy_document" "sns_to_queue" {
+[2026-11-17T20:16:59.534Z]       + id            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + json          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + minified_json = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + statement {
+[2026-11-17T20:16:59.534Z]           + actions   = [
+[2026-11-17T20:16:59.534Z]               + "sqs:SendMessage",
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + effect    = "Allow"
+[2026-11-17T20:16:59.534Z]           + resources = [
+[2026-11-17T20:16:59.534Z]               + (known after apply),
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + sid       = "AllowTopicToSend"
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + condition {
+[2026-11-17T20:16:59.534Z]               + test     = "ArnEquals"
+[2026-11-17T20:16:59.534Z]               + values   = [
+[2026-11-17T20:16:59.534Z]                   + (known after apply),
+[2026-11-17T20:16:59.534Z]                 ]
+[2026-11-17T20:16:59.534Z]               + variable = "aws:SourceArn"
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]           + principals {
+[2026-11-17T20:16:59.534Z]               + identifiers = [
+[2026-11-17T20:16:59.534Z]                   + "sns.amazonaws.com",
+[2026-11-17T20:16:59.534Z]                 ]
+[2026-11-17T20:16:59.534Z]               + type        = "Service"
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.aws_sns_topic.orders will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_sns_topic" "orders" {
+[2026-11-17T20:16:59.534Z]       + arn                         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + beginning_archive_time      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + content_based_deduplication = false
+[2026-11-17T20:16:59.534Z]       + fifo_throughput_scope       = (known after apply)
+[2026-11-17T20:16:59.534Z]       + fifo_topic                  = false
+[2026-11-17T20:16:59.534Z]       + id                          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + kms_master_key_id           = "alias/aws/sns"
+[2026-11-17T20:16:59.534Z]       + name                        = "agente-iac-order-events"
+[2026-11-17T20:16:59.534Z]       + name_prefix                 = (known after apply)
+[2026-11-17T20:16:59.534Z]       + owner                       = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy                      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + signature_version           = (known after apply)
+[2026-11-17T20:16:59.534Z]       + tags_all                    = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + tracing_config              = (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.aws_sns_topic_subscription.main will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_sns_topic_subscription" "main" {
+[2026-11-17T20:16:59.534Z]       + arn                             = (known after apply)
+[2026-11-17T20:16:59.534Z]       + confirmation_timeout_in_minutes = 1
+[2026-11-17T20:16:59.534Z]       + confirmation_was_authenticated  = (known after apply)
+[2026-11-17T20:16:59.534Z]       + endpoint                        = (known after apply)
+[2026-11-17T20:16:59.534Z]       + endpoint_auto_confirms          = false
+[2026-11-17T20:16:59.534Z]       + filter_policy_scope             = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + owner_id                        = (known after apply)
+[2026-11-17T20:16:59.534Z]       + pending_confirmation            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + protocol                        = "sqs"
+[2026-11-17T20:16:59.534Z]       + raw_message_delivery            = false
+[2026-11-17T20:16:59.534Z]       + topic_arn                       = (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.aws_sqs_queue.dlq will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_sqs_queue" "dlq" {
+[2026-11-17T20:16:59.534Z]       + arn                               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + content_based_deduplication       = false
+[2026-11-17T20:16:59.534Z]       + deduplication_scope               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + delay_seconds                     = 0
+[2026-11-17T20:16:59.534Z]       + fifo_queue                        = false
+[2026-11-17T20:16:59.534Z]       + fifo_throughput_limit             = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                                = (known after apply)
+[2026-11-17T20:16:59.534Z]       + kms_data_key_reuse_period_seconds = 0
+[2026-11-17T20:16:59.534Z]       + max_message_size                  = 262144
+[2026-11-17T20:16:59.534Z]       + message_retention_seconds         = 1209600
+[2026-11-17T20:16:59.534Z]       + name                              = "agente-iac-order-events-dlq"
+[2026-11-17T20:16:59.534Z]       + name_prefix                       = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy                            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + receive_wait_time_seconds         = 0
+[2026-11-17T20:16:59.534Z]       + redrive_allow_policy              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + redrive_policy                    = (known after apply)
+[2026-11-17T20:16:59.534Z]       + sqs_managed_sse_enabled           = true
+[2026-11-17T20:16:59.534Z]       + tags_all                          = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + url                               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + visibility_timeout_seconds        = 30
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.aws_sqs_queue.main will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_sqs_queue" "main" {
+[2026-11-17T20:16:59.534Z]       + arn                               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + content_based_deduplication       = false
+[2026-11-17T20:16:59.534Z]       + deduplication_scope               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + delay_seconds                     = 0
+[2026-11-17T20:16:59.534Z]       + fifo_queue                        = false
+[2026-11-17T20:16:59.534Z]       + fifo_throughput_limit             = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id                                = (known after apply)
+[2026-11-17T20:16:59.534Z]       + kms_data_key_reuse_period_seconds = 0
+[2026-11-17T20:16:59.534Z]       + max_message_size                  = 262144
+[2026-11-17T20:16:59.534Z]       + message_retention_seconds         = 345600
+[2026-11-17T20:16:59.534Z]       + name                              = "agente-iac-order-events"
+[2026-11-17T20:16:59.534Z]       + name_prefix                       = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy                            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + receive_wait_time_seconds         = 0
+[2026-11-17T20:16:59.534Z]       + redrive_allow_policy              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + redrive_policy                    = (known after apply)
+[2026-11-17T20:16:59.534Z]       + sqs_managed_sse_enabled           = true
+[2026-11-17T20:16:59.534Z]       + tags_all                          = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + url                               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + visibility_timeout_seconds        = 30
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_events.aws_sqs_queue_policy.main will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_sqs_queue_policy" "main" {
+[2026-11-17T20:16:59.534Z]       + id        = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy    = (known after apply)
+[2026-11-17T20:16:59.534Z]       + queue_url = (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.order_state.aws_dynamodb_table.orders will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_dynamodb_table" "orders" {
+[2026-11-17T20:16:59.534Z]       + arn              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + billing_mode     = "PAY_PER_REQUEST"
+[2026-11-17T20:16:59.534Z]       + hash_key         = "order_id"
+[2026-11-17T20:16:59.534Z]       + id               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + name             = "agente-iac-order-state"
+[2026-11-17T20:16:59.534Z]       + read_capacity    = (known after apply)
+[2026-11-17T20:16:59.534Z]       + stream_arn       = (known after apply)
+[2026-11-17T20:16:59.534Z]       + stream_label     = (known after apply)
+[2026-11-17T20:16:59.534Z]       + stream_view_type = (known after apply)
+[2026-11-17T20:16:59.534Z]       + tags_all         = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + write_capacity   = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + attribute {
+[2026-11-17T20:16:59.534Z]           + name = "order_id"
+[2026-11-17T20:16:59.534Z]           + type = "S"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + point_in_time_recovery {
+[2026-11-17T20:16:59.534Z]           + enabled                 = true
+[2026-11-17T20:16:59.534Z]           + recovery_period_in_days = (known after apply)
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + server_side_encryption (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + ttl {
+[2026-11-17T20:16:59.534Z]           + attribute_name = "expires_at"
+[2026-11-17T20:16:59.534Z]           + enabled        = true
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.pipeline_role.data.aws_iam_policy_document.bucket_rw will be read during apply
+[2026-11-17T20:16:59.534Z]   # (config refers to values not yet known)
+[2026-11-17T20:16:59.534Z]  <= data "aws_iam_policy_document" "bucket_rw" {
+[2026-11-17T20:16:59.534Z]       + id            = (known after apply)
+[2026-11-17T20:16:59.534Z]       + json          = (known after apply)
+[2026-11-17T20:16:59.534Z]       + minified_json = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + statement {
+[2026-11-17T20:16:59.534Z]           + actions   = [
+[2026-11-17T20:16:59.534Z]               + "s3:ListBucket",
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + effect    = "Allow"
+[2026-11-17T20:16:59.534Z]           + resources = [
+[2026-11-17T20:16:59.534Z]               + (known after apply),
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + sid       = "ListBucket"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + statement {
+[2026-11-17T20:16:59.534Z]           + actions   = [
+[2026-11-17T20:16:59.534Z]               + "s3:GetObject",
+[2026-11-17T20:16:59.534Z]               + "s3:PutObject",
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + effect    = "Allow"
+[2026-11-17T20:16:59.534Z]           + resources = [
+[2026-11-17T20:16:59.534Z]               + (known after apply),
+[2026-11-17T20:16:59.534Z]             ]
+[2026-11-17T20:16:59.534Z]           + sid       = "ReadWriteObjects"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.pipeline_role.aws_iam_policy.bucket_rw will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_iam_policy" "bucket_rw" {
+[2026-11-17T20:16:59.534Z]       + arn              = (known after apply)
+[2026-11-17T20:16:59.534Z]       + attachment_count = (known after apply)
+[2026-11-17T20:16:59.534Z]       + id               = (known after apply)
+[2026-11-17T20:16:59.534Z]       + name             = "agente-iac-pipeline-bucket-rw"
+[2026-11-17T20:16:59.534Z]       + name_prefix      = (known after apply)
+[2026-11-17T20:16:59.534Z]       + path             = "/"
+[2026-11-17T20:16:59.534Z]       + policy           = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy_id        = (known after apply)
+[2026-11-17T20:16:59.534Z]       + tags_all         = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.pipeline_role.aws_iam_role.this will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_iam_role" "this" {
+[2026-11-17T20:16:59.534Z]       + arn                   = (known after apply)
+[2026-11-17T20:16:59.534Z]       + assume_role_policy    = jsonencode(
+[2026-11-17T20:16:59.534Z]             {
+[2026-11-17T20:16:59.534Z]               + Statement = [
+[2026-11-17T20:16:59.534Z]                   + {
+[2026-11-17T20:16:59.534Z]                       + Action    = "sts:AssumeRole"
+[2026-11-17T20:16:59.534Z]                       + Effect    = "Allow"
+[2026-11-17T20:16:59.534Z]                       + Principal = {
+[2026-11-17T20:16:59.534Z]                           + Service = "ec2.amazonaws.com"
+[2026-11-17T20:16:59.534Z]                         }
+[2026-11-17T20:16:59.534Z]                     },
+[2026-11-17T20:16:59.534Z]                 ]
+[2026-11-17T20:16:59.534Z]               + Version   = "2012-10-17"
+[2026-11-17T20:16:59.534Z]             }
+[2026-11-17T20:16:59.534Z]         )
+[2026-11-17T20:16:59.534Z]       + create_date           = (known after apply)
+[2026-11-17T20:16:59.534Z]       + force_detach_policies = false
+[2026-11-17T20:16:59.534Z]       + id                    = (known after apply)
+[2026-11-17T20:16:59.534Z]       + managed_policy_arns   = (known after apply)
+[2026-11-17T20:16:59.534Z]       + max_session_duration  = 3600
+[2026-11-17T20:16:59.534Z]       + name                  = "agente-iac-pipeline"
+[2026-11-17T20:16:59.534Z]       + name_prefix           = (known after apply)
+[2026-11-17T20:16:59.534Z]       + path                  = "/"
+[2026-11-17T20:16:59.534Z]       + tags_all              = {
+[2026-11-17T20:16:59.534Z]           + "env"        = "local"
+[2026-11-17T20:16:59.534Z]           + "managed_by" = "terraform"
+[2026-11-17T20:16:59.534Z]           + "owner"      = "platform-team"
+[2026-11-17T20:16:59.534Z]           + "project"    = "agente-iac"
+[2026-11-17T20:16:59.534Z]         }
+[2026-11-17T20:16:59.534Z]       + unique_id             = (known after apply)
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]       + inline_policy (known after apply)
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z]   # module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw will be created
+[2026-11-17T20:16:59.534Z]   + resource "aws_iam_role_policy_attachment" "bucket_rw" {
+[2026-11-17T20:16:59.534Z]       + id         = (known after apply)
+[2026-11-17T20:16:59.534Z]       + policy_arn = (known after apply)
+[2026-11-17T20:16:59.534Z]       + role       = "agente-iac-pipeline"
+[2026-11-17T20:16:59.534Z]     }
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z] Plan: 15 to add, 0 to change, 0 to destroy.
+[2026-11-17T20:16:59.534Z] 
+[2026-11-17T20:16:59.534Z] Changes to Outputs:
+[2026-11-17T20:16:59.534Z]   + artifact_bucket_arn = (known after apply)
+[2026-11-17T20:16:59.534Z]   + order_dlq_arn       = (known after apply)
+[2026-11-17T20:16:59.534Z]   + order_queue_url     = (known after apply)
+[2026-11-17T20:16:59.534Z]   + order_state_table   = "agente-iac-order-state"
+[2026-11-17T20:16:59.534Z]   + order_topic_arn     = (known after apply)
+[2026-11-17T20:16:59.534Z]   + pipeline_role_arn   = (known after apply)
+[2026-11-17T20:16:59.534Z] + terraform show -no-color tfplan
+[Pipeline] archiveArtifacts
+[2026-11-17T20:17:01.425Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+[Pipeline] timeout
+[2026-11-17T20:17:01.527Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] input
+[2026-11-17T20:17:01.562Z] ¿Ejecutar 'apply' en el entorno 'local' del emulador? Revisa plan.txt en los artefactos.
+[2026-11-17T20:17:01.562Z] Aprobar or Abort
+[2026-11-17T20:17:11.388Z] Approved by admin
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+[Pipeline] dir
+[2026-11-17T20:17:11.503Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:17:11.780Z] + terraform workspace select default
+[2026-11-17T20:17:12.031Z] + terraform apply -input=false -no-color tfplan
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_role.this: Creating...
+[2026-11-17T20:17:13.893Z] module.order_events.aws_sqs_queue.dlq: Creating...
+[2026-11-17T20:17:13.893Z] module.order_events.aws_sns_topic.orders: Creating...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket.this: Creating...
+[2026-11-17T20:17:13.893Z] module.order_state.aws_dynamodb_table.orders: Creating...
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_role.this: Creation complete after 0s [id=agente-iac-pipeline]
+[2026-11-17T20:17:13.893Z] module.order_events.aws_sns_topic.orders: Creation complete after 0s [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events]
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket.this: Creation complete after 1s [id=agente-iac-artifacts]
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Creating...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Creating...
+[2026-11-17T20:17:13.893Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Reading...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Reading...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Read complete after 0s [id=2728510792]
+[2026-11-17T20:17:13.893Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Read complete after 0s [id=362203099]
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Creation complete after 0s [id=agente-iac-artifacts]
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 0s [id=agente-iac-artifacts]
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_policy.bucket_rw: Creating...
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Creating...
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_policy.bucket_rw: Creation complete after 0s [id=arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw]
+[2026-11-17T20:17:13.893Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Creation complete after 0s [id=agente-iac-artifacts]
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Creating...
+[2026-11-17T20:17:13.893Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Creation complete after 0s [id=agente-iac-pipeline-20261117201713536300000001]
+[2026-11-17T20:17:14.804Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Creation complete after 1s [id=agente-iac-artifacts]
+[2026-11-17T20:17:14.804Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Creating...
+[2026-11-17T20:17:20.000Z] module.order_state.aws_dynamodb_table.orders: Creation complete after 7s [id=agente-iac-order-state]
+[2026-11-17T20:17:24.124Z] module.order_events.aws_sqs_queue.dlq: Still creating... [10s elapsed]
+[2026-11-17T20:17:25.036Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [10s elapsed]
+[2026-11-17T20:17:34.913Z] module.order_events.aws_sqs_queue.dlq: Still creating... [20s elapsed]
+[2026-11-17T20:17:34.913Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [20s elapsed]
+[2026-11-17T20:17:39.036Z] module.order_events.aws_sqs_queue.dlq: Creation complete after 26s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events-dlq]
+[2026-11-17T20:17:39.036Z] module.order_events.aws_sqs_queue.main: Creating...
+[2026-11-17T20:17:45.518Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [30s elapsed]
+[2026-11-17T20:17:48.747Z] module.order_events.aws_sqs_queue.main: Still creating... [10s elapsed]
+[2026-11-17T20:17:55.228Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [40s elapsed]
+[2026-11-17T20:17:59.351Z] module.order_events.aws_sqs_queue.main: Still creating... [20s elapsed]
+[2026-11-17T20:18:04.547Z] module.order_events.aws_sqs_queue.main: Creation complete after 25s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:18:04.547Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Reading...
+[2026-11-17T20:18:04.547Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Read complete after 0s [id=3887143841]
+[2026-11-17T20:18:04.547Z] module.order_events.aws_sqs_queue_policy.main: Creating...
+[2026-11-17T20:18:04.798Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Still creating... [50s elapsed]
+[2026-11-17T20:18:09.994Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Creation complete after 55s [id=agente-iac-artifacts]
+[2026-11-17T20:18:14.117Z] module.order_events.aws_sqs_queue_policy.main: Still creating... [10s elapsed]
+[2026-11-17T20:18:23.994Z] module.order_events.aws_sqs_queue_policy.main: Still creating... [20s elapsed]
+[2026-11-17T20:18:29.189Z] module.order_events.aws_sqs_queue_policy.main: Creation complete after 25s [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:18:29.189Z] module.order_events.aws_sns_topic_subscription.main: Creating...
+[2026-11-17T20:18:29.189Z] module.order_events.aws_sns_topic_subscription.main: Creation complete after 0s [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events:c60628b7-3cf2-475c-9bbf-9f12b61beb0b]
+[2026-11-17T20:18:29.189Z] 
+[2026-11-17T20:18:29.189Z] Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
+[2026-11-17T20:18:29.189Z] 
+[2026-11-17T20:18:29.189Z] Outputs:
+[2026-11-17T20:18:29.189Z] 
+[2026-11-17T20:18:29.189Z] artifact_bucket_arn = "arn:aws:s3:::agente-iac-artifacts"
+[2026-11-17T20:18:29.189Z] order_dlq_arn = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events-dlq"
+[2026-11-17T20:18:29.189Z] order_queue_url = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events"
+[2026-11-17T20:18:29.189Z] order_state_table = "agente-iac-order-state"
+[2026-11-17T20:18:29.189Z] order_topic_arn = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:18:29.189Z] pipeline_role_arn = "arn:aws:iam::000000000000:role/agente-iac-pipeline"
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+[Pipeline] dir
+[2026-11-17T20:18:29.301Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:18:29.578Z] + bash scripts/verificar-criterios.sh
+[2026-11-17T20:18:29.578Z] == Spec 001 ==
+[2026-11-17T20:18:30.129Z] OK    001 CA-1 bloqueo público
+[2026-11-17T20:18:30.680Z] OK    001 CA-2 cifrado
+[2026-11-17T20:18:31.231Z] OK    001 CA-3 versionado
+[2026-11-17T20:18:31.481Z] OK    001 CA-4 solo HTTPS
+[2026-11-17T20:18:31.481Z] OK    001 CA-4 condición SecureTransport
+[2026-11-17T20:18:32.032Z] OK    001 CA-5 retención 30/7
+[2026-11-17T20:18:32.583Z] OK    001 CA-6 acciones permitidas
+[2026-11-17T20:18:32.583Z] OK    001 CA-6 sin comodín s3:*
+[2026-11-17T20:18:32.583Z] OK    001 CA-6 sin Resource *
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta project en bucket
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta project en rol
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta env en bucket
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta env en rol
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta owner en bucket
+[2026-11-17T20:18:33.926Z] OK    001 CA-7 etiqueta owner en rol
+[2026-11-17T20:18:33.926Z] == Spec 002 ==
+[2026-11-17T20:18:34.837Z] OK    002 CA-1 entrega tema->cola
+[2026-11-17T20:18:35.088Z] OK    002 CA-2 maxReceiveCount 3
+[2026-11-17T20:18:35.638Z] OK    002 CA-2 apunta a la DLQ
+[2026-11-17T20:18:36.189Z] OK    002 CA-3 retención DLQ 14d
+[2026-11-17T20:18:36.740Z] OK    002 CA-4 cifrado cola
+[2026-11-17T20:18:37.291Z] OK    002 CA-4 cifrado DLQ
+[2026-11-17T20:18:37.541Z] OK    002 CA-5 clave order_id (S)
+[2026-11-17T20:18:38.092Z] OK    002 CA-5 PAY_PER_REQUEST
+[2026-11-17T20:18:38.643Z] OK    002 CA-6 TTL habilitado
+[2026-11-17T20:18:39.194Z] OK    002 CA-6 PITR habilitado
+[2026-11-17T20:18:39.745Z] OK    002 CA-7 solo SendMessage
+[2026-11-17T20:18:39.745Z] OK    002 CA-7 principal SNS
+[2026-11-17T20:18:39.745Z] OK    002 CA-7 SourceArn del tema
+[2026-11-17T20:18:40.296Z] OK    002 CA-8 etiqueta project en tema
+[2026-11-17T20:18:40.546Z] OK    002 CA-8 etiqueta project en cola
+[2026-11-17T20:18:41.097Z] OK    002 CA-8 etiqueta project en DLQ
+[2026-11-17T20:18:41.648Z] OK    002 CA-8 etiqueta project en tabla
+[2026-11-17T20:18:42.199Z] OK    002 CA-8 etiqueta env en tema
+[2026-11-17T20:18:42.750Z] OK    002 CA-8 etiqueta env en cola
+[2026-11-17T20:18:43.000Z] OK    002 CA-8 etiqueta env en DLQ
+[2026-11-17T20:18:43.551Z] OK    002 CA-8 etiqueta env en tabla
+[2026-11-17T20:18:44.102Z] OK    002 CA-8 etiqueta owner en tema
+[2026-11-17T20:18:44.652Z] OK    002 CA-8 etiqueta owner en cola
+[2026-11-17T20:18:45.203Z] OK    002 CA-8 etiqueta owner en DLQ
+[2026-11-17T20:18:45.754Z] OK    002 CA-8 etiqueta owner en tabla
+[2026-11-17T20:18:45.754Z] 
+[2026-11-17T20:18:45.754Z] TODO OK
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+Stage "Registrar promoción" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:18:45.932Z] Pipeline OK (apply en local).
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+################ build #15 (apply en local) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:19:15.935Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:19:16.253Z] + mkdir -p agente-iac
+[2026-11-17T20:19:16.253Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:19:16.804Z] + terraform version
+[2026-11-17T20:19:16.804Z] + head -1
+[2026-11-17T20:19:16.804Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:19:16.935Z] Entorno=local acción=apply workspace=default prefijo=agente-iac
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:19:17.030Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:19:17.309Z] + bash scripts/seguridad.sh
+[2026-11-17T20:19:17.309Z] 
+[2026-11-17T20:19:17.309Z] == Excepciones documentadas ==
+[2026-11-17T20:19:17.309Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:19:17.309Z] 
+[2026-11-17T20:19:17.309Z] == terraform fmt ==
+[2026-11-17T20:19:17.309Z] PASS  terraform fmt -check
+[2026-11-17T20:19:17.309Z] 
+[2026-11-17T20:19:17.309Z] == terraform validate ==
+[2026-11-17T20:19:19.793Z] Success! The configuration is valid.
+[2026-11-17T20:19:19.793Z] 
+[2026-11-17T20:19:19.793Z] PASS  terraform validate
+[2026-11-17T20:19:19.793Z] 
+[2026-11-17T20:19:19.793Z] == TFLint ==
+[2026-11-17T20:19:19.793Z] PASS  tflint
+[2026-11-17T20:19:19.793Z] 
+[2026-11-17T20:19:19.793Z] == Checkov ==
+[2026-11-17T20:19:23.028Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:19:23.028Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:19:23.028Z] 
+[2026-11-17T20:19:23.028Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:19:24.890Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:19:26.753Z] 
+[2026-11-17T20:19:26.753Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:19:26.808Z] Recording test results
+[2026-11-17T20:19:26.818Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:19:26.838Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+[Pipeline] dir
+[2026-11-17T20:19:26.936Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:19:27.216Z] + python3 scripts/promocion.py exigir --infra infra
+[2026-11-17T20:19:27.216Z] PROMOCIÓN BLOQUEADA: la huella 871f46021798 no tiene un apply verificado en staging
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+Stage "Plan" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+Stage "Aprobación manual" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+Stage "Apply" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+Stage "Registrar promoción" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:19:27.733Z] Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
+################ build #16 (destroy en staging) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:20:00.890Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:20:01.199Z] + mkdir -p agente-iac
+[2026-11-17T20:20:01.199Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:20:01.750Z] + terraform version
+[2026-11-17T20:20:01.750Z] + head -1
+[2026-11-17T20:20:01.750Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:20:01.904Z] Entorno=staging acción=destroy workspace=staging prefijo=agente-iac-stg
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:20:02.011Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:20:02.293Z] + bash scripts/seguridad.sh
+[2026-11-17T20:20:02.293Z] 
+[2026-11-17T20:20:02.293Z] == Excepciones documentadas ==
+[2026-11-17T20:20:02.293Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:20:02.293Z] 
+[2026-11-17T20:20:02.293Z] == terraform fmt ==
+[2026-11-17T20:20:02.293Z] PASS  terraform fmt -check
+[2026-11-17T20:20:02.293Z] 
+[2026-11-17T20:20:02.293Z] == terraform validate ==
+[2026-11-17T20:20:20.260Z] Success! The configuration is valid.
+[2026-11-17T20:20:20.260Z] 
+[2026-11-17T20:20:20.260Z] PASS  terraform validate
+[2026-11-17T20:20:20.260Z] 
+[2026-11-17T20:20:20.260Z] == TFLint ==
+[2026-11-17T20:20:20.260Z] PASS  tflint
+[2026-11-17T20:20:20.260Z] 
+[2026-11-17T20:20:20.260Z] == Checkov ==
+[2026-11-17T20:20:20.811Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:20:20.811Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:20:20.811Z] 
+[2026-11-17T20:20:20.811Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:20:23.294Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:20:25.155Z] 
+[2026-11-17T20:20:25.155Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:20:25.209Z] Recording test results
+[2026-11-17T20:20:25.218Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:20:25.238Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+Stage "Compuerta de promoción" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+[Pipeline] dir
+[2026-11-17T20:20:25.405Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:20:25.683Z] + terraform init -input=false -no-color
+[2026-11-17T20:20:25.684Z] Initializing the backend...
+[2026-11-17T20:20:25.684Z] Initializing modules...
+[2026-11-17T20:20:25.684Z] - artifact_bucket in ../../modules/secure-bucket
+[2026-11-17T20:20:25.684Z] - order_events in ../../modules/order-events
+[2026-11-17T20:20:25.684Z] - order_state in ../../modules/order-state-table
+[2026-11-17T20:20:25.684Z] - pipeline_role in ../../modules/pipeline-role
+[2026-11-17T20:20:25.684Z] Initializing provider plugins...
+[2026-11-17T20:20:25.684Z] - Reusing previous version of hashicorp/aws from the dependency lock file
+[2026-11-17T20:20:27.027Z] - Installing hashicorp/aws v5.100.0...
+[2026-11-17T20:20:41.792Z] - Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+[2026-11-17T20:20:41.792Z] 
+[2026-11-17T20:20:41.792Z] Terraform has been successfully initialized!
+[2026-11-17T20:20:41.792Z] + terraform workspace select -or-create staging
+[2026-11-17T20:20:41.792Z] [0m[32mSwitched to workspace "staging".[0m
+[2026-11-17T20:20:41.792Z] + [ destroy = destroy ]
+[2026-11-17T20:20:41.792Z] + terraform plan -destroy -input=false -no-color -var-file=staging.tfvars -out=tfplan
+[2026-11-17T20:20:41.792Z] module.pipeline_role.data.aws_iam_policy_document.assume: Reading...
+[2026-11-17T20:20:41.792Z] module.order_state.aws_dynamodb_table.orders: Refreshing state... [id=agente-iac-stg-order-state]
+[2026-11-17T20:20:41.792Z] module.order_events.aws_sqs_queue.dlq: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events-dlq]
+[2026-11-17T20:20:41.792Z] module.order_events.aws_sns_topic.orders: Refreshing state... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.aws_s3_bucket.this: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:41.792Z] module.pipeline_role.data.aws_iam_policy_document.assume: Read complete after 0s [id=2851119427]
+[2026-11-17T20:20:41.792Z] module.pipeline_role.aws_iam_role.this: Refreshing state... [id=agente-iac-stg-pipeline]
+[2026-11-17T20:20:41.792Z] module.order_events.aws_sqs_queue.main: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:20:41.792Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Reading...
+[2026-11-17T20:20:41.792Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Read complete after 0s [id=748139016]
+[2026-11-17T20:20:41.792Z] module.order_events.aws_sqs_queue_policy.main: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:20:41.792Z] module.order_events.aws_sns_topic_subscription.main: Refreshing state... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events:fe7757bc-6b7e-474b-8587-dad99bc98acb]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Reading...
+[2026-11-17T20:20:41.792Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Reading...
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Read complete after 0s [id=4025011458]
+[2026-11-17T20:20:41.792Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Read complete after 0s [id=2898127244]
+[2026-11-17T20:20:41.792Z] module.pipeline_role.aws_iam_policy.bucket_rw: Refreshing state... [id=arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw]
+[2026-11-17T20:20:41.792Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:41.792Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Refreshing state... [id=agente-iac-stg-pipeline-20261117201427769200000001]
+[2026-11-17T20:20:43.136Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z] Terraform used the selected providers to generate the following execution
+[2026-11-17T20:20:43.686Z] plan. Resource actions are indicated with the following symbols:
+[2026-11-17T20:20:43.686Z]   - destroy
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z] Terraform will perform the following actions:
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]   # module.artifact_bucket.aws_s3_bucket.this will be destroyed
+[2026-11-17T20:20:43.686Z]   - resource "aws_s3_bucket" "this" {
+[2026-11-17T20:20:43.686Z]       - arn                         = "arn:aws:s3:::agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.686Z]       - bucket                      = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.686Z]       - bucket_domain_name          = "agente-iac-stg-artifacts.s3.amazonaws.com" -> null
+[2026-11-17T20:20:43.686Z]       - bucket_regional_domain_name = "agente-iac-stg-artifacts.s3.us-east-1.amazonaws.com" -> null
+[2026-11-17T20:20:43.686Z]       - force_destroy               = false -> null
+[2026-11-17T20:20:43.686Z]       - hosted_zone_id              = "Z3AQBSTGFYJSTF" -> null
+[2026-11-17T20:20:43.686Z]       - id                          = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.686Z]       - object_lock_enabled         = false -> null
+[2026-11-17T20:20:43.686Z]       - policy                      = jsonencode(
+[2026-11-17T20:20:43.686Z]             {
+[2026-11-17T20:20:43.686Z]               - Statement = [
+[2026-11-17T20:20:43.686Z]                   - {
+[2026-11-17T20:20:43.686Z]                       - Action    = "s3:*"
+[2026-11-17T20:20:43.686Z]                       - Condition = {
+[2026-11-17T20:20:43.686Z]                           - Bool = {
+[2026-11-17T20:20:43.686Z]                               - "aws:SecureTransport" = "false"
+[2026-11-17T20:20:43.686Z]                             }
+[2026-11-17T20:20:43.686Z]                         }
+[2026-11-17T20:20:43.686Z]                       - Effect    = "Deny"
+[2026-11-17T20:20:43.686Z]                       - Principal = "*"
+[2026-11-17T20:20:43.686Z]                       - Resource  = [
+[2026-11-17T20:20:43.686Z]                           - "arn:aws:s3:::agente-iac-stg-artifacts/*",
+[2026-11-17T20:20:43.686Z]                           - "arn:aws:s3:::agente-iac-stg-artifacts",
+[2026-11-17T20:20:43.686Z]                         ]
+[2026-11-17T20:20:43.686Z]                       - Sid       = "DenyInsecureTransport"
+[2026-11-17T20:20:43.686Z]                     },
+[2026-11-17T20:20:43.686Z]                 ]
+[2026-11-17T20:20:43.686Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.686Z]             }
+[2026-11-17T20:20:43.686Z]         ) -> null
+[2026-11-17T20:20:43.686Z]       - region                      = "us-east-1" -> null
+[2026-11-17T20:20:43.686Z]       - request_payer               = "BucketOwner" -> null
+[2026-11-17T20:20:43.686Z]       - tags                        = {} -> null
+[2026-11-17T20:20:43.686Z]       - tags_all                    = {
+[2026-11-17T20:20:43.686Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.686Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.686Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.686Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.686Z]         } -> null
+[2026-11-17T20:20:43.686Z]         # (2 unchanged attributes hidden)
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]       - grant {
+[2026-11-17T20:20:43.686Z]           - id          = "f7b11509f4d675c3c44f0dd37ca830bb02e8cfa58f04c46283c4bfcbdce1ff45" -> null
+[2026-11-17T20:20:43.686Z]           - permissions = [
+[2026-11-17T20:20:43.686Z]               - "FULL_CONTROL",
+[2026-11-17T20:20:43.686Z]             ] -> null
+[2026-11-17T20:20:43.686Z]           - type        = "CanonicalUser" -> null
+[2026-11-17T20:20:43.686Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.686Z]         }
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]       - lifecycle_rule {
+[2026-11-17T20:20:43.686Z]           - abort_incomplete_multipart_upload_days = 7 -> null
+[2026-11-17T20:20:43.686Z]           - enabled                                = true -> null
+[2026-11-17T20:20:43.686Z]           - id                                     = "expire-artifacts" -> null
+[2026-11-17T20:20:43.686Z]           - tags                                   = {} -> null
+[2026-11-17T20:20:43.686Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]           - expiration {
+[2026-11-17T20:20:43.686Z]               - days                         = 30 -> null
+[2026-11-17T20:20:43.686Z]               - expired_object_delete_marker = false -> null
+[2026-11-17T20:20:43.686Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.686Z]             }
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]           - noncurrent_version_expiration {
+[2026-11-17T20:20:43.686Z]               - days = 7 -> null
+[2026-11-17T20:20:43.686Z]             }
+[2026-11-17T20:20:43.686Z]         }
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]       - server_side_encryption_configuration {
+[2026-11-17T20:20:43.686Z]           - rule {
+[2026-11-17T20:20:43.686Z]               - bucket_key_enabled = false -> null
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]               - apply_server_side_encryption_by_default {
+[2026-11-17T20:20:43.686Z]                   - sse_algorithm     = "AES256" -> null
+[2026-11-17T20:20:43.686Z]                     # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.686Z]                 }
+[2026-11-17T20:20:43.686Z]             }
+[2026-11-17T20:20:43.686Z]         }
+[2026-11-17T20:20:43.686Z] 
+[2026-11-17T20:20:43.686Z]       - versioning {
+[2026-11-17T20:20:43.687Z]           - enabled    = true -> null
+[2026-11-17T20:20:43.687Z]           - mfa_delete = false -> null
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_s3_bucket_lifecycle_configuration" "this" {
+[2026-11-17T20:20:43.687Z]       - bucket                                 = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - id                                     = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - transition_default_minimum_object_size = "all_storage_classes_128K" -> null
+[2026-11-17T20:20:43.687Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - rule {
+[2026-11-17T20:20:43.687Z]           - id     = "expire-artifacts" -> null
+[2026-11-17T20:20:43.687Z]           - status = "Enabled" -> null
+[2026-11-17T20:20:43.687Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]           - abort_incomplete_multipart_upload {
+[2026-11-17T20:20:43.687Z]               - days_after_initiation = 7 -> null
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]           - expiration {
+[2026-11-17T20:20:43.687Z]               - days                         = 30 -> null
+[2026-11-17T20:20:43.687Z]               - expired_object_delete_marker = false -> null
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]           - filter {
+[2026-11-17T20:20:43.687Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]           - noncurrent_version_expiration {
+[2026-11-17T20:20:43.687Z]               - noncurrent_days = 7 -> null
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.artifact_bucket.aws_s3_bucket_policy.tls_only will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_s3_bucket_policy" "tls_only" {
+[2026-11-17T20:20:43.687Z]       - bucket = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - id     = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - policy = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action    = "s3:*"
+[2026-11-17T20:20:43.687Z]                       - Condition = {
+[2026-11-17T20:20:43.687Z]                           - Bool = {
+[2026-11-17T20:20:43.687Z]                               - "aws:SecureTransport" = "false"
+[2026-11-17T20:20:43.687Z]                             }
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Effect    = "Deny"
+[2026-11-17T20:20:43.687Z]                       - Principal = "*"
+[2026-11-17T20:20:43.687Z]                       - Resource  = [
+[2026-11-17T20:20:43.687Z]                           - "arn:aws:s3:::agente-iac-stg-artifacts/*",
+[2026-11-17T20:20:43.687Z]                           - "arn:aws:s3:::agente-iac-stg-artifacts",
+[2026-11-17T20:20:43.687Z]                         ]
+[2026-11-17T20:20:43.687Z]                       - Sid       = "DenyInsecureTransport"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.artifact_bucket.aws_s3_bucket_public_access_block.this will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_s3_bucket_public_access_block" "this" {
+[2026-11-17T20:20:43.687Z]       - block_public_acls       = true -> null
+[2026-11-17T20:20:43.687Z]       - block_public_policy     = true -> null
+[2026-11-17T20:20:43.687Z]       - bucket                  = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - id                      = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - ignore_public_acls      = true -> null
+[2026-11-17T20:20:43.687Z]       - restrict_public_buckets = true -> null
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+[2026-11-17T20:20:43.687Z]       - bucket                = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - id                    = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - rule {
+[2026-11-17T20:20:43.687Z]           - bucket_key_enabled = false -> null
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]           - apply_server_side_encryption_by_default {
+[2026-11-17T20:20:43.687Z]               - sse_algorithm     = "AES256" -> null
+[2026-11-17T20:20:43.687Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.artifact_bucket.aws_s3_bucket_versioning.this will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_s3_bucket_versioning" "this" {
+[2026-11-17T20:20:43.687Z]       - bucket                = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]       - id                    = "agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - versioning_configuration {
+[2026-11-17T20:20:43.687Z]           - status     = "Enabled" -> null
+[2026-11-17T20:20:43.687Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_events.aws_sns_topic.orders will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_sns_topic" "orders" {
+[2026-11-17T20:20:43.687Z]       - application_success_feedback_sample_rate = 0 -> null
+[2026-11-17T20:20:43.687Z]       - arn                                      = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - content_based_deduplication              = false -> null
+[2026-11-17T20:20:43.687Z]       - fifo_topic                               = false -> null
+[2026-11-17T20:20:43.687Z]       - firehose_success_feedback_sample_rate    = 0 -> null
+[2026-11-17T20:20:43.687Z]       - http_success_feedback_sample_rate        = 0 -> null
+[2026-11-17T20:20:43.687Z]       - id                                       = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - kms_master_key_id                        = "alias/aws/sns" -> null
+[2026-11-17T20:20:43.687Z]       - lambda_success_feedback_sample_rate      = 0 -> null
+[2026-11-17T20:20:43.687Z]       - name                                     = "agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - owner                                    = "000000000000" -> null
+[2026-11-17T20:20:43.687Z]       - policy                                   = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Id        = "__default_policy_ID"
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action    = [
+[2026-11-17T20:20:43.687Z]                           - "SNS:GetTopicAttributes",
+[2026-11-17T20:20:43.687Z]                           - "SNS:SetTopicAttributes",
+[2026-11-17T20:20:43.687Z]                           - "SNS:AddPermission",
+[2026-11-17T20:20:43.687Z]                           - "SNS:RemovePermission",
+[2026-11-17T20:20:43.687Z]                           - "SNS:DeleteTopic",
+[2026-11-17T20:20:43.687Z]                           - "SNS:Subscribe",
+[2026-11-17T20:20:43.687Z]                           - "SNS:ListSubscriptionsByTopic",
+[2026-11-17T20:20:43.687Z]                           - "SNS:Publish",
+[2026-11-17T20:20:43.687Z]                         ]
+[2026-11-17T20:20:43.687Z]                       - Condition = {
+[2026-11-17T20:20:43.687Z]                           - StringEquals = {
+[2026-11-17T20:20:43.687Z]                               - "AWS:SourceOwner" = "000000000000"
+[2026-11-17T20:20:43.687Z]                             }
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Effect    = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Principal = {
+[2026-11-17T20:20:43.687Z]                           - AWS = "*"
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Resource  = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:20:43.687Z]                       - Sid       = "__default_statement_ID"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2008-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - signature_version                        = 0 -> null
+[2026-11-17T20:20:43.687Z]       - sqs_success_feedback_sample_rate         = 0 -> null
+[2026-11-17T20:20:43.687Z]       - tags                                     = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all                                 = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]         # (17 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_events.aws_sns_topic_subscription.main will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_sns_topic_subscription" "main" {
+[2026-11-17T20:20:43.687Z]       - arn                             = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events:fe7757bc-6b7e-474b-8587-dad99bc98acb" -> null
+[2026-11-17T20:20:43.687Z]       - confirmation_timeout_in_minutes = 1 -> null
+[2026-11-17T20:20:43.687Z]       - confirmation_was_authenticated  = true -> null
+[2026-11-17T20:20:43.687Z]       - endpoint                        = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - endpoint_auto_confirms          = false -> null
+[2026-11-17T20:20:43.687Z]       - id                              = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events:fe7757bc-6b7e-474b-8587-dad99bc98acb" -> null
+[2026-11-17T20:20:43.687Z]       - owner_id                        = "000000000000" -> null
+[2026-11-17T20:20:43.687Z]       - pending_confirmation            = false -> null
+[2026-11-17T20:20:43.687Z]       - protocol                        = "sqs" -> null
+[2026-11-17T20:20:43.687Z]       - raw_message_delivery            = false -> null
+[2026-11-17T20:20:43.687Z]       - topic_arn                       = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]         # (6 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_events.aws_sqs_queue.dlq will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_sqs_queue" "dlq" {
+[2026-11-17T20:20:43.687Z]       - arn                               = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events-dlq" -> null
+[2026-11-17T20:20:43.687Z]       - content_based_deduplication       = false -> null
+[2026-11-17T20:20:43.687Z]       - delay_seconds                     = 0 -> null
+[2026-11-17T20:20:43.687Z]       - fifo_queue                        = false -> null
+[2026-11-17T20:20:43.687Z]       - id                                = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events-dlq" -> null
+[2026-11-17T20:20:43.687Z]       - kms_data_key_reuse_period_seconds = 300 -> null
+[2026-11-17T20:20:43.687Z]       - max_message_size                  = 262144 -> null
+[2026-11-17T20:20:43.687Z]       - message_retention_seconds         = 1209600 -> null
+[2026-11-17T20:20:43.687Z]       - name                              = "agente-iac-stg-order-events-dlq" -> null
+[2026-11-17T20:20:43.687Z]       - receive_wait_time_seconds         = 0 -> null
+[2026-11-17T20:20:43.687Z]       - sqs_managed_sse_enabled           = true -> null
+[2026-11-17T20:20:43.687Z]       - tags                              = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all                          = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]       - url                               = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events-dlq" -> null
+[2026-11-17T20:20:43.687Z]       - visibility_timeout_seconds        = 30 -> null
+[2026-11-17T20:20:43.687Z]         # (7 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_events.aws_sqs_queue.main will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_sqs_queue" "main" {
+[2026-11-17T20:20:43.687Z]       - arn                               = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - content_based_deduplication       = false -> null
+[2026-11-17T20:20:43.687Z]       - delay_seconds                     = 0 -> null
+[2026-11-17T20:20:43.687Z]       - fifo_queue                        = false -> null
+[2026-11-17T20:20:43.687Z]       - id                                = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - kms_data_key_reuse_period_seconds = 300 -> null
+[2026-11-17T20:20:43.687Z]       - max_message_size                  = 262144 -> null
+[2026-11-17T20:20:43.687Z]       - message_retention_seconds         = 345600 -> null
+[2026-11-17T20:20:43.687Z]       - name                              = "agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - policy                            = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action    = "sqs:SendMessage"
+[2026-11-17T20:20:43.687Z]                       - Condition = {
+[2026-11-17T20:20:43.687Z]                           - ArnEquals = {
+[2026-11-17T20:20:43.687Z]                               - "aws:SourceArn" = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:20:43.687Z]                             }
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Effect    = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Principal = {
+[2026-11-17T20:20:43.687Z]                           - Service = "sns.amazonaws.com"
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Resource  = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:20:43.687Z]                       - Sid       = "AllowTopicToSend"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - receive_wait_time_seconds         = 0 -> null
+[2026-11-17T20:20:43.687Z]       - redrive_policy                    = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - deadLetterTargetArn = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events-dlq"
+[2026-11-17T20:20:43.687Z]               - maxReceiveCount     = 3
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - sqs_managed_sse_enabled           = true -> null
+[2026-11-17T20:20:43.687Z]       - tags                              = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all                          = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]       - url                               = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - visibility_timeout_seconds        = 30 -> null
+[2026-11-17T20:20:43.687Z]         # (5 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_events.aws_sqs_queue_policy.main will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_sqs_queue_policy" "main" {
+[2026-11-17T20:20:43.687Z]       - id        = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]       - policy    = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action    = "sqs:SendMessage"
+[2026-11-17T20:20:43.687Z]                       - Condition = {
+[2026-11-17T20:20:43.687Z]                           - ArnEquals = {
+[2026-11-17T20:20:43.687Z]                               - "aws:SourceArn" = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:20:43.687Z]                             }
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Effect    = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Principal = {
+[2026-11-17T20:20:43.687Z]                           - Service = "sns.amazonaws.com"
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                       - Resource  = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events"
+[2026-11-17T20:20:43.687Z]                       - Sid       = "AllowTopicToSend"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - queue_url = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.order_state.aws_dynamodb_table.orders will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_dynamodb_table" "orders" {
+[2026-11-17T20:20:43.687Z]       - arn                         = "arn:aws:dynamodb:us-east-1:000000000000:table/agente-iac-stg-order-state" -> null
+[2026-11-17T20:20:43.687Z]       - billing_mode                = "PAY_PER_REQUEST" -> null
+[2026-11-17T20:20:43.687Z]       - deletion_protection_enabled = false -> null
+[2026-11-17T20:20:43.687Z]       - hash_key                    = "order_id" -> null
+[2026-11-17T20:20:43.687Z]       - id                          = "agente-iac-stg-order-state" -> null
+[2026-11-17T20:20:43.687Z]       - name                        = "agente-iac-stg-order-state" -> null
+[2026-11-17T20:20:43.687Z]       - read_capacity               = 0 -> null
+[2026-11-17T20:20:43.687Z]       - stream_enabled              = false -> null
+[2026-11-17T20:20:43.687Z]       - table_class                 = "STANDARD" -> null
+[2026-11-17T20:20:43.687Z]       - tags                        = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all                    = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]       - write_capacity              = 0 -> null
+[2026-11-17T20:20:43.687Z]         # (3 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - attribute {
+[2026-11-17T20:20:43.687Z]           - name = "order_id" -> null
+[2026-11-17T20:20:43.687Z]           - type = "S" -> null
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - point_in_time_recovery {
+[2026-11-17T20:20:43.687Z]           - enabled                 = true -> null
+[2026-11-17T20:20:43.687Z]           - recovery_period_in_days = 35 -> null
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]       - ttl {
+[2026-11-17T20:20:43.687Z]           - attribute_name = "expires_at" -> null
+[2026-11-17T20:20:43.687Z]           - enabled        = true -> null
+[2026-11-17T20:20:43.687Z]         }
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.pipeline_role.aws_iam_policy.bucket_rw will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_iam_policy" "bucket_rw" {
+[2026-11-17T20:20:43.687Z]       - arn              = "arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw" -> null
+[2026-11-17T20:20:43.687Z]       - attachment_count = 1 -> null
+[2026-11-17T20:20:43.687Z]       - id               = "arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw" -> null
+[2026-11-17T20:20:43.687Z]       - name             = "agente-iac-stg-pipeline-bucket-rw" -> null
+[2026-11-17T20:20:43.687Z]       - path             = "/" -> null
+[2026-11-17T20:20:43.687Z]       - policy           = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action   = "s3:ListBucket"
+[2026-11-17T20:20:43.687Z]                       - Effect   = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Resource = "arn:aws:s3:::agente-iac-stg-artifacts"
+[2026-11-17T20:20:43.687Z]                       - Sid      = "ListBucket"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action   = [
+[2026-11-17T20:20:43.687Z]                           - "s3:PutObject",
+[2026-11-17T20:20:43.687Z]                           - "s3:GetObject",
+[2026-11-17T20:20:43.687Z]                         ]
+[2026-11-17T20:20:43.687Z]                       - Effect   = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Resource = "arn:aws:s3:::agente-iac-stg-artifacts/*"
+[2026-11-17T20:20:43.687Z]                       - Sid      = "ReadWriteObjects"
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - policy_id        = "ANPAOWVOJOY3VBWOJCSHY" -> null
+[2026-11-17T20:20:43.687Z]       - tags             = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all         = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]         # (2 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.pipeline_role.aws_iam_role.this will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_iam_role" "this" {
+[2026-11-17T20:20:43.687Z]       - arn                   = "arn:aws:iam::000000000000:role/agente-iac-stg-pipeline" -> null
+[2026-11-17T20:20:43.687Z]       - assume_role_policy    = jsonencode(
+[2026-11-17T20:20:43.687Z]             {
+[2026-11-17T20:20:43.687Z]               - Statement = [
+[2026-11-17T20:20:43.687Z]                   - {
+[2026-11-17T20:20:43.687Z]                       - Action    = "sts:AssumeRole"
+[2026-11-17T20:20:43.687Z]                       - Effect    = "Allow"
+[2026-11-17T20:20:43.687Z]                       - Principal = {
+[2026-11-17T20:20:43.687Z]                           - Service = "ec2.amazonaws.com"
+[2026-11-17T20:20:43.687Z]                         }
+[2026-11-17T20:20:43.687Z]                     },
+[2026-11-17T20:20:43.687Z]                 ]
+[2026-11-17T20:20:43.687Z]               - Version   = "2012-10-17"
+[2026-11-17T20:20:43.687Z]             }
+[2026-11-17T20:20:43.687Z]         ) -> null
+[2026-11-17T20:20:43.687Z]       - create_date           = "2026-11-17T20:14:27Z" -> null
+[2026-11-17T20:20:43.687Z]       - force_detach_policies = false -> null
+[2026-11-17T20:20:43.687Z]       - id                    = "agente-iac-stg-pipeline" -> null
+[2026-11-17T20:20:43.687Z]       - managed_policy_arns   = [
+[2026-11-17T20:20:43.687Z]           - "arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw",
+[2026-11-17T20:20:43.687Z]         ] -> null
+[2026-11-17T20:20:43.687Z]       - max_session_duration  = 3600 -> null
+[2026-11-17T20:20:43.687Z]       - name                  = "agente-iac-stg-pipeline" -> null
+[2026-11-17T20:20:43.687Z]       - path                  = "/" -> null
+[2026-11-17T20:20:43.687Z]       - tags                  = {} -> null
+[2026-11-17T20:20:43.687Z]       - tags_all              = {
+[2026-11-17T20:20:43.687Z]           - "env"        = "staging"
+[2026-11-17T20:20:43.687Z]           - "managed_by" = "terraform"
+[2026-11-17T20:20:43.687Z]           - "owner"      = "platform-team"
+[2026-11-17T20:20:43.687Z]           - "project"    = "agente-iac"
+[2026-11-17T20:20:43.687Z]         } -> null
+[2026-11-17T20:20:43.687Z]       - unique_id             = "AROAOWVOJOY3VBWOJCSHY" -> null
+[2026-11-17T20:20:43.687Z]         # (3 unchanged attributes hidden)
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z]   # module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw will be destroyed
+[2026-11-17T20:20:43.687Z]   - resource "aws_iam_role_policy_attachment" "bucket_rw" {
+[2026-11-17T20:20:43.687Z]       - id         = "agente-iac-stg-pipeline-20261117201427769200000001" -> null
+[2026-11-17T20:20:43.687Z]       - policy_arn = "arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw" -> null
+[2026-11-17T20:20:43.687Z]       - role       = "agente-iac-stg-pipeline" -> null
+[2026-11-17T20:20:43.687Z]     }
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z] Plan: 0 to add, 0 to change, 15 to destroy.
+[2026-11-17T20:20:43.687Z] 
+[2026-11-17T20:20:43.687Z] Changes to Outputs:
+[2026-11-17T20:20:43.687Z]   - artifact_bucket_arn = "arn:aws:s3:::agente-iac-stg-artifacts" -> null
+[2026-11-17T20:20:43.687Z]   - order_dlq_arn       = "arn:aws:sqs:us-east-1:000000000000:agente-iac-stg-order-events-dlq" -> null
+[2026-11-17T20:20:43.687Z]   - order_queue_url     = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]   - order_state_table   = "agente-iac-stg-order-state" -> null
+[2026-11-17T20:20:43.687Z]   - order_topic_arn     = "arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events" -> null
+[2026-11-17T20:20:43.687Z]   - pipeline_role_arn   = "arn:aws:iam::000000000000:role/agente-iac-stg-pipeline" -> null
+[2026-11-17T20:20:43.687Z] + terraform show -no-color tfplan
+[Pipeline] archiveArtifacts
+[2026-11-17T20:20:45.049Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+[Pipeline] timeout
+[2026-11-17T20:20:45.150Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] input
+[2026-11-17T20:20:45.184Z] ¿Ejecutar 'destroy' en el entorno 'staging' del emulador? Revisa plan.txt en los artefactos.
+[2026-11-17T20:20:45.184Z] Aprobar or Abort
+[2026-11-17T20:20:59.498Z] Approved by admin
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+[Pipeline] dir
+[2026-11-17T20:20:59.614Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:20:59.894Z] + terraform workspace select staging
+[2026-11-17T20:21:00.144Z] + terraform apply -input=false -no-color tfplan
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Destroying... [id=agente-iac-stg-pipeline-20261117201427769200000001]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.order_events.aws_sns_topic_subscription.main: Destroying... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events:fe7757bc-6b7e-474b-8587-dad99bc98acb]
+[2026-11-17T20:21:02.006Z] module.order_state.aws_dynamodb_table.orders: Destroying... [id=agente-iac-stg-order-state]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.order_events.aws_sns_topic_subscription.main: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_policy.bucket_rw: Destroying... [id=arn:aws:iam::000000000000:policy/agente-iac-stg-pipeline-bucket-rw]
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_role.this: Destroying... [id=agente-iac-stg-pipeline]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_policy.bucket_rw: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.pipeline_role.aws_iam_role.this: Destruction complete after 0s
+[2026-11-17T20:21:02.006Z] module.order_events.aws_sqs_queue_policy.main: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket.this: Destroying... [id=agente-iac-stg-artifacts]
+[2026-11-17T20:21:02.006Z] module.artifact_bucket.aws_s3_bucket.this: Destruction complete after 0s
+[2026-11-17T20:21:05.235Z] module.order_state.aws_dynamodb_table.orders: Destruction complete after 3s
+[2026-11-17T20:21:11.717Z] module.order_events.aws_sqs_queue_policy.main: Still destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events, 10s elapsed]
+[2026-11-17T20:21:21.594Z] module.order_events.aws_sqs_queue_policy.main: Still destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events, 20s elapsed]
+[2026-11-17T20:21:26.790Z] module.order_events.aws_sqs_queue_policy.main: Destruction complete after 25s
+[2026-11-17T20:21:26.790Z] module.order_events.aws_sqs_queue.main: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events]
+[2026-11-17T20:21:26.790Z] module.order_events.aws_sns_topic.orders: Destroying... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-stg-order-events]
+[2026-11-17T20:21:26.790Z] module.order_events.aws_sns_topic.orders: Destruction complete after 0s
+[2026-11-17T20:21:28.134Z] module.order_events.aws_sqs_queue.main: Destruction complete after 1s
+[2026-11-17T20:21:28.134Z] module.order_events.aws_sqs_queue.dlq: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-stg-order-events-dlq]
+[2026-11-17T20:21:29.996Z] module.order_events.aws_sqs_queue.dlq: Destruction complete after 2s
+[2026-11-17T20:21:29.996Z] 
+[2026-11-17T20:21:29.996Z] Apply complete! Resources: 0 added, 0 changed, 15 destroyed.
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+[Pipeline] dir
+[2026-11-17T20:21:30.184Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:21:30.463Z] + [ destroy = apply ]
+[2026-11-17T20:21:30.463Z] + python3 scripts/promocion.py revocar
+[2026-11-17T20:21:30.463Z] 1 marcador(es) revocado(s)
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:21:30.580Z] Pipeline OK (destroy en staging).
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+################ build #17 (apply en local) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:22:00.952Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:22:01.283Z] + mkdir -p agente-iac
+[2026-11-17T20:22:01.283Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:22:01.833Z] + terraform version
+[2026-11-17T20:22:01.833Z] + head -1
+[2026-11-17T20:22:01.833Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:22:01.975Z] Entorno=local acción=apply workspace=default prefijo=agente-iac
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:22:02.073Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:22:02.353Z] + bash scripts/seguridad.sh
+[2026-11-17T20:22:02.353Z] 
+[2026-11-17T20:22:02.353Z] == Excepciones documentadas ==
+[2026-11-17T20:22:02.353Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:22:02.353Z] 
+[2026-11-17T20:22:02.353Z] == terraform fmt ==
+[2026-11-17T20:22:02.353Z] PASS  terraform fmt -check
+[2026-11-17T20:22:02.353Z] 
+[2026-11-17T20:22:02.353Z] == terraform validate ==
+[2026-11-17T20:22:04.836Z] Success! The configuration is valid.
+[2026-11-17T20:22:04.837Z] 
+[2026-11-17T20:22:04.837Z] PASS  terraform validate
+[2026-11-17T20:22:04.837Z] 
+[2026-11-17T20:22:04.837Z] == TFLint ==
+[2026-11-17T20:22:05.087Z] PASS  tflint
+[2026-11-17T20:22:05.087Z] 
+[2026-11-17T20:22:05.087Z] == Checkov ==
+[2026-11-17T20:22:08.316Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:22:08.316Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:22:08.316Z] 
+[2026-11-17T20:22:08.316Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:22:10.800Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:22:13.283Z] 
+[2026-11-17T20:22:13.283Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:22:13.334Z] Recording test results
+[2026-11-17T20:22:13.343Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:22:13.359Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+[Pipeline] dir
+[2026-11-17T20:22:13.446Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:22:13.725Z] + python3 scripts/promocion.py exigir --infra infra
+[2026-11-17T20:22:13.725Z] PROMOCIÓN BLOQUEADA: la huella 3aea1862bf2e no tiene un apply verificado en staging
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+Stage "Plan" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+Stage "Aprobación manual" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+Stage "Apply" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+Stage "Registrar promoción" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:22:14.216Z] Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
+################ build #18 (destroy en local) ################
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/agente-iac
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] timeout
+[2026-11-17T20:22:40.961Z] Timeout set to expire in 1 hr 0 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Preparar)
+[Pipeline] sh
+[2026-11-17T20:22:41.274Z] + mkdir -p agente-iac
+[2026-11-17T20:22:41.275Z] + rsync -a --delete --exclude terraform.tfstate* --exclude .terraform --exclude reports --exclude tfplan --exclude plan.txt --exclude .env --exclude .data --exclude .git /repo/ agente-iac/
+[2026-11-17T20:22:41.525Z] + terraform version
+[2026-11-17T20:22:41.525Z] + head -1
+[2026-11-17T20:22:41.775Z] Terraform v1.9.8
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Entorno)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+[2026-11-17T20:22:41.907Z] Entorno=local acción=destroy workspace=default prefijo=agente-iac
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate, lint y seguridad)
+[Pipeline] dir
+[2026-11-17T20:22:41.996Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:22:42.274Z] + bash scripts/seguridad.sh
+[2026-11-17T20:22:42.274Z] 
+[2026-11-17T20:22:42.274Z] == Excepciones documentadas ==
+[2026-11-17T20:22:42.274Z] PASS  excepciones válidas y vigentes
+[2026-11-17T20:22:42.274Z] 
+[2026-11-17T20:22:42.274Z] == terraform fmt ==
+[2026-11-17T20:22:42.274Z] PASS  terraform fmt -check
+[2026-11-17T20:22:42.274Z] 
+[2026-11-17T20:22:42.274Z] == terraform validate ==
+[2026-11-17T20:23:00.237Z] Success! The configuration is valid.
+[2026-11-17T20:23:00.237Z] 
+[2026-11-17T20:23:00.237Z] PASS  terraform validate
+[2026-11-17T20:23:00.237Z] 
+[2026-11-17T20:23:00.237Z] == TFLint ==
+[2026-11-17T20:23:00.237Z] PASS  tflint
+[2026-11-17T20:23:00.237Z] 
+[2026-11-17T20:23:00.237Z] == Checkov ==
+[2026-11-17T20:23:02.099Z] Passed checks: 73, Failed checks: 0, Skipped checks: 0
+[2026-11-17T20:23:02.099Z] PASS  checkov (sin excepciones documentadas)
+[2026-11-17T20:23:02.099Z] 
+[2026-11-17T20:23:02.099Z] == Trivy config (HIGH/CRITICAL) ==
+[2026-11-17T20:23:03.961Z] PASS  trivy HIGH/CRITICAL
+[2026-11-17T20:23:07.190Z] 
+[2026-11-17T20:23:07.190Z] GATE DE SEGURIDAD: OK
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] junit
+[2026-11-17T20:23:07.239Z] Recording test results
+[2026-11-17T20:23:07.248Z] [Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+[2026-11-17T20:23:07.271Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Compuerta de promoción)
+Stage "Compuerta de promoción" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan)
+[Pipeline] dir
+[2026-11-17T20:23:07.451Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:23:07.731Z] + terraform init -input=false -no-color
+[2026-11-17T20:23:07.731Z] Initializing the backend...
+[2026-11-17T20:23:07.731Z] Initializing modules...
+[2026-11-17T20:23:07.731Z] - artifact_bucket in ../../modules/secure-bucket
+[2026-11-17T20:23:07.731Z] - order_events in ../../modules/order-events
+[2026-11-17T20:23:07.731Z] - order_state in ../../modules/order-state-table
+[2026-11-17T20:23:07.731Z] - pipeline_role in ../../modules/pipeline-role
+[2026-11-17T20:23:07.731Z] Initializing provider plugins...
+[2026-11-17T20:23:07.731Z] - Reusing previous version of hashicorp/aws from the dependency lock file
+[2026-11-17T20:23:09.075Z] - Installing hashicorp/aws v5.100.0...
+[2026-11-17T20:23:23.840Z] - Installed hashicorp/aws v5.100.0 (signed by HashiCorp)
+[2026-11-17T20:23:23.840Z] 
+[2026-11-17T20:23:23.840Z] Terraform has been successfully initialized!
+[2026-11-17T20:23:23.840Z] + terraform workspace select -or-create default
+[2026-11-17T20:23:23.840Z] + [ destroy = destroy ]
+[2026-11-17T20:23:23.840Z] + terraform plan -destroy -input=false -no-color -out=tfplan
+[2026-11-17T20:23:23.840Z] module.pipeline_role.data.aws_iam_policy_document.assume: Reading...
+[2026-11-17T20:23:23.840Z] module.order_events.aws_sns_topic.orders: Refreshing state... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events]
+[2026-11-17T20:23:23.840Z] module.order_events.aws_sqs_queue.dlq: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events-dlq]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.aws_s3_bucket.this: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:23.840Z] module.order_state.aws_dynamodb_table.orders: Refreshing state... [id=agente-iac-order-state]
+[2026-11-17T20:23:23.840Z] module.pipeline_role.data.aws_iam_policy_document.assume: Read complete after 0s [id=2851119427]
+[2026-11-17T20:23:23.840Z] module.pipeline_role.aws_iam_role.this: Refreshing state... [id=agente-iac-pipeline]
+[2026-11-17T20:23:23.840Z] module.order_events.aws_sqs_queue.main: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:23:23.840Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Reading...
+[2026-11-17T20:23:23.840Z] module.order_events.data.aws_iam_policy_document.sns_to_queue: Read complete after 0s [id=3887143841]
+[2026-11-17T20:23:23.840Z] module.order_events.aws_sqs_queue_policy.main: Refreshing state... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:23:23.840Z] module.order_events.aws_sns_topic_subscription.main: Refreshing state... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events:c60628b7-3cf2-475c-9bbf-9f12b61beb0b]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Reading...
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:23.840Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Reading...
+[2026-11-17T20:23:23.840Z] module.pipeline_role.data.aws_iam_policy_document.bucket_rw: Read complete after 0s [id=362203099]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.data.aws_iam_policy_document.tls_only: Read complete after 0s [id=2728510792]
+[2026-11-17T20:23:23.840Z] module.pipeline_role.aws_iam_policy.bucket_rw: Refreshing state... [id=arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw]
+[2026-11-17T20:23:23.840Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:23.840Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Refreshing state... [id=agente-iac-pipeline-20261117201713536300000001]
+[2026-11-17T20:23:25.183Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=agente-iac-artifacts]
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z] Terraform used the selected providers to generate the following execution
+[2026-11-17T20:23:26.095Z] plan. Resource actions are indicated with the following symbols:
+[2026-11-17T20:23:26.095Z]   - destroy
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z] Terraform will perform the following actions:
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket.this will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket" "this" {
+[2026-11-17T20:23:26.095Z]       - arn                         = "arn:aws:s3:::agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - bucket                      = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - bucket_domain_name          = "agente-iac-artifacts.s3.amazonaws.com" -> null
+[2026-11-17T20:23:26.095Z]       - bucket_regional_domain_name = "agente-iac-artifacts.s3.us-east-1.amazonaws.com" -> null
+[2026-11-17T20:23:26.095Z]       - force_destroy               = false -> null
+[2026-11-17T20:23:26.095Z]       - hosted_zone_id              = "Z3AQBSTGFYJSTF" -> null
+[2026-11-17T20:23:26.095Z]       - id                          = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - object_lock_enabled         = false -> null
+[2026-11-17T20:23:26.095Z]       - policy                      = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action    = "s3:*"
+[2026-11-17T20:23:26.095Z]                       - Condition = {
+[2026-11-17T20:23:26.095Z]                           - Bool = {
+[2026-11-17T20:23:26.095Z]                               - "aws:SecureTransport" = "false"
+[2026-11-17T20:23:26.095Z]                             }
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Effect    = "Deny"
+[2026-11-17T20:23:26.095Z]                       - Principal = "*"
+[2026-11-17T20:23:26.095Z]                       - Resource  = [
+[2026-11-17T20:23:26.095Z]                           - "arn:aws:s3:::agente-iac-artifacts/*",
+[2026-11-17T20:23:26.095Z]                           - "arn:aws:s3:::agente-iac-artifacts",
+[2026-11-17T20:23:26.095Z]                         ]
+[2026-11-17T20:23:26.095Z]                       - Sid       = "DenyInsecureTransport"
+[2026-11-17T20:23:26.095Z]                     },
+[2026-11-17T20:23:26.095Z]                 ]
+[2026-11-17T20:23:26.095Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]       - region                      = "us-east-1" -> null
+[2026-11-17T20:23:26.095Z]       - request_payer               = "BucketOwner" -> null
+[2026-11-17T20:23:26.095Z]       - tags                        = {} -> null
+[2026-11-17T20:23:26.095Z]       - tags_all                    = {
+[2026-11-17T20:23:26.095Z]           - "env"        = "local"
+[2026-11-17T20:23:26.095Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.095Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.095Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.095Z]         } -> null
+[2026-11-17T20:23:26.095Z]         # (2 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - grant {
+[2026-11-17T20:23:26.095Z]           - id          = "f7b11509f4d675c3c44f0dd37ca830bb02e8cfa58f04c46283c4bfcbdce1ff45" -> null
+[2026-11-17T20:23:26.095Z]           - permissions = [
+[2026-11-17T20:23:26.095Z]               - "FULL_CONTROL",
+[2026-11-17T20:23:26.095Z]             ] -> null
+[2026-11-17T20:23:26.095Z]           - type        = "CanonicalUser" -> null
+[2026-11-17T20:23:26.095Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - lifecycle_rule {
+[2026-11-17T20:23:26.095Z]           - abort_incomplete_multipart_upload_days = 7 -> null
+[2026-11-17T20:23:26.095Z]           - enabled                                = true -> null
+[2026-11-17T20:23:26.095Z]           - id                                     = "expire-artifacts" -> null
+[2026-11-17T20:23:26.095Z]           - tags                                   = {} -> null
+[2026-11-17T20:23:26.095Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - expiration {
+[2026-11-17T20:23:26.095Z]               - days                         = 30 -> null
+[2026-11-17T20:23:26.095Z]               - expired_object_delete_marker = false -> null
+[2026-11-17T20:23:26.095Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - noncurrent_version_expiration {
+[2026-11-17T20:23:26.095Z]               - days = 7 -> null
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - server_side_encryption_configuration {
+[2026-11-17T20:23:26.095Z]           - rule {
+[2026-11-17T20:23:26.095Z]               - bucket_key_enabled = false -> null
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]               - apply_server_side_encryption_by_default {
+[2026-11-17T20:23:26.095Z]                   - sse_algorithm     = "AES256" -> null
+[2026-11-17T20:23:26.095Z]                     # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]                 }
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - versioning {
+[2026-11-17T20:23:26.095Z]           - enabled    = true -> null
+[2026-11-17T20:23:26.095Z]           - mfa_delete = false -> null
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket_lifecycle_configuration" "this" {
+[2026-11-17T20:23:26.095Z]       - bucket                                 = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - id                                     = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - transition_default_minimum_object_size = "all_storage_classes_128K" -> null
+[2026-11-17T20:23:26.095Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - rule {
+[2026-11-17T20:23:26.095Z]           - id     = "expire-artifacts" -> null
+[2026-11-17T20:23:26.095Z]           - status = "Enabled" -> null
+[2026-11-17T20:23:26.095Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - abort_incomplete_multipart_upload {
+[2026-11-17T20:23:26.095Z]               - days_after_initiation = 7 -> null
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - expiration {
+[2026-11-17T20:23:26.095Z]               - days                         = 30 -> null
+[2026-11-17T20:23:26.095Z]               - expired_object_delete_marker = false -> null
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - filter {
+[2026-11-17T20:23:26.095Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - noncurrent_version_expiration {
+[2026-11-17T20:23:26.095Z]               - noncurrent_days = 7 -> null
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket_policy.tls_only will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket_policy" "tls_only" {
+[2026-11-17T20:23:26.095Z]       - bucket = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - id     = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - policy = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action    = "s3:*"
+[2026-11-17T20:23:26.095Z]                       - Condition = {
+[2026-11-17T20:23:26.095Z]                           - Bool = {
+[2026-11-17T20:23:26.095Z]                               - "aws:SecureTransport" = "false"
+[2026-11-17T20:23:26.095Z]                             }
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Effect    = "Deny"
+[2026-11-17T20:23:26.095Z]                       - Principal = "*"
+[2026-11-17T20:23:26.095Z]                       - Resource  = [
+[2026-11-17T20:23:26.095Z]                           - "arn:aws:s3:::agente-iac-artifacts/*",
+[2026-11-17T20:23:26.095Z]                           - "arn:aws:s3:::agente-iac-artifacts",
+[2026-11-17T20:23:26.095Z]                         ]
+[2026-11-17T20:23:26.095Z]                       - Sid       = "DenyInsecureTransport"
+[2026-11-17T20:23:26.095Z]                     },
+[2026-11-17T20:23:26.095Z]                 ]
+[2026-11-17T20:23:26.095Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket_public_access_block.this will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket_public_access_block" "this" {
+[2026-11-17T20:23:26.095Z]       - block_public_acls       = true -> null
+[2026-11-17T20:23:26.095Z]       - block_public_policy     = true -> null
+[2026-11-17T20:23:26.095Z]       - bucket                  = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - id                      = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - ignore_public_acls      = true -> null
+[2026-11-17T20:23:26.095Z]       - restrict_public_buckets = true -> null
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+[2026-11-17T20:23:26.095Z]       - bucket                = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - id                    = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - rule {
+[2026-11-17T20:23:26.095Z]           - bucket_key_enabled = false -> null
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]           - apply_server_side_encryption_by_default {
+[2026-11-17T20:23:26.095Z]               - sse_algorithm     = "AES256" -> null
+[2026-11-17T20:23:26.095Z]                 # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.artifact_bucket.aws_s3_bucket_versioning.this will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_s3_bucket_versioning" "this" {
+[2026-11-17T20:23:26.095Z]       - bucket                = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]       - id                    = "agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.095Z]         # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - versioning_configuration {
+[2026-11-17T20:23:26.095Z]           - status     = "Enabled" -> null
+[2026-11-17T20:23:26.095Z]             # (1 unchanged attribute hidden)
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_events.aws_sns_topic.orders will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_sns_topic" "orders" {
+[2026-11-17T20:23:26.095Z]       - application_success_feedback_sample_rate = 0 -> null
+[2026-11-17T20:23:26.095Z]       - arn                                      = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - content_based_deduplication              = false -> null
+[2026-11-17T20:23:26.095Z]       - fifo_topic                               = false -> null
+[2026-11-17T20:23:26.095Z]       - firehose_success_feedback_sample_rate    = 0 -> null
+[2026-11-17T20:23:26.095Z]       - http_success_feedback_sample_rate        = 0 -> null
+[2026-11-17T20:23:26.095Z]       - id                                       = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - kms_master_key_id                        = "alias/aws/sns" -> null
+[2026-11-17T20:23:26.095Z]       - lambda_success_feedback_sample_rate      = 0 -> null
+[2026-11-17T20:23:26.095Z]       - name                                     = "agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - owner                                    = "000000000000" -> null
+[2026-11-17T20:23:26.095Z]       - policy                                   = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Id        = "__default_policy_ID"
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action    = [
+[2026-11-17T20:23:26.095Z]                           - "SNS:GetTopicAttributes",
+[2026-11-17T20:23:26.095Z]                           - "SNS:SetTopicAttributes",
+[2026-11-17T20:23:26.095Z]                           - "SNS:AddPermission",
+[2026-11-17T20:23:26.095Z]                           - "SNS:RemovePermission",
+[2026-11-17T20:23:26.095Z]                           - "SNS:DeleteTopic",
+[2026-11-17T20:23:26.095Z]                           - "SNS:Subscribe",
+[2026-11-17T20:23:26.095Z]                           - "SNS:ListSubscriptionsByTopic",
+[2026-11-17T20:23:26.095Z]                           - "SNS:Publish",
+[2026-11-17T20:23:26.095Z]                         ]
+[2026-11-17T20:23:26.095Z]                       - Condition = {
+[2026-11-17T20:23:26.095Z]                           - StringEquals = {
+[2026-11-17T20:23:26.095Z]                               - "AWS:SourceOwner" = "000000000000"
+[2026-11-17T20:23:26.095Z]                             }
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Effect    = "Allow"
+[2026-11-17T20:23:26.095Z]                       - Principal = {
+[2026-11-17T20:23:26.095Z]                           - AWS = "*"
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Resource  = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:23:26.095Z]                       - Sid       = "__default_statement_ID"
+[2026-11-17T20:23:26.095Z]                     },
+[2026-11-17T20:23:26.095Z]                 ]
+[2026-11-17T20:23:26.095Z]               - Version   = "2008-10-17"
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]       - signature_version                        = 0 -> null
+[2026-11-17T20:23:26.095Z]       - sqs_success_feedback_sample_rate         = 0 -> null
+[2026-11-17T20:23:26.095Z]       - tags                                     = {} -> null
+[2026-11-17T20:23:26.095Z]       - tags_all                                 = {
+[2026-11-17T20:23:26.095Z]           - "env"        = "local"
+[2026-11-17T20:23:26.095Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.095Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.095Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.095Z]         } -> null
+[2026-11-17T20:23:26.095Z]         # (17 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_events.aws_sns_topic_subscription.main will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_sns_topic_subscription" "main" {
+[2026-11-17T20:23:26.095Z]       - arn                             = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events:c60628b7-3cf2-475c-9bbf-9f12b61beb0b" -> null
+[2026-11-17T20:23:26.095Z]       - confirmation_timeout_in_minutes = 1 -> null
+[2026-11-17T20:23:26.095Z]       - confirmation_was_authenticated  = true -> null
+[2026-11-17T20:23:26.095Z]       - endpoint                        = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - endpoint_auto_confirms          = false -> null
+[2026-11-17T20:23:26.095Z]       - id                              = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events:c60628b7-3cf2-475c-9bbf-9f12b61beb0b" -> null
+[2026-11-17T20:23:26.095Z]       - owner_id                        = "000000000000" -> null
+[2026-11-17T20:23:26.095Z]       - pending_confirmation            = false -> null
+[2026-11-17T20:23:26.095Z]       - protocol                        = "sqs" -> null
+[2026-11-17T20:23:26.095Z]       - raw_message_delivery            = false -> null
+[2026-11-17T20:23:26.095Z]       - topic_arn                       = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]         # (6 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_events.aws_sqs_queue.dlq will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_sqs_queue" "dlq" {
+[2026-11-17T20:23:26.095Z]       - arn                               = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events-dlq" -> null
+[2026-11-17T20:23:26.095Z]       - content_based_deduplication       = false -> null
+[2026-11-17T20:23:26.095Z]       - delay_seconds                     = 0 -> null
+[2026-11-17T20:23:26.095Z]       - fifo_queue                        = false -> null
+[2026-11-17T20:23:26.095Z]       - id                                = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events-dlq" -> null
+[2026-11-17T20:23:26.095Z]       - kms_data_key_reuse_period_seconds = 300 -> null
+[2026-11-17T20:23:26.095Z]       - max_message_size                  = 262144 -> null
+[2026-11-17T20:23:26.095Z]       - message_retention_seconds         = 1209600 -> null
+[2026-11-17T20:23:26.095Z]       - name                              = "agente-iac-order-events-dlq" -> null
+[2026-11-17T20:23:26.095Z]       - receive_wait_time_seconds         = 0 -> null
+[2026-11-17T20:23:26.095Z]       - sqs_managed_sse_enabled           = true -> null
+[2026-11-17T20:23:26.095Z]       - tags                              = {} -> null
+[2026-11-17T20:23:26.095Z]       - tags_all                          = {
+[2026-11-17T20:23:26.095Z]           - "env"        = "local"
+[2026-11-17T20:23:26.095Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.095Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.095Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.095Z]         } -> null
+[2026-11-17T20:23:26.095Z]       - url                               = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events-dlq" -> null
+[2026-11-17T20:23:26.095Z]       - visibility_timeout_seconds        = 30 -> null
+[2026-11-17T20:23:26.095Z]         # (7 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_events.aws_sqs_queue.main will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_sqs_queue" "main" {
+[2026-11-17T20:23:26.095Z]       - arn                               = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - content_based_deduplication       = false -> null
+[2026-11-17T20:23:26.095Z]       - delay_seconds                     = 0 -> null
+[2026-11-17T20:23:26.095Z]       - fifo_queue                        = false -> null
+[2026-11-17T20:23:26.095Z]       - id                                = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - kms_data_key_reuse_period_seconds = 300 -> null
+[2026-11-17T20:23:26.095Z]       - max_message_size                  = 262144 -> null
+[2026-11-17T20:23:26.095Z]       - message_retention_seconds         = 345600 -> null
+[2026-11-17T20:23:26.095Z]       - name                              = "agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - policy                            = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action    = "sqs:SendMessage"
+[2026-11-17T20:23:26.095Z]                       - Condition = {
+[2026-11-17T20:23:26.095Z]                           - ArnEquals = {
+[2026-11-17T20:23:26.095Z]                               - "aws:SourceArn" = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:23:26.095Z]                             }
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Effect    = "Allow"
+[2026-11-17T20:23:26.095Z]                       - Principal = {
+[2026-11-17T20:23:26.095Z]                           - Service = "sns.amazonaws.com"
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Resource  = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:23:26.095Z]                       - Sid       = "AllowTopicToSend"
+[2026-11-17T20:23:26.095Z]                     },
+[2026-11-17T20:23:26.095Z]                 ]
+[2026-11-17T20:23:26.095Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]       - receive_wait_time_seconds         = 0 -> null
+[2026-11-17T20:23:26.095Z]       - redrive_policy                    = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - deadLetterTargetArn = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events-dlq"
+[2026-11-17T20:23:26.095Z]               - maxReceiveCount     = 3
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]       - sqs_managed_sse_enabled           = true -> null
+[2026-11-17T20:23:26.095Z]       - tags                              = {} -> null
+[2026-11-17T20:23:26.095Z]       - tags_all                          = {
+[2026-11-17T20:23:26.095Z]           - "env"        = "local"
+[2026-11-17T20:23:26.095Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.095Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.095Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.095Z]         } -> null
+[2026-11-17T20:23:26.095Z]       - url                               = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - visibility_timeout_seconds        = 30 -> null
+[2026-11-17T20:23:26.095Z]         # (5 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_events.aws_sqs_queue_policy.main will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_sqs_queue_policy" "main" {
+[2026-11-17T20:23:26.095Z]       - id        = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]       - policy    = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action    = "sqs:SendMessage"
+[2026-11-17T20:23:26.095Z]                       - Condition = {
+[2026-11-17T20:23:26.095Z]                           - ArnEquals = {
+[2026-11-17T20:23:26.095Z]                               - "aws:SourceArn" = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:23:26.095Z]                             }
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Effect    = "Allow"
+[2026-11-17T20:23:26.095Z]                       - Principal = {
+[2026-11-17T20:23:26.095Z]                           - Service = "sns.amazonaws.com"
+[2026-11-17T20:23:26.095Z]                         }
+[2026-11-17T20:23:26.095Z]                       - Resource  = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events"
+[2026-11-17T20:23:26.095Z]                       - Sid       = "AllowTopicToSend"
+[2026-11-17T20:23:26.095Z]                     },
+[2026-11-17T20:23:26.095Z]                 ]
+[2026-11-17T20:23:26.095Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.095Z]             }
+[2026-11-17T20:23:26.095Z]         ) -> null
+[2026-11-17T20:23:26.095Z]       - queue_url = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events" -> null
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.order_state.aws_dynamodb_table.orders will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_dynamodb_table" "orders" {
+[2026-11-17T20:23:26.095Z]       - arn                         = "arn:aws:dynamodb:us-east-1:000000000000:table/agente-iac-order-state" -> null
+[2026-11-17T20:23:26.095Z]       - billing_mode                = "PAY_PER_REQUEST" -> null
+[2026-11-17T20:23:26.095Z]       - deletion_protection_enabled = false -> null
+[2026-11-17T20:23:26.095Z]       - hash_key                    = "order_id" -> null
+[2026-11-17T20:23:26.095Z]       - id                          = "agente-iac-order-state" -> null
+[2026-11-17T20:23:26.095Z]       - name                        = "agente-iac-order-state" -> null
+[2026-11-17T20:23:26.095Z]       - read_capacity               = 0 -> null
+[2026-11-17T20:23:26.095Z]       - stream_enabled              = false -> null
+[2026-11-17T20:23:26.095Z]       - table_class                 = "STANDARD" -> null
+[2026-11-17T20:23:26.095Z]       - tags                        = {} -> null
+[2026-11-17T20:23:26.095Z]       - tags_all                    = {
+[2026-11-17T20:23:26.095Z]           - "env"        = "local"
+[2026-11-17T20:23:26.095Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.095Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.095Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.095Z]         } -> null
+[2026-11-17T20:23:26.095Z]       - write_capacity              = 0 -> null
+[2026-11-17T20:23:26.095Z]         # (3 unchanged attributes hidden)
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - attribute {
+[2026-11-17T20:23:26.095Z]           - name = "order_id" -> null
+[2026-11-17T20:23:26.095Z]           - type = "S" -> null
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - point_in_time_recovery {
+[2026-11-17T20:23:26.095Z]           - enabled                 = true -> null
+[2026-11-17T20:23:26.095Z]           - recovery_period_in_days = 35 -> null
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]       - ttl {
+[2026-11-17T20:23:26.095Z]           - attribute_name = "expires_at" -> null
+[2026-11-17T20:23:26.095Z]           - enabled        = true -> null
+[2026-11-17T20:23:26.095Z]         }
+[2026-11-17T20:23:26.095Z]     }
+[2026-11-17T20:23:26.095Z] 
+[2026-11-17T20:23:26.095Z]   # module.pipeline_role.aws_iam_policy.bucket_rw will be destroyed
+[2026-11-17T20:23:26.095Z]   - resource "aws_iam_policy" "bucket_rw" {
+[2026-11-17T20:23:26.095Z]       - arn              = "arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw" -> null
+[2026-11-17T20:23:26.095Z]       - attachment_count = 1 -> null
+[2026-11-17T20:23:26.095Z]       - id               = "arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw" -> null
+[2026-11-17T20:23:26.095Z]       - name             = "agente-iac-pipeline-bucket-rw" -> null
+[2026-11-17T20:23:26.095Z]       - path             = "/" -> null
+[2026-11-17T20:23:26.095Z]       - policy           = jsonencode(
+[2026-11-17T20:23:26.095Z]             {
+[2026-11-17T20:23:26.095Z]               - Statement = [
+[2026-11-17T20:23:26.095Z]                   - {
+[2026-11-17T20:23:26.095Z]                       - Action   = "s3:ListBucket"
+[2026-11-17T20:23:26.095Z]                       - Effect   = "Allow"
+[2026-11-17T20:23:26.096Z]                       - Resource = "arn:aws:s3:::agente-iac-artifacts"
+[2026-11-17T20:23:26.096Z]                       - Sid      = "ListBucket"
+[2026-11-17T20:23:26.096Z]                     },
+[2026-11-17T20:23:26.096Z]                   - {
+[2026-11-17T20:23:26.096Z]                       - Action   = [
+[2026-11-17T20:23:26.096Z]                           - "s3:PutObject",
+[2026-11-17T20:23:26.096Z]                           - "s3:GetObject",
+[2026-11-17T20:23:26.096Z]                         ]
+[2026-11-17T20:23:26.096Z]                       - Effect   = "Allow"
+[2026-11-17T20:23:26.096Z]                       - Resource = "arn:aws:s3:::agente-iac-artifacts/*"
+[2026-11-17T20:23:26.096Z]                       - Sid      = "ReadWriteObjects"
+[2026-11-17T20:23:26.096Z]                     },
+[2026-11-17T20:23:26.096Z]                 ]
+[2026-11-17T20:23:26.096Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.096Z]             }
+[2026-11-17T20:23:26.096Z]         ) -> null
+[2026-11-17T20:23:26.096Z]       - policy_id        = "ANPAN7DDQNT4UYC2BHD35" -> null
+[2026-11-17T20:23:26.096Z]       - tags             = {} -> null
+[2026-11-17T20:23:26.096Z]       - tags_all         = {
+[2026-11-17T20:23:26.096Z]           - "env"        = "local"
+[2026-11-17T20:23:26.096Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.096Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.096Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.096Z]         } -> null
+[2026-11-17T20:23:26.096Z]         # (2 unchanged attributes hidden)
+[2026-11-17T20:23:26.096Z]     }
+[2026-11-17T20:23:26.096Z] 
+[2026-11-17T20:23:26.096Z]   # module.pipeline_role.aws_iam_role.this will be destroyed
+[2026-11-17T20:23:26.096Z]   - resource "aws_iam_role" "this" {
+[2026-11-17T20:23:26.096Z]       - arn                   = "arn:aws:iam::000000000000:role/agente-iac-pipeline" -> null
+[2026-11-17T20:23:26.096Z]       - assume_role_policy    = jsonencode(
+[2026-11-17T20:23:26.096Z]             {
+[2026-11-17T20:23:26.096Z]               - Statement = [
+[2026-11-17T20:23:26.096Z]                   - {
+[2026-11-17T20:23:26.096Z]                       - Action    = "sts:AssumeRole"
+[2026-11-17T20:23:26.096Z]                       - Effect    = "Allow"
+[2026-11-17T20:23:26.096Z]                       - Principal = {
+[2026-11-17T20:23:26.096Z]                           - Service = "ec2.amazonaws.com"
+[2026-11-17T20:23:26.096Z]                         }
+[2026-11-17T20:23:26.096Z]                     },
+[2026-11-17T20:23:26.096Z]                 ]
+[2026-11-17T20:23:26.096Z]               - Version   = "2012-10-17"
+[2026-11-17T20:23:26.096Z]             }
+[2026-11-17T20:23:26.096Z]         ) -> null
+[2026-11-17T20:23:26.096Z]       - create_date           = "2026-11-17T20:17:13Z" -> null
+[2026-11-17T20:23:26.096Z]       - force_detach_policies = false -> null
+[2026-11-17T20:23:26.096Z]       - id                    = "agente-iac-pipeline" -> null
+[2026-11-17T20:23:26.096Z]       - managed_policy_arns   = [
+[2026-11-17T20:23:26.096Z]           - "arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw",
+[2026-11-17T20:23:26.096Z]         ] -> null
+[2026-11-17T20:23:26.096Z]       - max_session_duration  = 3600 -> null
+[2026-11-17T20:23:26.096Z]       - name                  = "agente-iac-pipeline" -> null
+[2026-11-17T20:23:26.096Z]       - path                  = "/" -> null
+[2026-11-17T20:23:26.096Z]       - tags                  = {} -> null
+[2026-11-17T20:23:26.096Z]       - tags_all              = {
+[2026-11-17T20:23:26.096Z]           - "env"        = "local"
+[2026-11-17T20:23:26.096Z]           - "managed_by" = "terraform"
+[2026-11-17T20:23:26.096Z]           - "owner"      = "platform-team"
+[2026-11-17T20:23:26.096Z]           - "project"    = "agente-iac"
+[2026-11-17T20:23:26.096Z]         } -> null
+[2026-11-17T20:23:26.096Z]       - unique_id             = "AROAN7DDQNT4UYC2BHD35" -> null
+[2026-11-17T20:23:26.096Z]         # (3 unchanged attributes hidden)
+[2026-11-17T20:23:26.096Z]     }
+[2026-11-17T20:23:26.096Z] 
+[2026-11-17T20:23:26.096Z]   # module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw will be destroyed
+[2026-11-17T20:23:26.096Z]   - resource "aws_iam_role_policy_attachment" "bucket_rw" {
+[2026-11-17T20:23:26.096Z]       - id         = "agente-iac-pipeline-20261117201713536300000001" -> null
+[2026-11-17T20:23:26.096Z]       - policy_arn = "arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw" -> null
+[2026-11-17T20:23:26.096Z]       - role       = "agente-iac-pipeline" -> null
+[2026-11-17T20:23:26.096Z]     }
+[2026-11-17T20:23:26.096Z] 
+[2026-11-17T20:23:26.096Z] Plan: 0 to add, 0 to change, 15 to destroy.
+[2026-11-17T20:23:26.096Z] 
+[2026-11-17T20:23:26.096Z] Changes to Outputs:
+[2026-11-17T20:23:26.096Z]   - artifact_bucket_arn = "arn:aws:s3:::agente-iac-artifacts" -> null
+[2026-11-17T20:23:26.096Z]   - order_dlq_arn       = "arn:aws:sqs:us-east-1:000000000000:agente-iac-order-events-dlq" -> null
+[2026-11-17T20:23:26.096Z]   - order_queue_url     = "https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events" -> null
+[2026-11-17T20:23:26.096Z]   - order_state_table   = "agente-iac-order-state" -> null
+[2026-11-17T20:23:26.096Z]   - order_topic_arn     = "arn:aws:sns:us-east-1:000000000000:agente-iac-order-events" -> null
+[2026-11-17T20:23:26.096Z]   - pipeline_role_arn   = "arn:aws:iam::000000000000:role/agente-iac-pipeline" -> null
+[2026-11-17T20:23:26.096Z] + terraform show -no-color tfplan
+[Pipeline] archiveArtifacts
+[2026-11-17T20:23:27.978Z] Archiving artifacts
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Aprobación manual)
+[Pipeline] timeout
+[2026-11-17T20:23:28.088Z] Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] input
+[2026-11-17T20:23:28.125Z] ¿Ejecutar 'destroy' en el entorno 'local' del emulador? Revisa plan.txt en los artefactos.
+[2026-11-17T20:23:28.125Z] Aprobar or Abort
+[2026-11-17T20:23:41.290Z] Approved by admin
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply)
+[Pipeline] dir
+[2026-11-17T20:23:41.411Z] Running in /var/jenkins_home/workspace/agente-iac/agente-iac/infra/envs/local
+[Pipeline] {
+[Pipeline] sh
+[2026-11-17T20:23:41.690Z] + terraform workspace select default
+[2026-11-17T20:23:41.941Z] + terraform apply -input=false -no-color tfplan
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.order_events.aws_sns_topic_subscription.main: Destroying... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events:c60628b7-3cf2-475c-9bbf-9f12b61beb0b]
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Destroying... [id=agente-iac-pipeline-20261117201713536300000001]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.order_state.aws_dynamodb_table.orders: Destroying... [id=agente-iac-order-state]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_role_policy_attachment.bucket_rw: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_policy.tls_only: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.order_events.aws_sns_topic_subscription.main: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_lifecycle_configuration.this: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_policy.bucket_rw: Destroying... [id=arn:aws:iam::000000000000:policy/agente-iac-pipeline-bucket-rw]
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_role.this: Destroying... [id=agente-iac-pipeline]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_public_access_block.this: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.order_events.aws_sqs_queue_policy.main: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_role.this: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.pipeline_role.aws_iam_policy.bucket_rw: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket_versioning.this: Destruction complete after 0s
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket.this: Destroying... [id=agente-iac-artifacts]
+[2026-11-17T20:23:43.803Z] module.artifact_bucket.aws_s3_bucket.this: Destruction complete after 0s
+[2026-11-17T20:23:47.032Z] module.order_state.aws_dynamodb_table.orders: Destruction complete after 3s
+[2026-11-17T20:23:53.515Z] module.order_events.aws_sqs_queue_policy.main: Still destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events, 10s elapsed]
+[2026-11-17T20:24:05.613Z] module.order_events.aws_sqs_queue_policy.main: Still destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events, 20s elapsed]
+[2026-11-17T20:24:08.841Z] module.order_events.aws_sqs_queue_policy.main: Destruction complete after 25s
+[2026-11-17T20:24:08.841Z] module.order_events.aws_sqs_queue.main: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events]
+[2026-11-17T20:24:08.841Z] module.order_events.aws_sns_topic.orders: Destroying... [id=arn:aws:sns:us-east-1:000000000000:agente-iac-order-events]
+[2026-11-17T20:24:08.841Z] module.order_events.aws_sns_topic.orders: Destruction complete after 0s
+[2026-11-17T20:24:10.185Z] module.order_events.aws_sqs_queue.main: Destruction complete after 2s
+[2026-11-17T20:24:10.185Z] module.order_events.aws_sqs_queue.dlq: Destroying... [id=https://sqs.us-east-1.amazonaws.com/000000000000/agente-iac-order-events-dlq]
+[2026-11-17T20:24:11.528Z] module.order_events.aws_sqs_queue.dlq: Destruction complete after 1s
+[2026-11-17T20:24:11.528Z] 
+[2026-11-17T20:24:11.528Z] Apply complete! Resources: 0 added, 0 changed, 15 destroyed.
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Pruebas de humo)
+Stage "Pruebas de humo" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Registrar promoción)
+Stage "Registrar promoción" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-17T20:24:11.759Z] Pipeline OK (destroy en local).
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
