@@ -1,5 +1,5 @@
 // Pipeline de IaC: validate -> lint -> security -> plan -> [aprobación manual] -> apply -> pruebas de humo.
-// El repo se monta en solo lectura en /repo; el emulador comparte red con este contenedor (127.0.0.1:9297).
+// Spec 005: Jenkins clona el repo (job con definición desde Git y polling de main); el emulador comparte red con este contenedor (127.0.0.1:9297).
 pipeline {
   agent any
 
@@ -32,12 +32,9 @@ pipeline {
   stages {
     stage('Preparar') {
       steps {
-        // Copia el código conservando el estado de Terraform de ejecuciones anteriores.
+        // El checkout de Git (rama de REPO_BRANCH) ya dejó el código en el workspace; el estado de Terraform (ignorado por git) se conserva entre builds.
         sh '''
-          mkdir -p agente-iac
-          # /repo es la carpeta agente-iac montada en solo lectura. No se copian secretos (.env) ni datos del emulador (.data).
-          rsync -a --delete --exclude 'terraform.tfstate*' --exclude '.terraform' --exclude 'reports' --exclude 'tfplan' --exclude 'plan.txt' \
-            --exclude '.env' --exclude '.data' --exclude '.git' /repo/ agente-iac/
+          git log -1 --format='Commit: %H %s'
           terraform version | head -1
         '''
       }
@@ -137,6 +134,17 @@ pipeline {
             else python3 scripts/promocion.py revocar; fi
           '''
         }
+      }
+    }
+
+    stage('Encadenar local') {
+      // Un apply de staging verificado encola el de local. Solo se encola: local pasa por la compuerta de promoción y espera su aprobación manual.
+      when { expression { env.ENTORNO_EFECTIVO == 'staging' && env.ACCION_EFECTIVA == 'apply' } }
+      steps {
+        build job: env.JOB_NAME, wait: false, parameters: [
+          string(name: 'ENTORNO', value: 'local'),
+          string(name: 'ACCION', value: 'apply')
+        ]
       }
     }
   }
