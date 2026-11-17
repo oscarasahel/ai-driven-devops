@@ -34,3 +34,6 @@ agente-iac/reports/
 agente-iac/bitacora/simuladas.local.json
 agente-iac/bitacora/resumen.json
 .evals-neg/
+
+# Bitácora del curso (material confidencial, solo local)
+docs/bitacora-curso.md
