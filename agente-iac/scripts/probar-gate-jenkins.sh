@@ -27,7 +27,7 @@ resource "aws_s3_bucket_acl" "publico" {
 }
 EOF
 
-salida="$(bash scripts/jenkins.sh disparar apply)" || { echo "$salida"; exit 1; }
+salida="$(bash scripts/jenkins.sh disparar apply local)" || { echo "$salida"; exit 1; }
 echo "$salida"
 N="$(echo "$salida" | sed -nE 's/.*#([0-9]+).*/\1/p')"
 res="$(bash scripts/jenkins.sh esperar-fin "$N")"; echo "$res"

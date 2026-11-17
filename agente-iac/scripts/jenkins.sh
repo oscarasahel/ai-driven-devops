@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Cliente mínimo de la API de Jenkins para el job agente-iac (http://127.0.0.1:8080).
 # Credenciales: JENKINS_ADMIN_USER / JENKINS_ADMIN_PASSWORD (de agente-iac/.env).
-# Uso: bash scripts/jenkins.sh <disparar [apply|destroy] | estado [N] | esperar-aprobacion [N] |
+# Uso: bash scripts/jenkins.sh <disparar [apply|destroy] [staging|local] | estado [N] | esperar-aprobacion [N] |
 #                               aprobar [N] | rechazar [N] | esperar-fin [N] | log [N]>
 # No depende del plugin pipeline-stage-view: el id de la aprobación se lee del formulario de /input/.
 set -u
@@ -27,15 +27,15 @@ N="${2:-}"
 
 case "$cmd" in
   disparar)
-    accion="${2:-apply}"
+    accion="${2:-apply}"; entorno="${3:-staging}"
     antes="$(ultimo)"; antes="${antes:-0}"
     C="$(crumb)"
-    # Con el job recién creado aún no hay parámetros definidos: se cae a /build (ACCION=apply).
-    if ! api -H "$C" -X POST "$URL/job/$JOB/buildWithParameters?ACCION=$accion" -o /dev/null 2>/dev/null; then
+    # Con el job recién creado aún no hay parámetros definidos: se cae a /build (ACCION=apply, ENTORNO=staging).
+    if ! api -H "$C" -X POST "$URL/job/$JOB/buildWithParameters?ACCION=$accion&ENTORNO=$entorno" -o /dev/null 2>/dev/null; then
       api -H "$C" -X POST "$URL/job/$JOB/build" -o /dev/null
     fi
     for _ in $(seq 1 20); do
-      n="$(ultimo)"; [ "${n:-0}" -gt "$antes" ] && { echo "disparado build #$n (ACCION=$accion)"; exit 0; }; sleep 1
+      n="$(ultimo)"; [ "${n:-0}" -gt "$antes" ] && { echo "disparado build #$n (ACCION=$accion, ENTORNO=$entorno)"; exit 0; }; sleep 1
     done
     echo "no apareció un build nuevo"; exit 1;;
   estado)

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Verifica los criterios de aceptación de las specs 001 y 002 contra el emulador.
-# Uso (desde agente-iac/, con el emulador y los recursos desplegados): bash scripts/verificar-criterios.sh
+# Uso (desde agente-iac/, con el emulador y los recursos desplegados): [NAME_PREFIX=agente-iac-stg] bash scripts/verificar-criterios.sh
 # Sale con 0 si todo pasa, 1 si algún criterio falla.
 set -u
 export MSYS_NO_PATHCONV=1
 
-P="agente-iac"
+P="${NAME_PREFIX:-agente-iac}"   # staging usa agente-iac-stg (NAME_PREFIX)
 B="$P-artifacts"
 ROLE="$P-pipeline"
 TOPIC="arn:aws:sns:us-east-1:000000000000:$P-order-events"

@@ -49,7 +49,7 @@ services:
 
   # Sirve bitacora.json y resumen.json a Grafana (solo red interna)
   bitacora-web:
-    image: nginx:1.27.3-alpine
+    image: nginx:1.27.3-alpine@sha256:814a8e88df978ade80e584cc5b333144b9372a8e3c98872d07137dbf3b44d0e4
     volumes:
       - ./bitacora:/usr/share/nginx/html:ro
       - ./grafana/nginx.conf:/etc/nginx/conf.d/default.conf:ro
@@ -58,7 +58,7 @@ services:
     networks: [iac]
 
   grafana:
-    image: grafana/grafana-oss:11.4.0
+    image: grafana/grafana-oss:11.4.0@sha256:d8ea37798ccc41061a62ab080f2676dda6bf7815558499f901bdb0f533a456fb
     depends_on: [bitacora-web]
     ports:
       - "127.0.0.1:3000:3000"
@@ -87,7 +87,7 @@ services:
   # Herramienta bajo demanda: docker compose run --rm terraform <comando>
   # Comparte la red del emulador, así que 127.0.0.1:9297 apunta al emulador.
   terraform:
-    image: hashicorp/terraform:1.9.8
+    image: hashicorp/terraform:1.9.8@sha256:18f9986038bbaf02cf49db9c09261c778161c51dcc7fb7e355ae8938459428cd
     profiles: ["tools"]
     network_mode: "service:aws-emulator"
     depends_on:
@@ -110,7 +110,7 @@ services:
 
   # Pruebas de humo: docker compose run --rm awscli s3 ls
   awscli:
-    image: amazon/aws-cli:2.22.0
+    image: amazon/aws-cli:2.22.0@sha256:de60944022e023e69cc50e3cfc91766d0788c27586b01fb77806bc435b484a35
     profiles: ["tools"]
     network_mode: "service:aws-emulator"
     depends_on:

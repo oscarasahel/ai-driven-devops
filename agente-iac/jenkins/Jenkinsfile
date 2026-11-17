@@ -4,7 +4,8 @@ pipeline {
   agent any
 
   parameters {
-    choice(name: 'ACCION', choices: ['apply', 'destroy'], description: 'apply crea/actualiza; destroy elimina todo. Ambas piden aprobación manual.')
+    choice(name: 'ENTORNO', choices: ['staging', 'local'], description: 'staging = workspace aislado con prefijo agente-iac-stg. local = entorno principal; apply exige staging verificado con el mismo código.')
+    choice(name: 'ACCION', choices: ['apply', 'destroy'], description: 'apply crea/actualiza; destroy elimina todo el entorno elegido. Ambas piden aprobación manual.')
   }
 
   options {
@@ -42,6 +43,20 @@ pipeline {
       }
     }
 
+    stage('Entorno') {
+      steps {
+        script {
+          env.ENTORNO_EFECTIVO = params.ENTORNO ?: 'staging'
+          env.ACCION_EFECTIVA  = params.ACCION ?: 'apply'
+          // staging: workspace propio + variables propias; local: workspace default y prefijo agente-iac.
+          env.TF_WS         = env.ENTORNO_EFECTIVO == 'staging' ? 'staging' : 'default'
+          env.TF_VARFILE    = env.ENTORNO_EFECTIVO == 'staging' ? '-var-file=staging.tfvars' : ''
+          env.NAME_PREFIX   = env.ENTORNO_EFECTIVO == 'staging' ? 'agente-iac-stg' : 'agente-iac'
+          echo "Entorno=${env.ENTORNO_EFECTIVO} acción=${env.ACCION_EFECTIVA} workspace=${env.TF_WS} prefijo=${env.NAME_PREFIX}"
+        }
+      }
+    }
+
     stage('Validate, lint y seguridad') {
       steps {
         dir('agente-iac') {
@@ -56,18 +71,26 @@ pipeline {
       }
     }
 
+    stage('Compuerta de promoción') {
+      // Aplicar en local solo si exactamente este código (huella de infra/) ya se aplicó y verificó en staging.
+      when { expression { env.ENTORNO_EFECTIVO == 'local' && env.ACCION_EFECTIVA == 'apply' } }
+      steps {
+        dir('agente-iac') {
+          sh 'python3 scripts/promocion.py exigir --infra infra'
+        }
+      }
+    }
+
     stage('Plan') {
       steps {
         dir('agente-iac/infra/envs/local') {
-          script {
-            env.ACCION_EFECTIVA = params.ACCION ?: 'apply'
-          }
           sh '''
             terraform init -input=false -no-color
+            terraform workspace select -or-create "$TF_WS"
             if [ "$ACCION_EFECTIVA" = "destroy" ]; then
-              terraform plan -destroy -input=false -no-color -out=tfplan
+              terraform plan -destroy -input=false -no-color $TF_VARFILE -out=tfplan
             else
-              terraform plan -input=false -no-color -out=tfplan
+              terraform plan -input=false -no-color $TF_VARFILE -out=tfplan
             fi
             terraform show -no-color tfplan > plan.txt
           '''
@@ -79,7 +102,7 @@ pipeline {
     stage('Aprobación manual') {
       steps {
         timeout(time: 30, unit: 'MINUTES') {
-          input message: "¿Ejecutar '${env.ACCION_EFECTIVA}' en el emulador? Revisa plan.txt en los artefactos.", ok: 'Aprobar'
+          input message: "¿Ejecutar '${env.ACCION_EFECTIVA}' en el entorno '${env.ENTORNO_EFECTIVO}' del emulador? Revisa plan.txt en los artefactos.", ok: 'Aprobar'
         }
       }
     }
@@ -87,7 +110,10 @@ pipeline {
     stage('Apply') {
       steps {
         dir('agente-iac/infra/envs/local') {
-          sh 'terraform apply -input=false -no-color tfplan'
+          sh '''
+            terraform workspace select "$TF_WS"
+            terraform apply -input=false -no-color tfplan
+          '''
         }
       }
     }
@@ -100,10 +126,23 @@ pipeline {
         }
       }
     }
+
+    stage('Registrar promoción') {
+      when { expression { env.ENTORNO_EFECTIVO == 'staging' } }
+      steps {
+        dir('agente-iac') {
+          // apply verificado en staging habilita local; destruir staging revoca la habilitación.
+          sh '''
+            if [ "$ACCION_EFECTIVA" = "apply" ]; then python3 scripts/promocion.py marcar --infra infra
+            else python3 scripts/promocion.py revocar; fi
+          '''
+        }
+      }
+    }
   }
 
   post {
     failure { echo 'Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.' }
-    success { echo "Pipeline OK (${env.ACCION_EFECTIVA})." }
+    success { echo "Pipeline OK (${env.ACCION_EFECTIVA} en ${env.ENTORNO_EFECTIVO})." }
   }
 }

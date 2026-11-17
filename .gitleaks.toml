@@ -1,0 +1,7 @@
+# Reglas por defecto de Gitleaks + una única excepción acotada.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "plugins.txt solo contiene nombres de plugin y versiones (p. ej. 173.v680e3a_b_69ff3); la regla generic-api-key las confunde con claves"
+paths = ['''agente-iac/jenkins/plugins\.txt''']
