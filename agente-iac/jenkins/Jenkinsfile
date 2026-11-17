@@ -1,0 +1,107 @@
+// Pipeline de IaC: validate -> lint -> security -> plan -> [aprobación manual] -> apply -> pruebas de humo.
+// El repo se monta en solo lectura en /repo; el emulador comparte red con este contenedor (127.0.0.1:9297).
+pipeline {
+  agent any
+
+  parameters {
+    choice(name: 'ACCION', choices: ['apply', 'destroy'], description: 'apply crea/actualiza; destroy elimina todo. Ambas piden aprobación manual.')
+  }
+
+  options {
+    timestamps()
+    timeout(time: 60, unit: 'MINUTES')
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+  }
+
+  environment {
+    SEGURIDAD_MODO              = 'nativo'
+    VERIFICAR_MODO              = 'nativo'
+    TF_IN_AUTOMATION            = '1'
+    AWS_ENDPOINT_URL            = 'https://127.0.0.1:9297'
+    AWS_SHARED_CREDENTIALS_FILE = '/emulator/9297/emulator_credentials'
+    AWS_CONFIG_FILE             = '/emulator/9297/config'
+    AWS_CA_BUNDLE               = '/emulator/9297/ca.pem'
+    AWS_REGION                  = 'us-east-1'
+    AWS_DEFAULT_REGION          = 'us-east-1'
+    AWS_EC2_METADATA_DISABLED   = 'true'
+    AWS_DISABLE_HOST_PREFIX_INJECTION = 'true'
+  }
+
+  stages {
+    stage('Preparar') {
+      steps {
+        // Copia el código conservando el estado de Terraform de ejecuciones anteriores.
+        sh '''
+          mkdir -p agente-iac
+          rsync -a --delete --exclude 'terraform.tfstate*' --exclude '.terraform' --exclude 'reports' --exclude 'tfplan' --exclude 'plan.txt' /repo/agente-iac/ agente-iac/
+          terraform version | head -1
+        '''
+      }
+    }
+
+    stage('Validate, lint y seguridad') {
+      steps {
+        dir('agente-iac') {
+          sh 'bash scripts/seguridad.sh'
+        }
+      }
+      post {
+        always {
+          junit allowEmptyResults: true, testResults: 'agente-iac/reports/*.xml'
+          archiveArtifacts artifacts: 'agente-iac/reports/*', allowEmptyArchive: true
+        }
+      }
+    }
+
+    stage('Plan') {
+      steps {
+        dir('agente-iac/infra/envs/local') {
+          script {
+            env.ACCION_EFECTIVA = params.ACCION ?: 'apply'
+          }
+          sh '''
+            terraform init -input=false -no-color
+            if [ "$ACCION_EFECTIVA" = "destroy" ]; then
+              terraform plan -destroy -input=false -no-color -out=tfplan
+            else
+              terraform plan -input=false -no-color -out=tfplan
+            fi
+            terraform show -no-color tfplan > plan.txt
+          '''
+          archiveArtifacts artifacts: 'plan.txt', allowEmptyArchive: false
+        }
+      }
+    }
+
+    stage('Aprobación manual') {
+      steps {
+        timeout(time: 30, unit: 'MINUTES') {
+          input message: "¿Ejecutar '${env.ACCION_EFECTIVA}' en el emulador? Revisa plan.txt en los artefactos.", ok: 'Aprobar'
+        }
+      }
+    }
+
+    stage('Apply') {
+      steps {
+        dir('agente-iac/infra/envs/local') {
+          sh 'terraform apply -input=false -no-color tfplan'
+        }
+      }
+    }
+
+    stage('Pruebas de humo') {
+      when { expression { env.ACCION_EFECTIVA == 'apply' } }
+      steps {
+        dir('agente-iac') {
+          sh 'bash scripts/verificar-criterios.sh'
+        }
+      }
+    }
+  }
+
+  post {
+    failure { echo 'Pipeline fallido: revisa la etapa que falló. Máx. 3 reintentos con diagnóstico antes de escalar.' }
+    success { echo "Pipeline OK (${env.ACCION_EFECTIVA})." }
+  }
+}

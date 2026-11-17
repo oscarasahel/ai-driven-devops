@@ -7,6 +7,8 @@ services:
     command: ["-p", "9297", "--telemetry", "off"]
     ports:
       - "127.0.0.1:9297:9297"
+      # Jenkins comparte la red de este servicio (el certificado del emulador solo vale para localhost/127.0.0.1)
+      - "127.0.0.1:8080:8080"
     volumes:
       # credenciales y ca.pem que genera el propio emulador (ignorado por git)
       - ./.data/emulator:/home/emulator/.aws/emulator
@@ -21,6 +23,29 @@ services:
       retries: 12
       start_period: 5s
     networks: [iac]
+
+  jenkins:
+    build: ./jenkins
+    image: agente-iac/jenkins:local
+    network_mode: "service:aws-emulator"
+    depends_on:
+      aws-emulator:
+        condition: service_healthy
+    environment:
+      JENKINS_ADMIN_USER: ${JENKINS_ADMIN_USER:?define JENKINS_ADMIN_USER en .env}
+      JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?define JENKINS_ADMIN_PASSWORD en .env}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./:/repo:ro
+      - ./.data/emulator:/emulator:ro
+    mem_limit: 2g
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8080/login"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
 
   # Herramienta bajo demanda: docker compose run --rm terraform <comando>
   # Comparte la red del emulador, así que 127.0.0.1:9297 apunta al emulador.
@@ -62,6 +87,9 @@ services:
       AWS_CONFIG_FILE: /emulator/9297/config
       AWS_CA_BUNDLE: /emulator/9297/ca.pem
       AWS_REGION: us-east-1
+
+volumes:
+  jenkins_home:
 
 networks:
   iac:

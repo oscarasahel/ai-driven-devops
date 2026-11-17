@@ -1,0 +1,17 @@
+jenkins:
+  systemMessage: "agente-iac: pipeline de IaC con aprobación manual (PoC local)"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_USER}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+unclassified:
+  location:
+    url: "http://127.0.0.1:8080/"
+jobs:
+  - file: /usr/share/jenkins/casc/jobs.groovy

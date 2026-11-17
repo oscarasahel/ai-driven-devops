@@ -15,7 +15,12 @@ TABLE="$P-order-state"
 POLICY_ARN="arn:aws:iam::000000000000:policy/$ROLE-bucket-rw"
 
 fallos=0
-aws() { docker compose run --rm -T awscli "$@" 2>/dev/null | grep -v '^ Container'; }
+# VERIFICAR_MODO=nativo (Jenkins): usa el binario aws del PATH; por defecto, el servicio awscli del compose.
+if [ "${VERIFICAR_MODO:-docker}" = "nativo" ]; then
+  aws() { command aws "$@" 2>/dev/null; }
+else
+  aws() { docker compose run --rm -T awscli "$@" 2>/dev/null | grep -v '^ Container'; }
+fi
 
 # chk <nombre> <patrón-regex-esperado> <salida>
 chk() {
