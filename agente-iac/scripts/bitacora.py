@@ -6,6 +6,7 @@ Fuentes:
   bitacora/simuladas.local.json  sesiones SIMULADAS/reconstruidas (local, ignorado por git; opcional)
 Salidas:
   bitacora/bitacora.json         unión de ambas, para Grafana (ignorado por git; confidencial)
+  bitacora/resumen.json          agregados calculados para los paneles de Grafana (ignorado por git)
   bitacora/BITACORA.md           índice de sesiones REALES
   bitacora/sesiones/sesion-NN-<slug>.md   una por sesión real
 
@@ -28,6 +29,7 @@ REALES = B / "sesiones.json"
 SIMULADAS = B / "simuladas.local.json"
 SALIDA_JSON = B / "bitacora.json"
 SALIDA_MD = B / "BITACORA.md"
+SALIDA_RESUMEN = B / "resumen.json"
 REQUERIDOS = ["numero", "fecha", "fase", "tema", "slug", "simulado", "temas_curso", "objetivo",
               "archivos", "decisiones", "evidencia", "metricas", "riesgos", "siguiente"]
 
@@ -100,6 +102,34 @@ def md_sesion(s):
     return "\n".join(L)
 
 
+def resumen(union):
+    """Agregados para Grafana. Solo las sesiones reales cuentan como 'aplicado'."""
+    reales = [s for s in union["sesiones"] if not s["simulado"]]
+    aplicados = {}
+    for s in reales:
+        for t in s["temas_curso"]:
+            aplicados.setdefault(t, []).append(s["numero"])
+    temas = [{"id": t["id"], "nombre": t["nombre"], "estado": "aplicado" if t["id"] in aplicados else "pendiente",
+              "sesiones": ", ".join(str(n) for n in aplicados.get(t["id"], []))} for t in union.get("temas_curso", [])]
+    recursos = [{"sesion": s["numero"], "tema": s["tema"], "recursos_terraform": s["metricas"].get("recursos_terraform", 0)}
+                for s in sorted(reales, key=lambda x: x["numero"])]
+    hall = {}
+    for s in reales:
+        m = s["metricas"]
+        for momento in ("antes", "despues"):
+            for sev, n in (m.get(f"hallazgos_{momento}") or {}).items():
+                hall.setdefault(sev, {"severidad": sev, "antes": 0, "despues": 0})[momento] += n
+    bitacora = [{"numero": s["numero"], "fecha": s["fecha"], "fase": s["fase"], "tema": s["tema"],
+                 "tipo": "SIMULADO" if s["simulado"] else "REAL", "rama": s.get("rama", ""),
+                 "commit": ", ".join(e["ref"] for e in s["evidencia"] if e["tipo"] == "commit")}
+                for s in sorted(union["sesiones"], key=lambda x: (x["fecha"], x["numero"]))]
+    return {"temas": temas, "recursos_por_sesion": recursos, "hallazgos": list(hall.values()),
+            "pipeline": [union.get("pipeline", {"estado": "desconocido", "detalle": ""})], "bitacora": bitacora,
+            "totales": [{"temas_aplicados": sum(1 for t in temas if t["estado"] == "aplicado"),
+                         "temas_pendientes": sum(1 for t in temas if t["estado"] == "pendiente"),
+                         "sesiones_reales": len(reales), "sesiones_simuladas": len(union["sesiones"]) - len(reales)}]}
+
+
 def generar():
     reales, sim, errores = validar()
     if errores:
@@ -122,6 +152,7 @@ def generar():
     union = {k: v for k, v in reales.items() if k != "sesiones"}
     union["sesiones"] = reales["sesiones"] + sim["sesiones"]
     SALIDA_JSON.write_text(json.dumps(union, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
+    SALIDA_RESUMEN.write_text(json.dumps(resumen(union), ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
     print(f"OK: {len(reales['sesiones'])} reales + {len(sim['sesiones'])} simuladas -> {SALIDA_JSON.name}, {SALIDA_MD.name}")
     return 0
 

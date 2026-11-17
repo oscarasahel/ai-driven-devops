@@ -1,0 +1,659 @@
+{
+  "uid": "avance-por-sesion",
+  "title": "Avance por sesión",
+  "tags": [
+    "agente-iac"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-90d",
+    "to": "now"
+  },
+  "editable": false,
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "description": "Reales vs simuladas se distinguen en la columna Tipo. Fuente: bitacora/resumen.json (generado por scripts/bitacora.py).",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Línea de tiempo de sesiones",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "bitacora",
+          "columns": [
+            {
+              "selector": "numero",
+              "text": "#",
+              "type": "number"
+            },
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "string"
+            },
+            {
+              "selector": "fase",
+              "text": "Fase",
+              "type": "string"
+            },
+            {
+              "selector": "tema",
+              "text": "Tema",
+              "type": "string"
+            },
+            {
+              "selector": "tipo",
+              "text": "Tipo",
+              "type": "string"
+            },
+            {
+              "selector": "rama",
+              "text": "Rama",
+              "type": "string"
+            },
+            {
+              "selector": "commit",
+              "text": "Commit",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "description": "Una fila por sesión ordenada por fecha. SIMULADO = reconstruida, sin evidencia verificable.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "color-text"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tipo"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "SIMULADO": {
+                        "color": "orange",
+                        "text": "SIMULADO"
+                      },
+                      "REAL": {
+                        "color": "green",
+                        "text": "REAL"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Fecha",
+            "desc": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Temas del curso: aplicados vs pendientes",
+      "type": "piechart",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 8,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "totales",
+          "columns": [
+            {
+              "selector": "temas_aplicados",
+              "text": "Aplicados",
+              "type": "number"
+            },
+            {
+              "selector": "temas_pendientes",
+              "text": "Pendientes",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Solo cuentan temas aplicados en sesiones reales.",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Aplicados"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "green"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Pendientes"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "orange"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "pieType": "donut",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Detalle de temas del curso",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 9,
+        "w": 16,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "temas",
+          "columns": [
+            {
+              "selector": "id",
+              "text": "Id",
+              "type": "string"
+            },
+            {
+              "selector": "nombre",
+              "text": "Tema",
+              "type": "string"
+            },
+            {
+              "selector": "estado",
+              "text": "Estado",
+              "type": "string"
+            },
+            {
+              "selector": "sesiones",
+              "text": "Sesiones reales",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Estado"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "aplicado": {
+                        "color": "green",
+                        "text": "aplicado"
+                      },
+                      "pendiente": {
+                        "color": "orange",
+                        "text": "pendiente"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true
+      }
+    },
+    {
+      "id": 4,
+      "title": "Recursos Terraform por sesión",
+      "type": "barchart",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 17,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "recursos_por_sesion",
+          "columns": [
+            {
+              "selector": "tema",
+              "text": "Sesión",
+              "type": "string"
+            },
+            {
+              "selector": "recursos_terraform",
+              "text": "Recursos Terraform",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Recursos Terraform gestionados al cierre de cada sesión (métrica registrada, no inferida).",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "xField": "Sesión",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Hallazgos de seguridad por severidad (antes / después)",
+      "type": "barchart",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 17,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "hallazgos",
+          "columns": [
+            {
+              "selector": "severidad",
+              "text": "Severidad",
+              "type": "string"
+            },
+            {
+              "selector": "antes",
+              "text": "Antes",
+              "type": "number"
+            },
+            {
+              "selector": "despues",
+              "text": "Después",
+              "type": "number"
+            }
+          ]
+        }
+      ],
+      "description": "Fase 4: 'alta' viene de Trivy; Checkov y TFLint no informan severidad. Después = tras corregir o documentar excepciones.",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "xField": "Severidad",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Estado del último pipeline",
+      "type": "stat",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 25,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "pipeline",
+          "columns": [
+            {
+              "selector": "estado",
+              "text": "Estado",
+              "type": "string"
+            },
+            {
+              "selector": "detalle",
+              "text": "Detalle",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "description": "Se actualiza en bitacora/sesiones.json (campo pipeline.estado).",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "ok": {
+                  "color": "green",
+                  "text": "OK"
+                },
+                "fallido": {
+                  "color": "red",
+                  "text": "FALLIDO"
+                },
+                "no verificado": {
+                  "color": "orange",
+                  "text": "NO VERIFICADO"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "textMode": "value",
+        "colorMode": "background",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Estado$/",
+          "values": false
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Bitácora (reales y simuladas)",
+      "type": "table",
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "bitacora"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 25,
+        "w": 16,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "bitacora"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "parser": "backend",
+          "format": "table",
+          "url": "http://bitacora-web/resumen.json",
+          "url_options": {
+            "method": "GET"
+          },
+          "root_selector": "bitacora",
+          "columns": [
+            {
+              "selector": "numero",
+              "text": "#",
+              "type": "number"
+            },
+            {
+              "selector": "fecha",
+              "text": "Fecha",
+              "type": "string"
+            },
+            {
+              "selector": "fase",
+              "text": "Fase",
+              "type": "string"
+            },
+            {
+              "selector": "tema",
+              "text": "Tema",
+              "type": "string"
+            },
+            {
+              "selector": "tipo",
+              "text": "Tipo",
+              "type": "string"
+            },
+            {
+              "selector": "rama",
+              "text": "Rama",
+              "type": "string"
+            },
+            {
+              "selector": "commit",
+              "text": "Commit",
+              "type": "string"
+            }
+          ]
+        }
+      ],
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "color-text"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Tipo"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "SIMULADO": {
+                        "color": "orange",
+                        "text": "SIMULADO"
+                      },
+                      "REAL": {
+                        "color": "green",
+                        "text": "REAL"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true
+      }
+    }
+  ]
+}
