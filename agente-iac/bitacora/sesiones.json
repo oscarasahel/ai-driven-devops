@@ -425,6 +425,58 @@
         "Fechas de S1-S4 aproximadas"
       ],
       "siguiente": "Fase 7: Grafana y dashboard."
+    },
+    {
+      "numero": 7,
+      "fecha": "2026-11-16",
+      "fase": "Fase 7",
+      "tema": "Grafana y dashboard por sesión",
+      "slug": "grafana",
+      "rama": "feature/fase-7-grafana",
+      "simulado": false,
+      "temas_curso": [
+        "S11",
+        "S7"
+      ],
+      "objetivo": "Visualizar el avance por sesión con un dashboard aprovisionado como código.",
+      "archivos": [
+        "agente-iac/grafana/dashboards/avance-por-sesion.json",
+        "agente-iac/grafana/provisioning/datasources/bitacora.yaml",
+        "agente-iac/docker-compose.yml",
+        "agente-iac/scripts/generar_dashboard.py"
+      ],
+      "decisiones": [
+        {
+          "decision": "Agregados calculados en bitacora.py (resumen.json)",
+          "porque": "Grafana solo muestra, la lógica queda en código testeable"
+        },
+        {
+          "decision": "Infinity 3.7.1 con Grafana 11.4.0",
+          "porque": "versiones fijadas y compatibles"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "56425d6",
+          "detalle": "commit de la fase 7"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-7.md",
+          "detalle": "consultas de los 7 paneles verificadas por API"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "paneles": 7,
+        "paneles_con_datos": 7
+      },
+      "riesgos": [
+        "Aspecto visual no revisado (sin navegador)",
+        "Estado del pipeline no conectado a métricas vivas"
+      ],
+      "siguiente": "Fase 8: evals, pruebas negativas y README."
     }
   ]
 }
