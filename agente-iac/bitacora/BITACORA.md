@@ -12,3 +12,4 @@ Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesi
 | 5 | 2026-11-16 | Fase 5 | [Jenkins con aprobación manual](sesiones/sesion-05-jenkins.md) | feature/fase-5-jenkins | 0b69f84 |
 | 6 | 2026-11-16 | Fase 6 | [Skill bitacora](sesiones/sesion-06-bitacora.md) | feature/fase-6-bitacora | 716d1e0 |
 | 7 | 2026-11-16 | Fase 7 | [Grafana y dashboard por sesión](sesiones/sesion-07-grafana.md) | feature/fase-7-grafana | 56425d6 |
+| 8 | 2026-11-16 | Fase 8 | [Endurecimiento y evals](sesiones/sesion-08-endurecimiento.md) | feature/fase-8-endurecimiento | 4067d49 |

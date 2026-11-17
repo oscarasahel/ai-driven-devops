@@ -477,6 +477,57 @@
         "Estado del pipeline no conectado a métricas vivas"
       ],
       "siguiente": "Fase 8: evals, pruebas negativas y README."
+    },
+    {
+      "numero": 8,
+      "fecha": "2026-11-16",
+      "fase": "Fase 8",
+      "tema": "Endurecimiento y evals",
+      "slug": "endurecimiento",
+      "rama": "feature/fase-8-endurecimiento",
+      "simulado": false,
+      "temas_curso": [
+        "S7",
+        "S13"
+      ],
+      "objetivo": "Fijar con evals y pruebas negativas lo que el sistema impone en código, y documentar el estado real.",
+      "archivos": [
+        "agente-iac/evals/run_evals.sh",
+        "agente-iac/README.md",
+        "agente-iac/docs/fase-8.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Evals deterministas sin LLM",
+          "porque": "repetibles y sin costo; el comportamiento del modelo queda declarado como no cubierto"
+        },
+        {
+          "decision": "README con estado real por criterio",
+          "porque": "no presentar como hecho lo que no se ejecutó"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "4067d49",
+          "detalle": "commit de la fase 8"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-8.md",
+          "detalle": "16/16 casos con el resultado esperado"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "evals_total": 16,
+        "evals_ok": 16
+      },
+      "riesgos": [
+        "Pipeline de Jenkins sin verificar de extremo a extremo",
+        "Ambigüedad e inyección de prompt a nivel del modelo sin evals automáticos"
+      ],
+      "siguiente": "Revisar y fusionar las ramas; ejecutar el pipeline de Jenkins a mano."
     }
   ]
 }
