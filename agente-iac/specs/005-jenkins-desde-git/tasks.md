@@ -11,6 +11,7 @@ Ver `plan.md`. Estado a 2026-11-17.
 | T5 | Pruebas que imponen los controles | CA-1, CA-4 a CA-6, CA-9 | Hecha | `tests/test_jenkins_desde_git.py` (8); 128 pruebas en total |
 | T6 | Gate de seguridad y Gitleaks | CA-9, CA-10 | Hecha | `seguridad.sh`: 6 PASS; Gitleaks: 44 commits sin hallazgos |
 | T7 | Jenkins alcanza GitHub desde el contenedor | Supuesto | Hecha | `git ls-remote` anónimo desde el contenedor devolvió el commit de `main` |
-| T8 | Build real desde Git, sin disparo manual, hasta la aprobación | CA-2, CA-3, CA-5 | Pendiente | Requiere la rama en GitHub y recrear Jenkins |
+| T8a | Build real desde Git hasta la aprobación | CA-2, CA-5 | Hecha | Build #30: clonó `d7df1c5`, gate OK, plan y espera de aprobación. Lanzado a mano (línea base del polling) |
+| T8b | Build lanzado por el polling, sin disparo manual | CA-3 | Pendiente | Se espera con el push de esta documentación |
 | T9 | Encadenado staging -> local y estado conservado | CA-6, CA-8 | Pendiente | Idem |
 | T10 | Sin builds nuevos con `main` quieto | CA-7 | Pendiente | Observación de varios intervalos |

@@ -26,6 +26,11 @@ Spec 005. Hasta ahora Jenkins leía la carpeta local del equipo (`./:/repo:ro`) 
 - Comprobar que, sin commits nuevos, no se crean builds.
 Hasta que `main` tenga el Jenkinsfile nuevo, se prueba recreando Jenkins con `REPO_BRANCH=feature/fase-20-jenkins-desde-git` en `.env`.
 
+## Hallazgos de la primera ejecución real (build #30)
+- **El polling necesita una línea base.** Con builds anteriores sin revisión de Git, el polling respondía "No changes" y no lanzaba nada. Hizo falta **un primer lanzamiento manual, una sola vez** (el #30); después, un commit nuevo en la rama lo dispara solo.
+- **El primer clon vació el workspace y se perdió el estado de Terraform de staging.** El #30 clonó el commit `d7df1c5` desde Git, pasó el gate y el plan y esperó la aprobación, pero el apply falló (`BucketAlreadyExists`, `QueueAlreadyExists`, `ResourceInUseException`, `EntityAlreadyExists`) porque los recursos del #28 seguían en el emulador sin estado que los registrara. Se limpiaron a mano con el AWS CLI, solo los `agente-iac-stg-*`.
+- **Riesgo que queda:** el estado de Terraform sigue dentro del workspace de Jenkins; vaciarlo (o un nuevo clon completo) lo vuelve a perder. Mover el estado fuera del workspace queda como mejora.
+
 ## Límites
 - Polling, no webhook: hay hasta 5 minutos de retraso.
 - Cualquier commit en `main` (incluidos los de documentación) lanza un build; filtrar por rutas queda como mejora.
