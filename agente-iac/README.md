@@ -24,7 +24,7 @@ Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker 
 |---|---|
 | Pruebas unitarias (120) | `pip install -r requirements-dev.txt && python -m pytest -q` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) | `bash scripts/seguridad.sh` |
-| Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` |
+| Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` (specs 001 a 004; la 004, bucket de secretos, está en `docs/fase-19.md`) |
 | Evals con resultado esperado (14 rápidos; 16 con el gate) | `bash evals/run_evals.sh [rapido]` |
 | Validar la bitácora | `python scripts/bitacora.py validar` |
 | Redirección real a la DLQ en el emulador | `bash scripts/probar-dlq.sh` |
