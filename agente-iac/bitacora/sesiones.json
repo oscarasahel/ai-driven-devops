@@ -893,6 +893,75 @@
         "Un solo recurso inseguro probado, no cada control por separado"
       ],
       "siguiente": "Separar solicitante y aprobador en Jenkins y planificar el staging (S5)."
+    },
+    {
+      "numero": 15,
+      "fecha": "2026-11-17",
+      "fase": "Fase 16",
+      "tema": "Staging con workspaces y promoción controlada",
+      "slug": "staging-promocion",
+      "rama": "feature/fase-16-staging-promocion",
+      "simulado": false,
+      "temas_curso": [
+        "S5"
+      ],
+      "objetivo": "Probar los cambios en un entorno staging aislado y permitir aplicar en local solo el código ya verificado en staging; fijar plugins e imágenes.",
+      "archivos": [
+        "agente-iac/specs/003-promocion-entornos/spec.md",
+        "agente-iac/jenkins/Jenkinsfile",
+        "agente-iac/scripts/promocion.py",
+        "agente-iac/scripts/probar-promocion-jenkins.sh",
+        "agente-iac/tests/test_promocion.py",
+        "agente-iac/jenkins/plugins.txt",
+        "agente-iac/docs/fase-16.md"
+      ],
+      "decisiones": [
+        {
+          "decision": "Workspaces de Terraform sobre un único módulo",
+          "porque": "menos duplicación y más fácil de administrar que directorios separados"
+        },
+        {
+          "decision": "Aprobación manual en staging y en local",
+          "porque": "mantiene la regla de ningún apply sin aprobación"
+        },
+        {
+          "decision": "Compuerta por huella del contenido de infra/",
+          "porque": "Jenkins no ve .git; así se promueve exactamente lo que se probó"
+        },
+        {
+          "decision": "No separar solicitante y aprobador",
+          "porque": "en esta PoC es la misma persona"
+        }
+      ],
+      "evidencia": [
+        {
+          "tipo": "commit",
+          "ref": "c2d9ad6",
+          "detalle": "staging con workspaces y compuerta de promoción"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/evidencia/jenkins-promocion.log",
+          "detalle": "logs de los builds #12 a #18"
+        },
+        {
+          "tipo": "archivo",
+          "ref": "agente-iac/docs/fase-16.md",
+          "detalle": "10 comprobaciones PASS en Jenkins"
+        }
+      ],
+      "metricas": {
+        "recursos_terraform": 15,
+        "pruebas_unitarias": 103,
+        "sli_pipeline_pct": 75.0,
+        "slo_pipeline_pct": 90.0
+      },
+      "riesgos": [
+        "Los workspaces aíslan el estado, no las credenciales ni la cuenta",
+        "La huella solo cubre infra/, no scripts ni el Jenkinsfile",
+        "jenkins.sh disparar muestra a veces un 400 inocuo y puede lanzar builds duplicados"
+      ],
+      "siguiente": "Marcar los builds de prueba negativa para excluirlos del SLI; S11 (OpenTelemetry)."
     }
   ]
 }
