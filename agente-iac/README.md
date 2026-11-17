@@ -17,7 +17,7 @@ docker compose run --rm terraform apply    # pide confirmación
 bash scripts/verificar-criterios.sh        # criterios de las specs contra el emulador
 docker compose run --rm terraform destroy
 ```
-Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker compose up -d grafana bitacora-web` (UI `127.0.0.1:3000`). Jenkins comparte la red del emulador: **si el emulador se recrea, recrear también Jenkins**. Desde la spec 005 Jenkins clona `main` desde GitHub y lanza `staging` solo tras cada merge (polling de 5 min), hasta la aprobación manual; ver `docs/fase-20.md` (`docker compose up -d --force-recreate jenkins`).
+Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker compose up -d grafana bitacora-web` (UI `127.0.0.1:3000`). Jenkins comparte la red del emulador: **si el emulador se recrea, recrear también Jenkins**. Desde la spec 005 Jenkins clona `main` desde GitHub y lanza `staging` solo tras cada merge a `main` (polling de 5 min), hasta la aprobación manual, y encola `local` tras un staging verificado; **verificado** con los builds #30 a #38 (ver `docs/fase-20.md`). Al cambiar de rama o de repositorio hay que lanzar un build manual una vez (`docker compose up -d --force-recreate jenkins`).
 
 ## Comprobaciones
 | Qué | Comando |

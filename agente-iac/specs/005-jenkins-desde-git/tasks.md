@@ -16,4 +16,4 @@ Ver `plan.md`. Estado a 2026-11-17.
 | T9 | Encadenado staging -> local | CA-6 | Hecha | Build #31 (staging) encoló el #32 (local); compuerta OK; ambos SUCCESS con aprobación manual |
 | T9b | Estado de Terraform conservado entre builds | CA-8 | Hecha | Build #33: "No changes. Your infrastructure matches the configuration." (el primer clon lo había vaciado en el #30) |
 | T10 | Sin builds nuevos con la rama quieta | CA-7 | Hecha | Entre el #33 y el #34 y en los polls de las 17:28 y 17:33, con la rama sin commits nuevos, el log dice "No changes" y no se creó ningún build |
-| T11 | Un merge a `main` lanza un build solo | CA-3 | Pendiente | Tras el build manual #35 desde `main`; se registra con el merge de este PR |
+| T11 | Un merge a `main` lanza un build solo | CA-3 | Hecha | Build #37: "Started by an SCM change" tras el merge del PR #10 (`68b2e1e`); staging + apply, plan sin cambios, SUCCESS; encoló el #38 de `local` (SUCCESS) |
