@@ -31,6 +31,11 @@ Hasta que `main` tenga el Jenkinsfile nuevo, se prueba recreando Jenkins con `RE
 - **El primer clon vació el workspace y se perdió el estado de Terraform de staging.** El #30 clonó el commit `d7df1c5` desde Git, pasó el gate y el plan y esperó la aprobación, pero el apply falló (`BucketAlreadyExists`, `QueueAlreadyExists`, `ResourceInUseException`, `EntityAlreadyExists`) porque los recursos del #28 seguían en el emulador sin estado que los registrara. Se limpiaron a mano con el AWS CLI, solo los `agente-iac-stg-*`.
 - **Riesgo que queda:** el estado de Terraform sigue dentro del workspace de Jenkins; vaciarlo (o un nuevo clon completo) lo vuelve a perder. Mover el estado fuera del workspace queda como mejora.
 
+## Ejecución exitosa desde Git (builds #31 y #32)
+- **#31 (staging, `apply`):** clonó `8b1eabe` desde GitHub, gate OK, aprobación manual, apply de 21 recursos, pruebas de humo "TODO OK" (incluida la sección de la spec 004) y promoción habilitada.
+- **#32 (local, `apply`):** lo encoló solo el #31 ("Started by upstream project agente-iac build number 31"), pasó la compuerta de promoción ("verificado en staging"), esperó la aprobación manual y terminó en SUCCESS con 21 recursos y "TODO OK".
+- Los dos lanzamientos previos al #31 que se aprobaron a mano fueron el #30 (línea base, falló por el estado perdido) y el propio #31 (lanzado a mano); la prueba del disparo por polling se registra en `tasks.md` cuando ocurra.
+
 ## Límites
 - Polling, no webhook: hay hasta 5 minutos de retraso.
 - Cualquier commit en `main` (incluidos los de documentación) lanza un build; filtrar por rutas queda como mejora.
