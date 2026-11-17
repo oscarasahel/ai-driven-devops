@@ -33,3 +33,4 @@ agente-iac/reports/
 # Bitácora: lo simulado y la unión para Grafana son locales
 agente-iac/bitacora/simuladas.local.json
 agente-iac/bitacora/resumen.json
+.evals-neg/
