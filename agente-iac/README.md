@@ -17,12 +17,12 @@ docker compose run --rm terraform apply    # pide confirmación
 bash scripts/verificar-criterios.sh        # criterios de las specs contra el emulador
 docker compose run --rm terraform destroy
 ```
-Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker compose up -d grafana bitacora-web` (UI `127.0.0.1:3000`). Jenkins comparte la red del emulador: **si el emulador se recrea, recrear también Jenkins** (`docker compose up -d --force-recreate jenkins`).
+Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker compose up -d grafana bitacora-web` (UI `127.0.0.1:3000`). Jenkins comparte la red del emulador: **si el emulador se recrea, recrear también Jenkins**. Desde la spec 005 Jenkins clona `main` desde GitHub y lanza `staging` solo tras cada merge (polling de 5 min), hasta la aprobación manual; ver `docs/fase-20.md` (`docker compose up -d --force-recreate jenkins`).
 
 ## Comprobaciones
 | Qué | Comando |
 |---|---|
-| Pruebas unitarias (120) | `pip install -r requirements-dev.txt && python -m pytest -q` |
+| Pruebas unitarias (128) | `pip install -r requirements-dev.txt && python -m pytest -q` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) | `bash scripts/seguridad.sh` |
 | Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` (specs 001 a 004; la 004, bucket de secretos, está en `docs/fase-19.md`) |
 | Evals con resultado esperado (14 rápidos; 16 con el gate) | `bash evals/run_evals.sh [rapido]` |
@@ -53,6 +53,7 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 |---|---|
 | `docker compose up` levanta emulador, Jenkins y Grafana sanos | **Verificado:** `down` + un solo `up -d --wait`: los cuatro contenedores `healthy` en 14 s y respondiendo |
 | Un requerimiento recorre el flujo completo y deja recursos en el emulador | **Verificado en Jenkins** (build #2: gate, plan, aprobación, apply de 15 recursos, pruebas de humo) |
+| Reutilización de un módulo para un requerimiento nuevo (spec 004, bucket de secretos) | **Verificado en el emulador con Terraform** (apply de 21 recursos, `verificar-criterios.sh` en OK, plan sin cambios, destroy) y gate de seguridad en PASS. **No ejecutado todavía en Jenkins**: aprobación manual y pruebas de humo pendientes. Ver `docs/fase-19.md` |
 | Trazas OpenTelemetry del pipeline | **Exportación a archivo OTLP/JSON, sin colector**: no hay visor ni latencia por etapa (un span por build). Ver `docs/fase-17.md` |
 | SLI del pipeline | Ventana de 20 builds: bruto 85 %; **ajustado 100 %** (con #1 y #5 aún dentro: 75 % / 93,8 %; excluye pruebas negativas deliberadas, `policies/builds-prueba-negativa.json`) |
 | Staging aislado y promoción controlada a `local` | **Verificado en Jenkins** (builds #12 a #18, 10 comprobaciones PASS): compuerta por huella de `infra/`, un cambio la invalida, destruir staging la revoca. Ver `docs/fase-16.md` y `specs/003-promocion-entornos/` |
@@ -73,4 +74,4 @@ Jenkins (`jenkins/Jenkinsfile`): validate -> lint -> security -> plan -> **aprob
 `docs/seguimiento.md` (en la raíz del repo), `bitacora/bitacora.json`, `bitacora/resumen.json`, `bitacora/simuladas.local.json`, `bitacora/temas.local.json`, `bitacora/pipeline-eventos.json`, `bitacora/chatops-auditoria.jsonl` y `.env`. Los cuatro primeros son material confidencial del curso o derivados de él. En un clon nuevo, `python scripts/bitacora.py generar` produce lo que falte.
 
 ## Ramas
-Las fases 0 a 13 se integraron en `main` con el PR #1 (merge commit `d679087`). Las 14 ramas `feature/fase-N-*` **se conservan a propósito**: la bitácora cita commits por SHA y el CI comprueba que existan, así que no se borran ni se hace squash. El trabajo nuevo va en una rama `feature/*` desde `main`, con PR y los 4 checks en verde.
+Las fases 0 a 13 se integraron en `main` con el PR #1 (merge commit `d679087`); después, las fases 14 a 18 con los PR #2 a #6. Las 19 ramas `feature/fase-N-*` **se conservan a propósito**: la bitácora cita commits por SHA y el CI comprueba que existan, así que no se borran ni se hace squash. La spec 004 (bucket de secretos, [fase 19](docs/fase-19.md)) se integró con el PR #7; la spec 005 (Jenkins desde Git, [fase 20](docs/fase-20.md)) va en `feature/fase-20-jenkins-desde-git`. El trabajo nuevo va en una rama `feature/*` desde `main`, con PR y los 4 checks en verde.
