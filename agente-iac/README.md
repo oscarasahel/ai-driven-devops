@@ -6,6 +6,50 @@ Reglas del proyecto: [CLAUDE.md](CLAUDE.md) y [docs/constitution.md](docs/consti
 
 > El repositorio es **público**: no incluye material confidencial del curso (ver "Archivos locales").
 
+## Diagramas
+
+### Flujo de un cambio
+```mermaid
+flowchart LR
+    R[Requerimiento en texto] --> S[Spec con criterios<br/>Dado / Cuando / Entonces]
+    S -->|validar_spec.py| T[Terraform]
+    T --> G{Gate de seguridad<br/>TFLint, Checkov, Trivy}
+    G -->|HIGH o CRITICAL| X[Se rechaza]
+    G -->|limpio| P[terraform plan]
+    P --> H{Aprobación humana<br/>en Jenkins}
+    H -->|rechaza| X
+    H -->|aprueba| A[apply en el emulador de AWS]
+    A --> V[Pruebas de humo<br/>sobre los criterios]
+    V --> B[Bitácora y Grafana]
+```
+
+### Pipeline de Jenkins tras un merge
+```mermaid
+flowchart TD
+    M[Merge a main en GitHub] -->|polling cada 5 min| J[Build staging + apply]
+    J --> E1[Validate, lint y seguridad]
+    E1 --> E2[Compuerta de promoción<br/>huella de infra/]
+    E2 --> E3[Plan]
+    E3 --> E4{Aprobación manual<br/>máx. 30 min}
+    E4 -->|caduca o rechaza| F[Build abortado, sin cambios]
+    E4 -->|aprueba| E5[Apply y pruebas de humo]
+    E5 --> E6[Registrar promoción]
+    E6 -->|solo se encola| L[Build local + apply]
+    L --> E4L{Aprobación manual propia}
+```
+
+### Servicios locales
+```mermaid
+flowchart LR
+    GH[(GitHub, solo lectura HTTPS)] --> JK[Jenkins :8080]
+    JK --> TF[Terraform]
+    TF --> EM[Emulador de AWS :9297]
+    JK --> CLI[AWS CLI]
+    CLI --> EM
+    BIT[bitacora/*.json<br/>sesiones, resumen, eventos] --> BW[bitacora-web nginx]
+    BW --> GR[Grafana :3000]
+```
+
 ## Arranque rápido (PowerShell o Git Bash, desde `agente-iac/`)
 ```bash
 cp .env.example .env                       # solo valores ficticios; .env no se versiona
@@ -22,7 +66,7 @@ Otros servicios: `docker compose up -d jenkins` (UI `127.0.0.1:8080`) y `docker 
 ## Comprobaciones
 | Qué | Comando |
 |---|---|
-| Pruebas unitarias (128) | `pip install -r requirements-dev.txt && python -m pytest -q` |
+| Pruebas unitarias (133) | `pip install -r requirements-dev.txt && python -m pytest -q` |
 | Gate de seguridad (fmt, validate, TFLint, Checkov, Trivy) | `bash scripts/seguridad.sh` |
 | Validar una spec | `python scripts/validar_spec.py specs/001-bucket-artefactos/spec.md` (specs 001 a 004; la 004, bucket de secretos, está en `docs/fase-19.md`) |
 | Evals con resultado esperado (14 rápidos; 16 con el gate) | `bash evals/run_evals.sh [rapido]` |
