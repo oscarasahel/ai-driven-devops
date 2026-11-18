@@ -4,11 +4,14 @@ Prueba de concepto **100 % local** (Docker Desktop, sin cuenta AWS) de un agente
 
 `requerimiento → spec → Terraform → gate de seguridad → plan → aprobación humana → apply → bitácora y Grafana`
 
-Todo vive en [`agente-iac/`](agente-iac/). Los datos y la bitácora del curso son locales y no se versionan: este repositorio es público.
+Todo vive en [`agente-iac/`](agente-iac/). **Empieza por la [bitácora de sesiones](BITACORA.md)**: 19 sesiones reales con su evidencia, cómo se validó cada una, qué acertó y qué falló la IA, y un índice al resto del proyecto. Este repositorio es público: el material confidencial del curso es local y no se versiona.
 
 ## Por dónde empezar
 | Si quieres... | Ve a |
 |---|---|
+| Ver el trabajo sesión por sesión | [Bitácora](BITACORA.md) |
+| Leer el resumen para revisores | [Cierre del proyecto](agente-iac/docs/cierre-proyecto.md) |
+| Ver los diagramas | [README de agente-iac](agente-iac/README.md#diagramas) |
 | Recorrer el proyecto y la demo | [Guía de presentación](agente-iac/docs/guia-presentacion.md) |
 | Levantarlo y ver los comandos | [README de agente-iac](agente-iac/README.md) |
 | Entender las reglas y decisiones | [Constitution](agente-iac/docs/constitution.md) y [ADR](agente-iac/docs/adr/) |
