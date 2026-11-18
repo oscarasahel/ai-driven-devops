@@ -1,5 +1,24 @@
 # Bitácora de sesiones (reales)
 
+## Empieza aquí
+
+agente-iac es una prueba de concepto local: un requerimiento en texto pasa a una spec verificable, luego a Terraform, por un gate de seguridad y por una aprobación humana, y se aplica en un emulador de AWS. Esta bitácora registra cada sesión de trabajo con su evidencia.
+
+| Qué buscas | Dónde está |
+|---|---|
+| Visión general y diagramas | [README del proyecto](../README.md) |
+| Resumen para revisores | [Cierre del proyecto](../docs/cierre-proyecto.md) |
+| Guía para presentarlo | [Guía de presentación](../docs/guia-presentacion.md) |
+| Requisitos y criterios de aceptación | [Specs](../specs/) |
+| Detalle de cada fase | [Documentos de fase](../docs/) (`fase-N.md`) |
+| Builds reales de Jenkins | [Evidencia](../docs/evidencia/) |
+| Seguridad | [AI-BOM](../docs/seguridad/ai-bom.md) y [modelo de amenazas](../docs/seguridad/modelo-de-amenazas.md) |
+| Operación | [Runbooks](../docs/runbooks/) |
+
+Cada sesión de la tabla enlaza a su ficha: objetivo, decisiones, evidencia, cómo se validó, qué acertó y qué falló la IA, y la lección aprendida.
+
+## Sesiones
+
 Solo sesiones con evidencia verificable (commit y archivos existentes). Las sesiones simuladas del curso viven en un archivo local y se distinguen en Grafana.
 
 | # | Fecha | Fase | Tema | Rama | Commit |
