@@ -28,6 +28,16 @@ Probar los cambios en un entorno staging aislado y permitir aplicar en local sol
 - [archivo] `agente-iac/docs/evidencia/jenkins-promocion.log` — logs de los builds #12 a #18
 - [archivo] `agente-iac/docs/fase-16.md` — 10 comprobaciones PASS en Jenkins
 
+## Cómo se validó
+Builds reales de staging y local con la compuerta de promoción; pruebas de promoción con scripts/probar-promocion-jenkins.sh; 103 pruebas.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Aisló staging con workspaces y exigió código verificado en staging antes de aplicar en local, con huella de infra/.
+- **Falló:** jenkins.sh disparar mostraba a veces un 400 y podía lanzar builds duplicados; la huella solo cubre infra/.
+
+## Lección aprendida
+Los workspaces aíslan el estado, no las credenciales ni la cuenta.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 103

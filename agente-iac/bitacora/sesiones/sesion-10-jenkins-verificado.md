@@ -26,6 +26,16 @@ Demostrar con ejecuciones reales que el pipeline no aplica sin aprobación manua
 - [archivo] `agente-iac/docs/evidencia/jenkins-build-3.log` — destroy rechazado: ABORTED, sin cambios
 - [archivo] `agente-iac/docs/evidencia/jenkins-build-4.log` — destroy aprobado
 
+## Cómo se validó
+Builds reales en Jenkins: 2 aprobados, 1 rechazado sin cambios y 1 con defecto; logs guardados y revisados con Gitleaks.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Demostró que no se aplica sin aprobación y que un rechazo no cambia nada.
+- **Falló:** El build 1 falló por un defecto de la propia IA (ruta de rsync), que se corrigió.
+
+## Lección aprendida
+Probar el rechazo es tan importante como probar la aprobación.
+
 ## Métricas
 - recursos_terraform: 15
 - builds_ok: 2

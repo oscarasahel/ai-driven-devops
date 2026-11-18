@@ -24,6 +24,16 @@ Cerrar las brechas de pruebas unitarias, CI con Gitleaks y GitHub Actions.
 - [commit] `c93a23c` — pruebas y workflow de CI
 - [archivo] `agente-iac/docs/fase-9.md` — run de Actions 44031273761 con los 4 jobs en éxito
 
+## Cómo se validó
+34 pruebas unitarias y 4 jobs de CI en verde; las pruebas se comprobaron además con mutaciones manuales.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Cerró brechas de pruebas, fijó las acciones de GitHub por SHA y pasó Gitleaks por todo el historial.
+- **Falló:** La protección de la rama y los checks requeridos eran un paso manual en GitHub; los evals lentos no corren en CI.
+
+## Lección aprendida
+Una prueba que no falla cuando se rompe el código no prueba nada: por eso se mutó a mano.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 34

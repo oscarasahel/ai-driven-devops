@@ -23,6 +23,16 @@ Dejar la estructura, las reglas y la verificación del emulador antes de constru
 - [commit] `d8a5efa` — commit de la fase 0
 - [archivo] `agente-iac/docs/emulador-tabla.md` — tabla de servicios y límites del emulador
 
+## Cómo se validó
+Se comprobó que el emulador responde y que la estructura y las reglas existen; no había nada que aplicar todavía.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Dejó las reglas y la estructura antes de construir, y anotó lo que no pudo verificar (tabla de fidelidad del emulador, versión no fijable).
+- **Falló:** No encontró una tabla de fidelidad por servicio del emulador ni pudo fijar su versión; quedaron como riesgos.
+
+## Lección aprendida
+Fijar las reglas antes de escribir código evita decidir bajo presión; lo que no se puede fijar se declara como riesgo desde el primer día.
+
 ## Métricas
 - recursos_terraform: 0
 - archivos_nuevos: 19

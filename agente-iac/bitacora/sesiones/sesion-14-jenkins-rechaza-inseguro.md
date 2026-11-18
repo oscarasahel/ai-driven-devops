@@ -25,6 +25,16 @@ Demostrar que el pipeline de Jenkins rechaza un recurso inseguro antes de planif
 - [archivo] `agente-iac/docs/evidencia/jenkins-gate-inseguro.log` — log del build #6 rechazado por el gate
 - [archivo] `agente-iac/docs/fase-15.md` — 6 comprobaciones PASS y hallazgo del build #5
 
+## Cómo se validó
+Build real en Jenkins que rechaza un recurso inseguro antes de planificar, comprobando el contenido del log y no solo el fallo; 93 pruebas.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Demostró que el pipeline rechaza lo inseguro y destapó defectos de finales de línea que se corrigieron con .gitattributes.
+- **Falló:** Dos de los tres builds fallidos fueron defectos corregidos y uno la prueba negativa deliberada; el SLI bajó a 50 %.
+
+## Lección aprendida
+Una prueba negativa debe comprobar la causa del fallo, no solo que falle.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 93

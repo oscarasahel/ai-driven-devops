@@ -22,6 +22,16 @@ Registrar sesiones con evidencia verificable y separar lo simulado de lo real.
 - [commit] `716d1e0` — commit de la fase 6
 - [archivo] `agente-iac/docs/fase-6.md` — verificación y límites
 
+## Cómo se validó
+Pruebas del validador y comprobación de que los commits y archivos citados existen en git.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Separó lo real de lo simulado y obligó por código a citar commits existentes.
+- **Falló:** Las fechas de las sesiones 1 a 4 quedaron aproximadas por haberse reconstruido después.
+
+## Lección aprendida
+La veracidad se impone mejor en el validador que en una regla escrita.
+
 ## Métricas
 - recursos_terraform: 15
 - sesiones_reales: 7

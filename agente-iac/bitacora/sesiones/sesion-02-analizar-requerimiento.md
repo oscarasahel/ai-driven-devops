@@ -22,6 +22,16 @@ Convertir requerimientos en specs verificables y validarlas en código.
 - [commit] `7ee8a33` — commit de la fase 2
 - [archivo] `agente-iac/docs/fase-2.md` — validación y sondeo del emulador
 
+## Cómo se validó
+El validador scripts/validar_spec.py y sus pruebas comprueban la estructura de cada spec; 17 criterios de aceptación escritos.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Separó el análisis (spec sin código) de la construcción y sondeó el emulador antes de comprometer criterios.
+- **Falló:** El validador revisa la estructura y no la calidad semántica: una spec bien formada puede ser ambigua.
+
+## Lección aprendida
+Validar la forma en código es barato, pero la calidad del requerimiento sigue necesitando revisión humana.
+
 ## Métricas
 - recursos_terraform: 0
 - criterios_aceptacion: 17

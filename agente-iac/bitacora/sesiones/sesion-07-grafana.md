@@ -22,6 +22,16 @@ Visualizar el avance por sesión con un dashboard aprovisionado como código.
 - [commit] `56425d6` — commit de la fase 7
 - [archivo] `agente-iac/docs/fase-7.md` — consultas de los 7 paneles verificadas por API
 
+## Cómo se validó
+Dashboard aprovisionado como código; 7 paneles con datos comprobados contra la API de Grafana.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Calculó los agregados en bitacora.py y dejó el dashboard versionado.
+- **Falló:** No se pudo revisar el aspecto visual (sin navegador) y el estado del pipeline no estaba conectado a métricas vivas.
+
+## Lección aprendida
+Que los paneles devuelvan datos no demuestra que se vean bien; la revisión visual es un paso aparte.
+
 ## Métricas
 - recursos_terraform: 15
 - paneles: 7
