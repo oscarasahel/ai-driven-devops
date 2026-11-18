@@ -43,6 +43,12 @@ Un push a la rama (`e15a697`) creó el #33 sin intervención: "Started by an SCM
 ## Cambio de rama: el polling sigue la rama del último build (builds #34 a #36)
 Tras el merge del PR #8 se quitó `REPO_BRANCH` y se recreó Jenkins con la configuración `*/main`, pero el polling seguía diciendo "already built" sobre la rama de la fase: Jenkins consulta el origen **registrado en el último build**, no el de la configuración. Hizo falta un build desde `main` (el #35: clonó `d7f617b`, plan "No changes", SUCCESS y encoló el #36 de `local`) para que a partir de ahí siguiera `main`. Regla práctica: **al cambiar de rama o de repositorio, lanzar una vez un build manual desde el origen nuevo.**
 
+## Disparo por merge a `main` (builds #37 y #38)
+Tras fusionar el PR #10 (`68b2e1e`), el polling dijo "Changes found" y creó el **#37** sin intervención: "Started by an SCM change", clonó `68b2e1e` desde `main`, `staging` + `apply`, gate OK, plan "No changes", aprobación manual y SUCCESS con pruebas de humo "TODO OK". El #37 encoló el **#38** de `local`, que pasó la compuerta de promoción, esperó su aprobación y terminó en SUCCESS.
+
+## Estado final de la spec 005
+Los 10 criterios de aceptación están verificados con builds reales (#30 a #38). Quedan como límites conocidos los de la sección siguiente.
+
 ## Límites
 - Polling, no webhook: hay hasta 5 minutos de retraso.
 - Cualquier commit en `main` (incluidos los de documentación) lanza un build; filtrar por rutas queda como mejora.

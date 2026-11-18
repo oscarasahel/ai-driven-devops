@@ -1130,6 +1130,10 @@
         {
           "decision": "Origen del código por REPO_URL y REPO_BRANCH con valores por defecto",
           "porque": "permite probar una rama antes del merge sin tocar el código"
+        },
+        {
+          "decision": "Registrar la verificación final con los builds #30 a #38",
+          "porque": "el disparo por merge y el encadenado a local se comprobaron con ejecuciones reales"
         }
       ],
       "evidencia": [
@@ -1157,6 +1161,11 @@
           "tipo": "archivo",
           "ref": "agente-iac/docs/fase-20.md",
           "detalle": "builds #30 a #33: línea base, estado perdido, encadenado a local y disparo automático"
+        },
+        {
+          "tipo": "commit",
+          "ref": "68b2e1e",
+          "detalle": "merge del PR #10 que disparó el build #37 por polling"
         }
       ],
       "metricas": {
@@ -1167,7 +1176,8 @@
         "El estado de Terraform sigue dentro del workspace de Jenkins: el primer clon lo vació y vaciarlo otra vez lo perdería",
         "El polling necesita un build exitoso desde Git como referencia; antes dijo No changes",
         "Cualquier commit en la rama lanza un build, incluidos los de documentación",
-        "Un build esperando aprobación bloquea a los siguientes y caduca a los 30 minutos"
+        "Un build esperando aprobación bloquea a los siguientes y caduca a los 30 minutos",
+        "El polling sigue la rama del último build: al cambiar de rama o repositorio hace falta un build manual desde el origen nuevo"
       ],
       "siguiente": "Comprobar CA-7 (sin commits nuevos no hay builds), fusionar el PR, quitar REPO_BRANCH del .env y mover el estado de Terraform fuera del workspace."
     }
