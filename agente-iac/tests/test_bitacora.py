@@ -132,3 +132,14 @@ def test_el_indice_de_la_bitacora_enlaza_a_rutas_que_existen():
     assert len(enlaces) >= 8
     for e in enlaces:
         assert (bitacora.B / e).resolve().exists(), e
+
+
+def test_la_copia_de_la_raiz_coincide_y_sus_enlaces_existen():
+    import re
+    original = bitacora.SALIDA_MD.read_text(encoding="utf-8")
+    copia = bitacora.SALIDA_MD_RAIZ.read_text(encoding="utf-8")
+    assert copia == bitacora.para_raiz(original)
+    enlaces = [e for e in re.findall(r"\]\(([^)#\s]+)\)", copia) if not e.startswith("http")]
+    assert len(enlaces) > 20
+    for e in enlaces:
+        assert (bitacora.REPO / e).exists(), e

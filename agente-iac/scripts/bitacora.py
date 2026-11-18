@@ -7,7 +7,7 @@ Fuentes:
 Salidas:
   bitacora/bitacora.json         unión de ambas, para Grafana (ignorado por git; confidencial)
   bitacora/resumen.json          agregados calculados para los paneles de Grafana (ignorado por git)
-  bitacora/BITACORA.md           índice de sesiones REALES
+  bitacora/BITACORA.md           índice de sesiones REALES (con copia generada en BITACORA.md, en la raíz del repo)
   bitacora/sesiones/sesion-NN-<slug>.md   una por sesión real
 
 Comandos:  validar | generar | agregar <archivo.json>
@@ -31,6 +31,7 @@ SIMULADAS = B / "simuladas.local.json"
 TEMAS_LOCAL = B / "temas.local.json"  # nombres de los temas del curso: material confidencial, solo local
 SALIDA_JSON = B / "bitacora.json"
 SALIDA_MD = B / "BITACORA.md"
+SALIDA_MD_RAIZ = REPO / "BITACORA.md"  # copia generada, visible en la portada del repo
 SALIDA_RESUMEN = B / "resumen.json"
 REQUERIDOS = ["numero", "fecha", "fase", "tema", "slug", "simulado", "temas_curso", "objetivo",
               "archivos", "decisiones", "evidencia", "metricas", "riesgos", "siguiente"]
@@ -170,6 +171,11 @@ Cada sesión de la tabla enlaza a su ficha: objetivo, decisiones, evidencia, có
 """
 
 
+def para_raiz(md):
+    """Mismo contenido con los enlaces relativos reescritos para vivir en la raíz del repo."""
+    return md.replace("](../", "](agente-iac/").replace("](sesiones/", "](agente-iac/bitacora/sesiones/")
+
+
 def generar():
     reales, sim, errores = validar()
     if errores:
@@ -188,7 +194,9 @@ def generar():
         (B / "sesiones" / archivo).write_text(md_sesion(s), encoding="utf-8", newline="\n")
         filas.append(f"| {s['numero']} | {s['fecha']} | {s['fase']} | [{s['tema']}](sesiones/{archivo}) | "
                      f"{s.get('rama', '-')} | {commits} |")
-    SALIDA_MD.write_text("\n".join(filas) + "\n", encoding="utf-8", newline="\n")
+    contenido = "\n".join(filas) + "\n"
+    SALIDA_MD.write_text(contenido, encoding="utf-8", newline="\n")
+    SALIDA_MD_RAIZ.write_text(para_raiz(contenido), encoding="utf-8", newline="\n")
     union = {k: v for k, v in reales.items() if k != "sesiones"}
     union["sesiones"] = reales["sesiones"] + sim["sesiones"]
     union["temas_curso"] = nombrar_temas(reales.get("temas_curso", []))
