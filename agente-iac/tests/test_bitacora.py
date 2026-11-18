@@ -124,3 +124,11 @@ def test_ia_incompleta_se_rechaza(sha):
 def test_ficha_incluye_reflexion(sha):
     md = bitacora.md_sesion(_sesion(sha))
     assert "## Cómo se validó" in md and "**Falló:** f" in md and "## Lección aprendida" in md
+
+
+def test_el_indice_de_la_bitacora_enlaza_a_rutas_que_existen():
+    import re
+    enlaces = re.findall(r"\]\((\.\./[^)#]+)\)", bitacora.INDICE)
+    assert len(enlaces) >= 8
+    for e in enlaces:
+        assert (bitacora.B / e).resolve().exists(), e
