@@ -24,6 +24,16 @@ Mantener el material confidencial fuera del repo público y medir el pipeline co
 - [commit] `8ee5c56` — higiene, eventos y dashboard
 - [archivo] `agente-iac/docs/fase-12.md` — 44 pruebas, 9 de 9 paneles, Gitleaks sin hallazgos
 
+## Cómo se validó
+44 pruebas unitarias, eventos estructurados del pipeline y SLI calculado (75 % frente a un SLO de 90 %); 9 paneles con datos.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Separó los nombres de los temas del curso a un archivo local y midió el pipeline con eventos y un SLI.
+- **Falló:** Los títulos de los temas siguen en el historial de ramas anteriores del repo público; el SLI es muy sensible con 4 builds.
+
+## Lección aprendida
+Un repo público exige decidir qué no se publica antes de escribirlo, no después.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 44

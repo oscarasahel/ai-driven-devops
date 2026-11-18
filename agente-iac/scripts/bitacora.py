@@ -14,6 +14,7 @@ Comandos:  validar | generar | agregar <archivo.json>
 - validar: esquema; toda sesión real debe tener evidencia, y cada commit citado debe existir en git
            y cada archivo citado debe existir. Toda sesión simulada debe llevar simulado=true y no citar commits.
 - generar: valida y regenera las salidas.
+- Toda sesión real lleva además 'validacion', 'ia' {acerto, fallo} y 'leccion', redactados con hechos ya registrados.
 - agregar: añade una sesión real desde un JSON (la valida primero).
 Veracidad: nunca se marca como real una sesión sin evidencia verificable.
 """
@@ -58,6 +59,13 @@ def validar_sesion(s, simulada):
         if any(ev.get("tipo") == "commit" for ev in s["evidencia"]):
             e.append("una sesión simulada no puede citar commits")
         return e
+    if not str(s.get("validacion", "")).strip():
+        e.append("sesión real sin 'validacion' (cómo se comprobó)")
+    ia = s.get("ia") or {}
+    if not str(ia.get("acerto", "")).strip() or not str(ia.get("fallo", "")).strip():
+        e.append("sesión real sin 'ia.acerto' y 'ia.fallo' (si no falló nada, decirlo)")
+    if not str(s.get("leccion", "")).strip():
+        e.append("sesión real sin 'leccion'")
     if not s["evidencia"]:
         e.append("sesión real sin evidencia")
     for ev in s["evidencia"]:
@@ -97,6 +105,12 @@ def md_sesion(s):
     L += ["", "## Evidencia"]
     for ev in s["evidencia"]:
         L.append(f"- [{ev['tipo']}] `{ev['ref']}`" + (f" — {ev['detalle']}" if ev.get("detalle") else ""))
+    if s.get("validacion"):
+        L += ["", "## Cómo se validó", s["validacion"]]
+    if s.get("ia"):
+        L += ["", "## Qué acertó y qué falló la IA", f"- **Acertó:** {s['ia']['acerto']}", f"- **Falló:** {s['ia']['fallo']}"]
+    if s.get("leccion"):
+        L += ["", "## Lección aprendida", s["leccion"]]
     L += ["", "## Métricas"] + [f"- {k}: {v}" for k, v in s["metricas"].items()]
     L += ["", "## Riesgos y pendientes"] + [f"- {r}" for r in s["riesgos"]]
     L += ["", "## Siguiente paso", s["siguiente"], ""]

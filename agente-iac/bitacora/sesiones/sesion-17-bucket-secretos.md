@@ -28,6 +28,16 @@ Recorrer el flujo con un requerimiento nuevo (bucket S3 para secretos) reutiliza
 - [commit] `0dba369` — instancia secrets_bucket y criterios de verificación
 - [archivo] `agente-iac/docs/fase-19.md` — apply de 21 recursos, TODO OK, plan sin cambios y destroy en el emulador
 
+## Cómo se validó
+Spec 004 validada; 8 criterios de aceptación comprobados contra el emulador con verificar-criterios.sh; gate de seguridad en verde.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Aplicó la skill al requerimiento, preguntó lo ambiguo (rol, versiones, KMS) y reutilizó el módulo secure-bucket.
+- **Falló:** La primera ejecución en Jenkins (build 28) falló porque mis ediciones dejaron finales de línea CRLF en un script bash; se convirtió a LF.
+
+## Lección aprendida
+En Windows hay que escribir con LF explícito; un fallo en Jenkins que no sale en local suele ser de entorno.
+
 ## Métricas
 - recursos_terraform: 21
 

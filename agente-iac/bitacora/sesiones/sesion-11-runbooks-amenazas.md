@@ -26,6 +26,16 @@ Cerrar las brechas de documentación operativa y de seguridad frente a las sesio
 - [commit] `af43bc9` — documentación y prueba de la DLQ
 - [archivo] `agente-iac/docs/fase-11.md` — qué se verificó y qué no
 
+## Cómo se validó
+Runbooks escritos a partir de incidentes reales; comportamiento de la DLQ verificado con un mensaje real; 20 riesgos OWASP revisados.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Convirtió incidentes reales en runbooks y marcó plan.md y tasks.md como reconstruidos a posteriori.
+- **Falló:** ChatOps quedó solo en diseño; el runbook de revisión previa no se probó con un plan destructivo inesperado; la numeración OWASP quedó por verificar.
+
+## Lección aprendida
+Documentar lo reconstruido como reconstruido mantiene creíble el resto.
+
 ## Métricas
 - recursos_terraform: 15
 - runbooks: 3

@@ -26,6 +26,16 @@ Cerrar brechas con el curso: implementar la capa de ChatOps de solo lectura, una
 - [archivo] `agente-iac/docs/fase-13.md` — 90 pruebas, plan real explicado, job probado en GitHub
 - [archivo] `agente-iac/docs/evidencia/evals-modelo.md` — 6 de 6 corridas con modelo pasan
 
+## Cómo se validó
+90 pruebas unitarias; los comandos que cambian estado se rechazan en código y se probaron; evals con modelo ejecutados en local.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Implementó ChatOps de solo lectura y sugerencias de corrección desde un catálogo fijo, sin usar el texto del informe.
+- **Falló:** Los evals con modelo son pocos y no deterministas, y el comentario en PR no se ejercitó porque la prueba fue en una rama sin PR.
+
+## Lección aprendida
+Los evals con modelo detectan regresiones groseras; no demuestran robustez.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 90

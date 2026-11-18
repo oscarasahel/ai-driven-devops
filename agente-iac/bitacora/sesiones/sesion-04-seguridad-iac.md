@@ -22,6 +22,16 @@ Imponer en código el gate de seguridad (TFLint, Checkov, Trivy) con excepciones
 - [commit] `760d03a` — commit de la fase 4
 - [archivo] `agente-iac/docs/fase-4.md` — gate verde y dos pruebas negativas
 
+## Cómo se validó
+Se ejecutó el gate (TFLint, Checkov, Trivy): antes 1 hallazgo alto y 10 sin severidad, después 0 y 0, con 7 excepciones documentadas.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Encontró un SNS sin cifrar y lo corrigió; documentó las excepciones con justificación y vencimiento.
+- **Falló:** Checkov no informa severidad sin API key, por lo que los hallazgos sin severidad hubo que clasificarlos a mano.
+
+## Lección aprendida
+Un gate sin excepciones documentadas se acaba ignorando; con justificación y vencimiento se puede sostener.
+
 ## Métricas
 - recursos_terraform: 15
 - hallazgos_antes: {'alta': 1, 'sin_severidad': 10}

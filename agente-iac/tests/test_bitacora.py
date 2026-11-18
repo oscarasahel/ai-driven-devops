@@ -17,7 +17,8 @@ def _sesion(sha, **cambios):
     s = {"numero": 1, "fecha": "2026-11-16", "fase": "F", "tema": "T", "slug": "t", "simulado": False,
          "temas_curso": ["S1"], "objetivo": "o", "archivos": [],
          "decisiones": [], "evidencia": [{"tipo": "commit", "ref": sha}], "metricas": {},
-         "riesgos": [], "siguiente": "x"}
+         "riesgos": [], "siguiente": "x", "validacion": "v",
+         "ia": {"acerto": "a", "fallo": "f"}, "leccion": "l"}
     s.update(cambios)
     return s
 
@@ -107,3 +108,19 @@ def test_sesiones_json_versionado_no_contiene_nombres_de_temas():
     import json
     datos = json.loads(bitacora.REALES.read_text(encoding="utf-8"))
     assert all(set(t) == {"id"} for t in datos["temas_curso"])
+
+
+@pytest.mark.parametrize("campo", ["validacion", "ia", "leccion"])
+def test_real_sin_reflexion_se_rechaza(sha, campo):
+    s = _sesion(sha)
+    del s[campo]
+    assert any(campo in e for e in bitacora.validar_sesion(s, False))
+
+
+def test_ia_incompleta_se_rechaza(sha):
+    assert bitacora.validar_sesion(_sesion(sha, ia={"acerto": "a", "fallo": " "}), False)
+
+
+def test_ficha_incluye_reflexion(sha):
+    md = bitacora.md_sesion(_sesion(sha))
+    assert "## Cómo se validó" in md and "**Falló:** f" in md and "## Lección aprendida" in md

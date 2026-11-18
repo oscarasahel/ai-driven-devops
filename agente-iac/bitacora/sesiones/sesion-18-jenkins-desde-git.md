@@ -34,6 +34,16 @@ Que Jenkins clone el repositorio de GitHub y lance el pipeline solo tras un merg
 - [archivo] `agente-iac/docs/fase-20.md` — builds #30 a #33: línea base, estado perdido, encadenado a local y disparo automático
 - [commit] `68b2e1e` — merge del PR #10 que disparó el build #37 por polling
 
+## Cómo se validó
+10 criterios de la spec 005 comprobados con builds reales (30 a 38) y 8 pruebas nuevas; 128 pruebas en total.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Hizo que Jenkins clone de Git, dispare por polling tras el merge y encole local sin saltarse la aprobación manual.
+- **Falló:** Tardó varios builds en entender el polling: hacía falta una línea base exitosa, seguía la rama del último build y el primer clon borró el estado de Terraform.
+
+## Lección aprendida
+Cada hallazgo de Jenkins quedó documentado en fase-20.md; el estado de Terraform debería salir del workspace.
+
 ## Métricas
 - recursos_terraform: 21
 - pruebas_unitarias: 128

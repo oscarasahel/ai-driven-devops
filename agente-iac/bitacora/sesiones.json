@@ -100,7 +100,13 @@
         "No se encontró tabla de fidelidad por servicio del emulador",
         "El RPM del emulador no se puede fijar a versión"
       ],
-      "siguiente": "Fase 1: compose y prueba de humo."
+      "siguiente": "Fase 1: compose y prueba de humo.",
+      "validacion": "Se comprobó que el emulador responde y que la estructura y las reglas existen; no había nada que aplicar todavía.",
+      "ia": {
+        "acerto": "Dejó las reglas y la estructura antes de construir, y anotó lo que no pudo verificar (tabla de fidelidad del emulador, versión no fijable).",
+        "fallo": "No encontró una tabla de fidelidad por servicio del emulador ni pudo fijar su versión; quedaron como riesgos."
+      },
+      "leccion": "Fijar las reglas antes de escribir código evita decidir bajo presión; lo que no se puede fijar se declara como riesgo desde el primer día."
     },
     {
       "numero": 1,
@@ -151,7 +157,13 @@
       "riesgos": [
         "La versión del emulador no es fijable"
       ],
-      "siguiente": "Fase 2: skill analizar-requerimiento."
+      "siguiente": "Fase 2: skill analizar-requerimiento.",
+      "validacion": "terraform apply contra el emulador y consulta con AWS CLI de que el bucket existe; versiones del emulador (1.0.485) y del provider (5.100.0) anotadas.",
+      "ia": {
+        "acerto": "Dejó Terraform y AWS CLI en la red del emulador y el primer bucket funcionando.",
+        "fallo": "No se registró ningún fallo en esta sesión; el riesgo abierto es que la versión del emulador no se puede fijar."
+      },
+      "leccion": "Un primer recurso mínimo de extremo a extremo valida la cadena completa antes de crecer."
     },
     {
       "numero": 2,
@@ -202,7 +214,13 @@
       "riesgos": [
         "El validador revisa estructura, no calidad semántica"
       ],
-      "siguiente": "Fase 3: construir-iac."
+      "siguiente": "Fase 3: construir-iac.",
+      "validacion": "El validador scripts/validar_spec.py y sus pruebas comprueban la estructura de cada spec; 17 criterios de aceptación escritos.",
+      "ia": {
+        "acerto": "Separó el análisis (spec sin código) de la construcción y sondeó el emulador antes de comprometer criterios.",
+        "fallo": "El validador revisa la estructura y no la calidad semántica: una spec bien formada puede ser ambigua."
+      },
+      "leccion": "Validar la forma en código es barato, pero la calidad del requerimiento sigue necesitando revisión humana."
     },
     {
       "numero": 3,
@@ -249,7 +267,13 @@
       "riesgos": [
         "Redirección real a la DLQ sin probar (solo por atributos)"
       ],
-      "siguiente": "Fase 4: gate de seguridad."
+      "siguiente": "Fase 4: gate de seguridad.",
+      "validacion": "Los criterios se comprobaron contra el emulador (29 verificados) con terraform fmt y validate en verde.",
+      "ia": {
+        "acerto": "Generó los módulos pequeños desde las specs aprobadas y comprobó los criterios en el emulador.",
+        "fallo": "La redirección real a la cola de mensajes fallidos (DLQ) solo se comprobó por atributos; se verificó con un mensaje real más adelante (sesión 11)."
+      },
+      "leccion": "Comprobar atributos no es comprobar comportamiento: lo que no se ejercita queda como riesgo hasta probarlo."
     },
     {
       "numero": 4,
@@ -308,7 +332,13 @@
       "riesgos": [
         "Checkov no informa severidad sin API key"
       ],
-      "siguiente": "Fase 5: Jenkins."
+      "siguiente": "Fase 5: Jenkins.",
+      "validacion": "Se ejecutó el gate (TFLint, Checkov, Trivy): antes 1 hallazgo alto y 10 sin severidad, después 0 y 0, con 7 excepciones documentadas.",
+      "ia": {
+        "acerto": "Encontró un SNS sin cifrar y lo corrigió; documentó las excepciones con justificación y vencimiento.",
+        "fallo": "Checkov no informa severidad sin API key, por lo que los hallazgos sin severidad hubo que clasificarlos a mano."
+      },
+      "leccion": "Un gate sin excepciones documentadas se acaba ignorando; con justificación y vencimiento se puede sostener."
     },
     {
       "numero": 5,
@@ -359,7 +389,13 @@
         "El pipeline completo NO se ejecutó: sin evidencia de la aprobación manual",
         "scripts/jenkins.sh devolvió 404 sin diagnosticar"
       ],
-      "siguiente": "Fase 6: bitácora."
+      "siguiente": "Fase 6: bitácora.",
+      "validacion": "Se levantó Jenkins y se definió el pipeline, pero la ejecución completa no se hizo en esta sesión: quedó registrada como no verificada.",
+      "ia": {
+        "acerto": "Orquestó el flujo con aprobación manual y registró con honestidad que no lo había ejecutado entero.",
+        "fallo": "Dejó el pipeline sin evidencia de la aprobación manual y jenkins.sh devolvió un 404 que no se diagnosticó."
+      },
+      "leccion": "Un pipeline escrito no es un pipeline verificado; declararlo evitó dar por bueno algo sin probar."
     },
     {
       "numero": 6,
@@ -410,7 +446,13 @@
       "riesgos": [
         "Fechas de S1-S4 aproximadas"
       ],
-      "siguiente": "Fase 7: Grafana y dashboard."
+      "siguiente": "Fase 7: Grafana y dashboard.",
+      "validacion": "Pruebas del validador y comprobación de que los commits y archivos citados existen en git.",
+      "ia": {
+        "acerto": "Separó lo real de lo simulado y obligó por código a citar commits existentes.",
+        "fallo": "Las fechas de las sesiones 1 a 4 quedaron aproximadas por haberse reconstruido después."
+      },
+      "leccion": "La veracidad se impone mejor en el validador que en una regla escrita."
     },
     {
       "numero": 7,
@@ -462,7 +504,13 @@
         "Aspecto visual no revisado (sin navegador)",
         "Estado del pipeline no conectado a métricas vivas"
       ],
-      "siguiente": "Fase 8: evals, pruebas negativas y README."
+      "siguiente": "Fase 8: evals, pruebas negativas y README.",
+      "validacion": "Dashboard aprovisionado como código; 7 paneles con datos comprobados contra la API de Grafana.",
+      "ia": {
+        "acerto": "Calculó los agregados en bitacora.py y dejó el dashboard versionado.",
+        "fallo": "No se pudo revisar el aspecto visual (sin navegador) y el estado del pipeline no estaba conectado a métricas vivas."
+      },
+      "leccion": "Que los paneles devuelvan datos no demuestra que se vean bien; la revisión visual es un paso aparte."
     },
     {
       "numero": 8,
@@ -513,7 +561,13 @@
         "Pipeline de Jenkins sin verificar de extremo a extremo",
         "Ambigüedad e inyección de prompt a nivel del modelo sin evals automáticos"
       ],
-      "siguiente": "Revisar y fusionar las ramas; ejecutar el pipeline de Jenkins a mano."
+      "siguiente": "Revisar y fusionar las ramas; ejecutar el pipeline de Jenkins a mano.",
+      "validacion": "16 evals deterministas en verde y pruebas negativas; README con el estado real por criterio.",
+      "ia": {
+        "acerto": "Fijó con evals deterministas lo que el sistema impone en código y documentó el estado real.",
+        "fallo": "Quedaron sin cubrir el pipeline de Jenkins de extremo a extremo y la ambigüedad o inyección de prompt a nivel del modelo."
+      },
+      "leccion": "Los evals sin modelo cubren lo que el código garantiza, no lo que el modelo decide."
     },
     {
       "numero": 9,
@@ -572,7 +626,13 @@
         "Sin protección de rama ni checks requeridos (paso manual en GitHub)",
         "Los evals lentos no corren en CI"
       ],
-      "siguiente": "Fase 10: pipeline de Jenkins verificado de extremo a extremo."
+      "siguiente": "Fase 10: pipeline de Jenkins verificado de extremo a extremo.",
+      "validacion": "34 pruebas unitarias y 4 jobs de CI en verde; las pruebas se comprobaron además con mutaciones manuales.",
+      "ia": {
+        "acerto": "Cerró brechas de pruebas, fijó las acciones de GitHub por SHA y pasó Gitleaks por todo el historial.",
+        "fallo": "La protección de la rama y los checks requeridos eran un paso manual en GitHub; los evals lentos no corren en CI."
+      },
+      "leccion": "Una prueba que no falla cuando se rompe el código no prueba nada: por eso se mutó a mano."
     },
     {
       "numero": 10,
@@ -639,7 +699,13 @@
         "Un solo usuario (admin): no hay separación entre solicitante y aprobador",
         "El build #1 falló por un defecto mío (ruta de rsync), corregido"
       ],
-      "siguiente": "Fase 11: runbooks, diseño de ChatOps, AI-BOM y modelado de amenazas."
+      "siguiente": "Fase 11: runbooks, diseño de ChatOps, AI-BOM y modelado de amenazas.",
+      "validacion": "Builds reales en Jenkins: 2 aprobados, 1 rechazado sin cambios y 1 con defecto; logs guardados y revisados con Gitleaks.",
+      "ia": {
+        "acerto": "Demostró que no se aplica sin aprobación y que un rechazo no cambia nada.",
+        "fallo": "El build 1 falló por un defecto de la propia IA (ruta de rsync), que se corrigió."
+      },
+      "leccion": "Probar el rechazo es tan importante como probar la aprobación."
     },
     {
       "numero": 11,
@@ -702,7 +768,13 @@
         "Runbook de revisión previa no probado con un plan destructivo inesperado",
         "Numeración OWASP a verificar contra la versión vigente"
       ],
-      "siguiente": "Fase 12: higiene del repositorio público, telemetría del pipeline y actualización del dashboard."
+      "siguiente": "Fase 12: higiene del repositorio público, telemetría del pipeline y actualización del dashboard.",
+      "validacion": "Runbooks escritos a partir de incidentes reales; comportamiento de la DLQ verificado con un mensaje real; 20 riesgos OWASP revisados.",
+      "ia": {
+        "acerto": "Convirtió incidentes reales en runbooks y marcó plan.md y tasks.md como reconstruidos a posteriori.",
+        "fallo": "ChatOps quedó solo en diseño; el runbook de revisión previa no se probó con un plan destructivo inesperado; la numeración OWASP quedó por verificar."
+      },
+      "leccion": "Documentar lo reconstruido como reconstruido mantiene creíble el resto."
     },
     {
       "numero": 12,
@@ -764,7 +836,13 @@
         "SLI muy sensible con 4 builds",
         "Aspecto visual del dashboard sin revisar"
       ],
-      "siguiente": "Revisión humana por la mañana y decisión sobre el historial y la fusión de ramas."
+      "siguiente": "Revisión humana por la mañana y decisión sobre el historial y la fusión de ramas.",
+      "validacion": "44 pruebas unitarias, eventos estructurados del pipeline y SLI calculado (75 % frente a un SLO de 90 %); 9 paneles con datos.",
+      "ia": {
+        "acerto": "Separó los nombres de los temas del curso a un archivo local y midió el pipeline con eventos y un SLI.",
+        "fallo": "Los títulos de los temas siguen en el historial de ramas anteriores del repo público; el SLI es muy sensible con 4 builds."
+      },
+      "leccion": "Un repo público exige decidir qué no se publica antes de escribirlo, no después."
     },
     {
       "numero": 13,
@@ -828,7 +906,13 @@
         "ChatOps sin gateway ni identidad real; solicitante y aprobador siguen siendo el mismo usuario en Jenkins",
         "El comentario en PR del job de sugerencias no se ejercitó (la prueba fue en una rama sin PR)"
       ],
-      "siguiente": "Revisión humana y decisión sobre la fusión de ramas y el historial público."
+      "siguiente": "Revisión humana y decisión sobre la fusión de ramas y el historial público.",
+      "validacion": "90 pruebas unitarias; los comandos que cambian estado se rechazan en código y se probaron; evals con modelo ejecutados en local.",
+      "ia": {
+        "acerto": "Implementó ChatOps de solo lectura y sugerencias de corrección desde un catálogo fijo, sin usar el texto del informe.",
+        "fallo": "Los evals con modelo son pocos y no deterministas, y el comentario en PR no se ejercitó porque la prueba fue en una rama sin PR."
+      },
+      "leccion": "Los evals con modelo detectan regresiones groseras; no demuestran robustez."
     },
     {
       "numero": 14,
@@ -892,7 +976,13 @@
         "El SLI baja a 50 % por tres builds malos (dos defectos corregidos y una prueba negativa deliberada)",
         "Un solo recurso inseguro probado, no cada control por separado"
       ],
-      "siguiente": "Separar solicitante y aprobador en Jenkins y planificar el staging (S5)."
+      "siguiente": "Separar solicitante y aprobador en Jenkins y planificar el staging (S5).",
+      "validacion": "Build real en Jenkins que rechaza un recurso inseguro antes de planificar, comprobando el contenido del log y no solo el fallo; 93 pruebas.",
+      "ia": {
+        "acerto": "Demostró que el pipeline rechaza lo inseguro y destapó defectos de finales de línea que se corrigieron con .gitattributes.",
+        "fallo": "Dos de los tres builds fallidos fueron defectos corregidos y uno la prueba negativa deliberada; el SLI bajó a 50 %."
+      },
+      "leccion": "Una prueba negativa debe comprobar la causa del fallo, no solo que falle."
     },
     {
       "numero": 15,
@@ -961,7 +1051,13 @@
         "La huella solo cubre infra/, no scripts ni el Jenkinsfile",
         "jenkins.sh disparar muestra a veces un 400 inocuo y puede lanzar builds duplicados"
       ],
-      "siguiente": "Marcar los builds de prueba negativa para excluirlos del SLI; S11 (OpenTelemetry)."
+      "siguiente": "Marcar los builds de prueba negativa para excluirlos del SLI; S11 (OpenTelemetry).",
+      "validacion": "Builds reales de staging y local con la compuerta de promoción; pruebas de promoción con scripts/probar-promocion-jenkins.sh; 103 pruebas.",
+      "ia": {
+        "acerto": "Aisló staging con workspaces y exigió código verificado en staging antes de aplicar en local, con huella de infra/.",
+        "fallo": "jenkins.sh disparar mostraba a veces un 400 y podía lanzar builds duplicados; la huella solo cubre infra/."
+      },
+      "leccion": "Los workspaces aíslan el estado, no las credenciales ni la cuenta."
     },
     {
       "numero": 16,
@@ -1029,7 +1125,13 @@
         "--enviar no está probado contra un colector real",
         "El SLI de 100 % es de una ventana de 20 builds; Jenkins rota los anteriores"
       ],
-      "siguiente": "Colector OTLP real y latencia por etapa; ChatOps con canal real; evals del modelo en CI."
+      "siguiente": "Colector OTLP real y latencia por etapa; ChatOps con canal real; evals del modelo en CI.",
+      "validacion": "120 pruebas; SLI del 100 % sobre una ventana de 20 builds y trazas OTLP/JSON generadas.",
+      "ia": {
+        "acerto": "Excluyó del SLI solo las pruebas negativas listadas y evitó los builds duplicados decidiendo por código HTTP.",
+        "fallo": "No hay colector ni visor de trazas ni latencia por etapa, y --enviar no se probó contra un colector real."
+      },
+      "leccion": "Una métrica sobre una ventana corta se puede leer mal: hay que decir de cuántos builds sale."
     },
     {
       "numero": 17,
@@ -1094,7 +1196,13 @@
         "No se ejecutó en Jenkins: aprobación manual y pruebas de humo pendientes (T8)",
         "Tras seguridad.sh hay que repetir terraform init"
       ],
-      "siguiente": "Ejecutar la spec 004 en Jenkins con aprobación manual; spec del rol IAM cuando exista el principal."
+      "siguiente": "Ejecutar la spec 004 en Jenkins con aprobación manual; spec del rol IAM cuando exista el principal.",
+      "validacion": "Spec 004 validada; 8 criterios de aceptación comprobados contra el emulador con verificar-criterios.sh; gate de seguridad en verde.",
+      "ia": {
+        "acerto": "Aplicó la skill al requerimiento, preguntó lo ambiguo (rol, versiones, KMS) y reutilizó el módulo secure-bucket.",
+        "fallo": "La primera ejecución en Jenkins (build 28) falló porque mis ediciones dejaron finales de línea CRLF en un script bash; se convirtió a LF."
+      },
+      "leccion": "En Windows hay que escribir con LF explícito; un fallo en Jenkins que no sale en local suele ser de entorno."
     },
     {
       "numero": 18,
@@ -1179,7 +1287,13 @@
         "Un build esperando aprobación bloquea a los siguientes y caduca a los 30 minutos",
         "El polling sigue la rama del último build: al cambiar de rama o repositorio hace falta un build manual desde el origen nuevo"
       ],
-      "siguiente": "Comprobar CA-7 (sin commits nuevos no hay builds), fusionar el PR, quitar REPO_BRANCH del .env y mover el estado de Terraform fuera del workspace."
+      "siguiente": "Comprobar CA-7 (sin commits nuevos no hay builds), fusionar el PR, quitar REPO_BRANCH del .env y mover el estado de Terraform fuera del workspace.",
+      "validacion": "10 criterios de la spec 005 comprobados con builds reales (30 a 38) y 8 pruebas nuevas; 128 pruebas en total.",
+      "ia": {
+        "acerto": "Hizo que Jenkins clone de Git, dispare por polling tras el merge y encole local sin saltarse la aprobación manual.",
+        "fallo": "Tardó varios builds en entender el polling: hacía falta una línea base exitosa, seguía la rama del último build y el primer clon borró el estado de Terraform."
+      },
+      "leccion": "Cada hallazgo de Jenkins quedó documentado en fase-20.md; el estado de Terraform debería salir del workspace."
     }
   ]
 }

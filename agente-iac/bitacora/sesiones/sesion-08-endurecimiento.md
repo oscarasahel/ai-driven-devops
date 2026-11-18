@@ -21,6 +21,16 @@ Fijar con evals y pruebas negativas lo que el sistema impone en código, y docum
 - [commit] `4067d49` — commit de la fase 8
 - [archivo] `agente-iac/docs/fase-8.md` — 16/16 casos con el resultado esperado
 
+## Cómo se validó
+16 evals deterministas en verde y pruebas negativas; README con el estado real por criterio.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Fijó con evals deterministas lo que el sistema impone en código y documentó el estado real.
+- **Falló:** Quedaron sin cubrir el pipeline de Jenkins de extremo a extremo y la ambigüedad o inyección de prompt a nivel del modelo.
+
+## Lección aprendida
+Los evals sin modelo cubren lo que el código garantiza, no lo que el modelo decide.
+
 ## Métricas
 - recursos_terraform: 15
 - evals_total: 16

@@ -26,6 +26,16 @@ Cerrar la primera versión: SLI que no penaliza las pruebas negativas, exportaci
 - [commit] `2e79b16` — arreglo de jenkins.sh disparar
 - [archivo] `agente-iac/docs/fase-17.md` — causa del 400 y cifras del SLI
 
+## Cómo se validó
+120 pruebas; SLI del 100 % sobre una ventana de 20 builds y trazas OTLP/JSON generadas.
+
+## Qué acertó y qué falló la IA
+- **Acertó:** Excluyó del SLI solo las pruebas negativas listadas y evitó los builds duplicados decidiendo por código HTTP.
+- **Falló:** No hay colector ni visor de trazas ni latencia por etapa, y --enviar no se probó contra un colector real.
+
+## Lección aprendida
+Una métrica sobre una ventana corta se puede leer mal: hay que decir de cuántos builds sale.
+
 ## Métricas
 - recursos_terraform: 15
 - pruebas_unitarias: 120
